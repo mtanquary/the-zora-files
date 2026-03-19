@@ -1,0 +1,30 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (for when website is initialized)
+node_modules/
+.next/
+.env
+.env.local
+.env.production
+
+# Large media files (store these elsewhere, not in git)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.psd
+*.ai
+
+# LUT files can be large
+*.cube

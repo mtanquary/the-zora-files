@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finding Zora — The Official Rulebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --predawn: #0D0F14;
+    --predawn-mid: #141820;
+    --predawn-light: #1C2230;
+    --amber: #F0A500;
+    --amber-dark: #B87800;
+    --amber-light: #FFD166;
+    --amber-glow: rgba(240,165,0,0.12);
+    --sunrise: #E8520A;
+    --teal: #1D9E75;
+    --teal-light: #2CC48F;
+    --mist: #C8D4E0;
+    --mist-dim: #8A9AAE;
+    --parchment: #F5ECD7;
+    --parchment-dark: #E8D9BC;
+    --ink: #1A1208;
+    --rule: rgba(240,165,0,0.25);
+    --page-max: 860px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--predawn);
+    color: var(--mist);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* ─── PRINT / PAGE BREAKS ─── */
+  @media print {
+    .page-break { page-break-before: always; }
+    body { background: white; color: #1A1208; }
+    .cover { background: var(--predawn) !important; }
+  }
+
+  /* ─── GLOBAL LAYOUT ─── */
+  .page {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ─── ORNAMENTAL SVG ELEMENTS ─── */
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0;
+  }
+  .ornament-divider::before,
+  .ornament-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  }
+  .ornament-divider span {
+    color: var(--amber);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .corner-ornament {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+  .corner-ornament.tl { top: 1.5rem; left: 1.5rem; }
+  .corner-ornament.tr { top: 1.5rem; right: 1.5rem; transform: scaleX(-1); }
+  .corner-ornament.bl { bottom: 1.5rem; left: 1.5rem; transform: scaleY(-1); }
+  .corner-ornament.br { bottom: 1.5rem; right: 1.5rem; transform: scale(-1); }
+
+  /* ─── COVER PAGE ─── */
+  .cover {
+    background: var(--predawn);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 2rem;
+    border-bottom: 2px solid var(--amber);
+  }
+
+  .cover-starfield {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(200,212,224,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 8%, rgba(200,212,224,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 20%, rgba(240,165,0,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 5%, rgba(200,212,224,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 12%, rgba(200,212,224,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 18%, rgba(200,212,224,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 35%, rgba(200,212,224,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 50% 30%, rgba(200,212,224,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 28%, rgba(200,212,224,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 50%, rgba(200,212,224,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 45%, rgba(200,212,224,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 55%, rgba(240,165,0,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 48%, rgba(200,212,224,0.3) 0%, transparent 100%);
+  }
+
+  .cover-horizon {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to top, rgba(232,82,10,0.15), rgba(240,165,0,0.08), transparent);
+  }
+
+  .cover-mountain {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .cover-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 680px;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+
+  .cover-channel {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: var(--mist-dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .cover-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--amber);
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 0 60px rgba(240,165,0,0.4);
+    font-weight: 700;
+  }
+
+  .cover-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    color: var(--mist);
+    letter-spacing: 0.15em;
+    margin-bottom: 3rem;
+  }
+
+  .cover-rule {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    margin: 0 auto 2rem;
+  }
+
+  .cover-descriptor {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--mist-dim);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cover-edition {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--mist-dim);
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+
+  /* ─── CHAPTER PAGES ─── */
+  .chapter-opener {
+    background: var(--predawn-mid);
+    padding: 5rem 2rem 3rem;
+    position: relative;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+    overflow: hidden;
+  }
+
+  .chapter-opener::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--amber-glow) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .chapter-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .chapter-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--amber);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .chapter-lore {
+    font-style: italic;
+    color: var(--mist-dim);
+    font-size: 1.05rem;
+    max-width: 600px;
+    line-height: 1.8;
+    border-left: 2px solid var(--amber);
+    padding-left: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ─── CONTENT SECTIONS ─── */
+  .section {
+    padding: 2rem 0;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    color: var(--amber-light);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--teal-light);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: var(--mist);
+  }
+
+  p strong {
+    color: var(--amber-light);
+    font-weight: 600;
+  }
+
+  p em {
+    color: var(--mist);
+  }
+
+  /* ─── LORE BLOCKS ─── */
+  .lore-block {
+    background: var(--predawn-mid);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--amber);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--mist-dim);
+    border-radius: 0 4px 4px 0;
+    position: relative;
+  }
+
+  .lore-block::before {
+    content: '❝';
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    font-size: 2rem;
+    color: var(--amber);
+    opacity: 0.4;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .lore-block p {
+    color: var(--mist-dim);
+    margin: 0;
+  }
+
+  .lore-attribution {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--amber);
+    font-style: normal;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── RULE CALLOUT BOXES ─── */
+  .rule-box {
+    background: rgba(29,158,117,0.08);
+    border: 1px solid rgba(29,158,117,0.3);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .rule-box-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .rule-box p {
+    color: var(--mist);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .warning-box {
+    background: rgba(232,82,10,0.08);
+    border: 1px solid rgba(232,82,10,0.3);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .warning-box-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sunrise);
+    margin-bottom: 0.5rem;
+  }
+
+  .warning-box p {
+    color: var(--mist);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  /* ─── TABLES ─── */
+  .table-container {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  .table-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  thead tr {
+    background: rgba(240,165,0,0.15);
+    border-bottom: 1px solid var(--amber);
+  }
+
+  th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    color: var(--amber);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 0.6rem 1rem;
+    color: var(--mist);
+    border-bottom: 1px solid rgba(200,212,224,0.06);
+    vertical-align: top;
+  }
+
+  tr:hover td {
+    background: rgba(240,165,0,0.04);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .td-score {
+    color: var(--amber-light);
+    font-weight: 700;
+  }
+
+  .td-label {
+    color: var(--teal-light);
+  }
+
+  .td-dim {
+    color: var(--mist-dim);
+    font-size: 0.75rem;
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* ─── SCORE COMPONENT CARDS ─── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .score-card {
+    background: var(--predawn-mid);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+  }
+
+  .score-card.teal::before {
+    background: linear-gradient(90deg, var(--teal), transparent);
+  }
+
+  .score-card.sunrise::before {
+    background: linear-gradient(90deg, var(--sunrise), transparent);
+  }
+
+  .score-card-max {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .score-card.teal .score-card-max { color: var(--teal-light); }
+  .score-card.sunrise .score-card-max { color: var(--sunrise); }
+
+  .score-card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--mist-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .score-card-desc {
+    font-family: 'Crimson Text', serif;
+    font-size: 0.9rem;
+    color: var(--mist-dim);
+    line-height: 1.5;
+  }
+
+  /* ─── LEVEL TABLE ─── */
+  .level-table tr.current-level td {
+    background: var(--amber-glow);
+  }
+
+  .level-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-scout { background: rgba(138,154,174,0.2); color: var(--mist-dim); }
+  .badge-1 { background: rgba(29,158,117,0.15); color: var(--teal-light); }
+  .badge-2 { background: rgba(29,158,117,0.2); color: var(--teal-light); }
+  .badge-3 { background: rgba(240,165,0,0.15); color: var(--amber); }
+  .badge-4 { background: rgba(240,165,0,0.2); color: var(--amber); }
+  .badge-5 { background: rgba(240,165,0,0.25); color: var(--amber-light); }
+  .badge-6 { background: rgba(232,82,10,0.15); color: var(--sunrise); }
+  .badge-7 { background: rgba(232,82,10,0.2); color: var(--sunrise); }
+  .badge-8 { background: rgba(232,82,10,0.25); color: #FF7A3D; }
+  .badge-9 { background: rgba(255,209,102,0.2); color: var(--amber-light); }
+  .badge-10 { background: linear-gradient(90deg, rgba(240,165,0,0.3), rgba(232,82,10,0.3)); color: var(--amber-light); border: 1px solid rgba(240,165,0,0.4); }
+
+  /* ─── RARITY TIERS ─── */
+  .rarity-common { color: var(--mist-dim); }
+  .rarity-uncommon { color: var(--teal-light); }
+  .rarity-rare { color: var(--amber); }
+  .rarity-very-rare { color: var(--sunrise); }
+  .rarity-exceptional { color: #FFD166; text-shadow: 0 0 8px rgba(255,209,102,0.4); }
+
+  /* ─── QUICK REFERENCE ─── */
+  .quick-ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .quick-ref-block {
+    background: var(--predawn-mid);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+
+  .quick-ref-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .quick-ref-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.3rem 0;
+    border-bottom: 1px dotted rgba(200,212,224,0.08);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+  }
+
+  .quick-ref-item:last-child { border-bottom: none; }
+
+  .quick-ref-key { color: var(--mist-dim); }
+  .quick-ref-val { color: var(--amber-light); font-weight: 700; }
+
+  /* ─── DISCOVERY CARD EXAMPLE ─── */
+  .discovery-card {
+    background: var(--predawn-mid);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .discovery-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--amber-glow);
+    border: 1px solid var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.4rem;
+  }
+
+  .discovery-content {}
+
+  .discovery-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--amber-light);
+    margin-bottom: 0.2rem;
+  }
+
+  .discovery-scientific {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--mist-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .discovery-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .discovery-meta span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .meta-type { background: rgba(29,158,117,0.15); color: var(--teal-light); }
+  .meta-rarity { background: rgba(240,165,0,0.15); color: var(--amber); }
+  .meta-pts { background: rgba(232,82,10,0.15); color: var(--sunrise); }
+
+  /* ─── FORMULA BOX ─── */
+  .formula-box {
+    background: var(--predawn-light);
+    border: 1px solid var(--amber);
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .formula-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .formula-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--mist);
+    line-height: 2;
+  }
+
+  .formula-text .f-var { color: var(--amber-light); font-weight: 700; }
+  .formula-text .f-teal { color: var(--teal-light); }
+  .formula-text .f-op { color: var(--mist-dim); }
+  .formula-text .f-max { font-size: 0.75rem; color: var(--mist-dim); display: block; margin-top: 0.25rem; }
+
+  /* ─── TABLE OF CONTENTS ─── */
+  .toc-entry {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dotted rgba(200,212,224,0.08);
+  }
+
+  .toc-chapter {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber);
+    width: 80px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .toc-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--mist);
+    flex: 1;
+  }
+
+  .toc-dots {
+    flex: 1;
+    border-bottom: 1px dotted rgba(200,212,224,0.15);
+    margin: 0 0.5rem;
+    margin-bottom: 0.25rem;
+    min-width: 20px;
+  }
+
+  /* ─── APPENDIX / GLOSSARY ─── */
+  .glossary-term {
+    margin-bottom: 1.25rem;
+  }
+
+  .glossary-word {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--amber-light);
+    margin-bottom: 0.2rem;
+  }
+
+  .glossary-def {
+    color: var(--mist);
+    font-size: 0.95rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--rule);
+  }
+
+  /* ─── SECTION SPACERS ─── */
+  .spacer-lg { height: 3rem; }
+  .spacer-md { height: 2rem; }
+  .spacer-sm { height: 1rem; }
+
+  /* ─── FOOTER ─── */
+  .page-footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .page-footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--mist-dim);
+    opacity: 0.4;
+    text-transform: uppercase;
+  }
+
+  /* ─── INLINE HIGHLIGHTS ─── */
+  .highlight-amber { color: var(--amber-light); font-weight: 600; }
+  .highlight-teal { color: var(--teal-light); }
+  .highlight-sunrise { color: var(--sunrise); }
+  .mono { font-family: 'Space Mono', monospace; font-size: 0.85em; }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+    color: var(--mist);
+  }
+
+  li strong { color: var(--amber-light); }
+
+  /* ─── CHAPTER DIVIDER FULL WIDTH ─── */
+  .chapter-break {
+    background: var(--predawn-mid);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin: 3rem -2rem;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .chapter-break-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.7;
+  }
+
+  .chapter-break-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ─── SVG MOUNTAIN SILHOUETTE ─── */
+  .mountain-svg {
+    width: 100%;
+    max-height: 180px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ COVER ═══ -->
+<div class="cover">
+  <div class="cover-starfield"></div>
+  <div class="cover-horizon"></div>
+
+  <!-- Mountain silhouette -->
+  <div class="cover-mountain">
+    <svg viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" class="mountain-svg">
+      <defs>
+        <linearGradient id="mtnGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1C2230"/>
+          <stop offset="100%" stop-color="#0D0F14"/>
+        </linearGradient>
+      </defs>
+      <!-- Background ranges -->
+      <path d="M0 180 L80 120 L140 140 L220 90 L300 110 L380 70 L460 95 L540 60 L620 85 L700 50 L760 75 L860 45 L860 180 Z" fill="#141820" opacity="0.6"/>
+      <!-- Mid range -->
+      <path d="M0 180 L30 150 L100 165 L180 130 L260 148 L340 115 L420 135 L500 105 L580 125 L660 100 L740 120 L800 108 L860 118 L860 180 Z" fill="url(#mtnGrad)" opacity="0.8"/>
+      <!-- Foreground -->
+      <path d="M0 180 L0 168 L60 175 L120 162 L200 170 L280 158 L360 172 L440 155 L520 168 L600 160 L680 170 L760 158 L860 165 L860 180 Z" fill="#0D0F14"/>
+      <!-- Saguaro silhouettes -->
+      <g fill="#0D0F14" stroke="#141820" stroke-width="0.5">
+        <rect x="72" y="148" width="4" height="22"/>
+        <path d="M70 158 Q66 155 66 150 L70 150 L70 158"/>
+        <path d="M76 155 Q80 152 80 147 L76 147 L76 155"/>
+        <rect x="180" y="152" width="3" height="18"/>
+        <path d="M178 161 Q175 158 175 154 L178 154 L178 161"/>
+        <rect x="420" y="145" width="4" height="25"/>
+        <path d="M418 158 Q414 155 414 149 L418 149 L418 158"/>
+        <path d="M424 154 Q428 151 428 145 L424 145 L424 154"/>
+        <rect x="640" y="150" width="3" height="20"/>
+        <path d="M638 160 Q635 157 635 152 L638 152 L638 160"/>
+        <rect x="760" y="148" width="4" height="22"/>
+        <path d="M758 160 Q754 157 754 151 L758 151 L758 160"/>
+        <path d="M764 157 Q768 154 768 148 L764 148 L764 157"/>
+      </g>
+      <!-- Amber glow at horizon -->
+      <ellipse cx="430" cy="100" rx="200" ry="40" fill="rgba(240,165,0,0.06)"/>
+    </svg>
+  </div>
+
+  <div class="cover-content">
+    <p class="cover-eyebrow">The Zora Files Presents</p>
+
+    <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:1.5rem; opacity:0.9;">
+      <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(240,165,0,0.3)" stroke-width="0.5"/>
+      <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(240,165,0,0.2)" stroke-width="0.5"/>
+      <!-- Sun rays -->
+      <g stroke="rgba(240,165,0,0.6)" stroke-width="1" stroke-linecap="round">
+        <line x1="40" y1="4" x2="40" y2="12"/>
+        <line x1="40" y1="68" x2="40" y2="76"/>
+        <line x1="4" y1="40" x2="12" y2="40"/>
+        <line x1="68" y1="40" x2="76" y2="40"/>
+        <line x1="12.7" y1="12.7" x2="18.4" y2="18.4"/>
+        <line x1="61.6" y1="61.6" x2="67.3" y2="67.3"/>
+        <line x1="67.3" y1="12.7" x2="61.6" y2="18.4"/>
+        <line x1="18.4" y1="61.6" x2="12.7" y2="67.3"/>
+      </g>
+      <!-- Sun circle -->
+      <circle cx="40" cy="40" r="10" fill="rgba(240,165,0,0.15)" stroke="rgba(240,165,0,0.8)" stroke-width="1"/>
+      <circle cx="40" cy="40" r="6" fill="rgba(240,165,0,0.4)"/>
+    </svg>
+
+    <p class="cover-channel">The Zora Files</p>
+    <h1 class="cover-title">Finding<br>Zora</h1>
+    <p class="cover-subtitle">The Official Rulebook &amp; Field Manual</p>
+
+    <div class="cover-rule"></div>
+
+    <p class="cover-descriptor">
+      A game of pursuit, precision, and pre-dawn patience.<br>
+      Chase the perfect sunrise. Score everything you find.<br>
+      Level up. The desert keeps score.
+    </p>
+
+    <p class="cover-edition">First Edition · The Zora Files · Season One</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ TABLE OF CONTENTS ═══ -->
+<div class="page">
+  <div class="spacer-lg"></div>
+
+  <div class="ornament-divider"><span>Contents</span></div>
+
+  <div class="toc-entry">
+    <span class="toc-chapter">Foreword</span>
+    <span class="toc-title">The Chronicle Begins</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter I</span>
+    <span class="toc-title">The Two Pillars</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter II</span>
+    <span class="toc-title">The Eos Index — Scoring the Sunrise</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter III</span>
+    <span class="toc-title">The Zora Score — The Full Expedition</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter IV</span>
+    <span class="toc-title">The Discovery Log — Unlocking the World</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter V</span>
+    <span class="toc-title">The Records Board — All-Time Bests</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter VI</span>
+    <span class="toc-title">The Leveling System — Rise Through the Ranks</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Chapter VII</span>
+    <span class="toc-title">Field Protocol — Running an Episode</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Appendix A</span>
+    <span class="toc-title">Quick Reference Card</span>
+    <span class="toc-dots"></span>
+  </div>
+  <div class="toc-entry">
+    <span class="toc-chapter">Appendix B</span>
+    <span class="toc-title">Glossary of Terms</span>
+    <span class="toc-dots"></span>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ FOREWORD ═══ -->
+  <div class="ornament-divider"><span>Foreword</span></div>
+
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Foreword</p>
+      <h2 class="chapter-title">The Chronicle Begins</h2>
+      <p class="chapter-lore">
+        "Every dawn is a scored event. Most people sleep through the leaderboard."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      This is not a travel show. It is not a nature documentary. It is not a photography tutorial.
+      It is a <strong>game</strong> — played at altitudes where the air is thin and the light is honest,
+      in the dark hours before the world decides what kind of day it wants to be.
+    </p>
+    <p>
+      The game has a name: <strong>Finding Zora</strong>. <em>Zora</em> is the Slavic word for dawn —
+      that specific shade of possibility that exists only in the window between absolute darkness
+      and the moment the sun commits to rising. Every expedition in this chronicle is an attempt
+      to find it in its purest form.
+    </p>
+    <p>
+      The game has rules. It has a scoring system. It has a leaderboard, a discovery log, and a
+      leveling system that rewards the player for pushing further, arriving earlier, and seeing more.
+      It has a theoretical maximum score that may never be reached. That's the point.
+    </p>
+    <p>
+      This rulebook governs every expedition in the <strong>Finding Zora</strong> series, broadcast
+      under <strong>The Zora Files</strong> channel. It is the authoritative reference for how scores
+      are calculated, how discoveries are logged, how records are set, and how the player advances
+      through the ranks. It is also — if you happen to love early mornings, open landscapes, and
+      the peculiar satisfaction of scoring a 73 on a Tuesday — an invitation.
+    </p>
+
+    <div class="lore-block">
+      <p>
+        Home base is the Sonoran Desert of Arizona. But Zora does not belong to any single landscape.
+        She has been spotted over the Atlantic, above the treeline in the Rockies, rising from the sea
+        off coastal cliffs in latitudes the scorpions have never visited. Wherever dawn breaks,
+        the game is on.
+      </p>
+    </div>
+
+    <p>
+      One final note before the rules begin. The scoring system rewards <strong>effort and intentionality</strong>,
+      not luck. A spectacular sky witnessed from a hotel parking lot will always score lower than a
+      modest sky earned at the top of a difficult pre-dawn ascent. The game knows the difference.
+      So does the player.
+    </p>
+    <p>
+      Let the record show that the pursuit began in the Sonoran Desert, before anyone was watching,
+      in the dark.
+    </p>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER I ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter I</p>
+      <h2 class="chapter-title">The Two Pillars</h2>
+      <p class="chapter-lore">
+        "The Eos Index measures what the sky offers. The Zora Score measures what you deserved to see it."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      Every expedition in <strong>Finding Zora</strong> produces two numbers. These numbers are distinct,
+      serve different purposes, and together tell the complete story of a chase.
+    </p>
+
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-card-max">100</div>
+        <div class="score-card-label">Eos Index — max score</div>
+        <div class="score-card-desc">
+          The pure quality score of the sunrise itself. Sky, setting, and conditions combine to produce
+          a number between 0 and 100. This is what the dawn gave you.
+        </div>
+      </div>
+      <div class="score-card teal">
+        <div class="score-card-max">~215</div>
+        <div class="score-card-label">Zora Score — theoretical max</div>
+        <div class="score-card-desc">
+          The full expedition score. The Eos Index is the foundation, and travel, discovery, elevation,
+          and adversity stack on top. This is what you earned.
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-label">The Master Formula</div>
+      <div class="formula-text">
+        <span class="f-var">Zora Score</span>
+        <span class="f-op"> = </span>
+        <span class="f-teal">Eos Index</span>
+        <span class="f-op"> + </span>
+        <span class="f-var">Discovery Pts</span>
+        <span class="f-op"> + </span>
+        <span class="f-var">Travel Pts</span>
+        <span class="f-op"> + </span>
+        <span class="f-var">Conditions Pts</span>
+        <span class="f-max">Theoretical maximum: approximately 215 points · A perfect 100 Eos Index is the ultimate sub-objective</span>
+      </div>
+    </div>
+
+    <p>
+      Both scores are announced at the end of every episode. Both appear on the leaderboard.
+      Followers of the series who care about photography track the <strong class="highlight-amber">Eos Index</strong>.
+      Followers who care about adventure track the <strong class="highlight-teal">Zora Score</strong>.
+      Everyone watches the same chase.
+    </p>
+
+    <div class="rule-box">
+      <div class="rule-box-title">Core Principle</div>
+      <p>
+        A perfect sunrise witnessed from a parking lot will always score lower than a modest sunrise
+        earned at the top of a difficult pre-dawn ascent. The Eos Index measures the sky.
+        The Zora Score measures the player.
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER II ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter II</p>
+      <h2 class="chapter-title">The Eos Index</h2>
+      <p class="chapter-lore">
+        "Eos, goddess of dawn, does not grade on a curve. Neither does this index."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Eos Index</strong> is a scored assessment of sunrise quality, calculated across three
+      components: <span class="highlight-amber">Sky</span>,
+      <span class="highlight-teal">Setting</span>, and
+      <span class="highlight-sunrise">Conditions</span>.
+      The maximum possible score is <strong>100 points</strong>. A score of 100 represents
+      the theoretical perfect sunrise — the destination this entire series is named for.
+    </p>
+    <p>
+      Scores are assessed by the player in the field and finalized in post. Camera metadata,
+      footage review, and field notes serve as verification. No score may be retroactively improved,
+      but may be retroactively lowered if post-production reveals an error in field assessment.
+    </p>
+
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-card-max">50</div>
+        <div class="score-card-label">Sky</div>
+        <div class="score-card-desc">Color, cloud engagement, and horizon clarity. The dominant component.</div>
+      </div>
+      <div class="score-card teal">
+        <div class="score-card-max">30</div>
+        <div class="score-card-label">Setting</div>
+        <div class="score-card-desc">Foreground composition and uniqueness of location.</div>
+      </div>
+      <div class="score-card sunrise">
+        <div class="score-card-max">20</div>
+        <div class="score-card-label">Conditions</div>
+        <div class="score-card-desc">Effort to reach the position and environmental challenge.</div>
+      </div>
+    </div>
+
+    <div class="ornament-divider"><span>Sky Component</span></div>
+
+    <p class="section-subtitle">I. Sky — 50 Points Maximum</p>
+
+    <p>The sky is the game. Everything else is context for the sky.</p>
+
+    <div class="table-container">
+      <div class="table-label">Sky Scoring Rubric</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sub-Component</th>
+            <th>Max Pts</th>
+            <th>What earns a high score</th>
+            <th>What earns a low score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Color Intensity</td>
+            <td class="td-score">20</td>
+            <td class="td-dim">Deep reds, vivid oranges, saturated pinks — a wide chromatic range across the visible sky</td>
+            <td class="td-dim">Pale yellow wash, minimal hue variation, muted or washed-out tones</td>
+          </tr>
+          <tr>
+            <td class="td-label">Cloud Engagement</td>
+            <td class="td-score">15</td>
+            <td class="td-dim">Dramatically lit clouds with visible rim-lighting, crepuscular rays, or layered cloud structures catching the first light</td>
+            <td class="td-dim">Completely clear sky (moderate penalty) or flat uniform overcast with no visible detail (severe penalty)</td>
+          </tr>
+          <tr>
+            <td class="td-label">Horizon Definition</td>
+            <td class="td-score">15</td>
+            <td class="td-dim">Clean, readable horizon with clear separation between sky strata and earth — mountains, ridgelines, or open water at the edge</td>
+            <td class="td-dim">Obstructed horizon (urban skyline, heavy haze), or no discernible horizon at all</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lore-block">
+      <p>
+        Note on clear skies: a cloudless sunrise is not automatically a perfect sky. Clouds are the
+        canvas upon which dawn paints her most memorable work. A perfectly clear sky earns a ceiling
+        of approximately 35 out of 50 in the Sky component. The remaining 15 require clouds.
+      </p>
+    </div>
+
+    <div class="ornament-divider"><span>Setting Component</span></div>
+
+    <p class="section-subtitle">II. Setting — 30 Points Maximum</p>
+
+    <p>Where you are when the sun rises matters as much as what the sky does. An extraordinary
+    sunrise witnessed from an extraordinary location is the mark of a well-planned expedition.</p>
+
+    <div class="table-container">
+      <div class="table-label">Setting Scoring Rubric</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sub-Component</th>
+            <th>Max Pts</th>
+            <th>High score</th>
+            <th>Low score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Foreground Composition</td>
+            <td class="td-score">15</td>
+            <td class="td-dim">Compelling natural subject in frame — saguaro silhouette, petroglyph panel, waterfall, wildlife — creating visual depth</td>
+            <td class="td-dim">Featureless foreground, asphalt, suburban elements such as fences or buildings</td>
+          </tr>
+          <tr>
+            <td class="td-label">Location Uniqueness</td>
+            <td class="td-score">15</td>
+            <td class="td-dim">Remote wilderness, geological rarity, historically significant site, or a location requiring deliberate effort to access</td>
+            <td class="td-dim">Suburban street, roadside pull-off, hotel parking lot, or any location accessible to the general public without planning</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Conditions Component</span></div>
+
+    <p class="section-subtitle">III. Conditions — 20 Points Maximum</p>
+
+    <p>The Conditions component of the Eos Index specifically measures the <em>effort to reach
+    the chosen sunrise position</em> and the <em>environmental challenge</em> encountered in doing so.
+    This is distinct from the travel scoring in the Zora Score — this measures only
+    the final approach and the conditions at the location itself.</p>
+
+    <div class="table-container">
+      <div class="table-label">Conditions Scoring Rubric</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sub-Component</th>
+            <th>Max Pts</th>
+            <th>High score</th>
+            <th>Low score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Effort to Reach Position</td>
+            <td class="td-score">10</td>
+            <td class="td-dim">Serious pre-dawn hike with elevation gain, technical terrain, or navigation challenge to reach the sunrise position</td>
+            <td class="td-dim">Drive to location and stand beside the vehicle; roadside pull-off; flat paved walk under 0.25 miles</td>
+          </tr>
+          <tr>
+            <td class="td-label">Environmental Challenge</td>
+            <td class="td-score">10</td>
+            <td class="td-dim">Extreme cold, high wind, technical footing, rain, snow, or conditions that required genuine preparation and risk assessment</td>
+            <td class="td-dim">Comfortable weather, no wind, clear footing — a perfect morning in every way except the challenge</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Reference Scores</span></div>
+
+    <p class="section-subtitle">Calibration — Known Scores</p>
+    <p>The following scores were established during the calibration session before Season One began.
+    They serve as reference points for scoring consistency across future episodes.</p>
+
+    <div class="table-container">
+      <div class="table-label">Eos Index Leaderboard — Calibration Session</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Location</th>
+            <th>Score</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-score">#1</td>
+            <td class="td-label">Ocean cliff silhouette</td>
+            <td class="td-score">85</td>
+            <td class="td-dim">Open ocean horizon, dramatic cloud drama, coastal cliff hike required. Series benchmark.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#2</td>
+            <td class="td-label">Mesa canyon starburst</td>
+            <td class="td-score">73</td>
+            <td class="td-dim">Mesa silhouettes framing the sun through a natural saddle. Exceptional composition.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#3</td>
+            <td class="td-label">Airport tarmac</td>
+            <td class="td-score">67</td>
+            <td class="td-dim">Near-perfect sky; zero effort. The system working exactly as designed.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#4</td>
+            <td class="td-label">Desert wildflowers</td>
+            <td class="td-score">62</td>
+            <td class="td-dim">Sand verbena foreground with golden sunburst. Rare seasonal bloom.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#5</td>
+            <td class="td-label">Saguaro silhouette</td>
+            <td class="td-score">60</td>
+            <td class="td-dim">Single saguaro, clean gradient, layered mountain backdrop.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#6</td>
+            <td class="td-label">Desert saguaro trail</td>
+            <td class="td-score">58</td>
+            <td class="td-dim">Rocky trail leading lines into the sunrise frame.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#7</td>
+            <td class="td-label">Sandy wash road</td>
+            <td class="td-score">54</td>
+            <td class="td-dim">Ground-level perspective on rippled sand. Atmospheric but not dramatic.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#8</td>
+            <td class="td-label">Ponderosa pine forest</td>
+            <td class="td-score">53</td>
+            <td class="td-dim">Forest blocks sky entirely — high setting score, penalized sky.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#9</td>
+            <td class="td-label">Suburban crepuscular rays</td>
+            <td class="td-score">50</td>
+            <td class="td-dim">Spectacular rays, power lines and rooftops in frame. Proof that sky alone is not enough.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#9</td>
+            <td class="td-label">High desert silhouette</td>
+            <td class="td-score">50</td>
+            <td class="td-dim">Elegant blush gradient. Beautiful, not dramatic. The system scores drama.</td>
+          </tr>
+          <tr>
+            <td class="td-score">#11</td>
+            <td class="td-label">Riparian canal</td>
+            <td class="td-score">45</td>
+            <td class="td-dim">Suburban houses visible in background. Water reflection nearly saves it.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER III ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter III</p>
+      <h2 class="chapter-title">The Zora Score</h2>
+      <p class="chapter-lore">
+        "The sky rewards those who showed up. The Zora Score rewards those who had no business being there at all."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Zora Score</strong> is the complete expedition score. It begins with the
+      <strong class="highlight-teal">Eos Index</strong> and accumulates additional points across
+      five categories: Travel, Elevation, Pre-Dawn Timing, Weather Adversity, and Discovery.
+      Discovery points are covered in full in Chapter IV.
+    </p>
+
+    <div class="ornament-divider"><span>Travel Points</span></div>
+
+    <p class="section-subtitle">I. Travel Distance</p>
+    <p>Measured from the player's home base or overnight location to the sunrise position,
+    by the most direct navigable route.</p>
+
+    <div class="table-container">
+      <div class="table-label">Travel Distance Scoring</div>
+      <table>
+        <thead>
+          <tr><th>Distance from Origin</th><th>Points Awarded</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 – 5 miles</td><td class="td-score">0 pts</td></tr>
+          <tr><td>6 – 15 miles</td><td class="td-score">1 pt</td></tr>
+          <tr><td>16 – 30 miles</td><td class="td-score">2 pts</td></tr>
+          <tr><td>31 – 75 miles</td><td class="td-score">3 pts</td></tr>
+          <tr><td>76 – 150 miles</td><td class="td-score">4 pts</td></tr>
+          <tr><td>150+ miles</td><td class="td-score">5 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="section-subtitle">II. Travel Difficulty Bonuses</p>
+    <p>These bonuses are stackable. All that apply to a given expedition are added together.</p>
+
+    <div class="table-container">
+      <div class="table-label">Travel Difficulty Bonuses (stackable)</div>
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Requirement</th><th>Bonus</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Off-Pavement Travel</td>
+            <td class="td-dim">At least 1 continuous mile of unpaved road en route</td>
+            <td class="td-score">+1 pt</td>
+          </tr>
+          <tr>
+            <td class="td-label">High-Clearance Required</td>
+            <td class="td-dim">At least 1 mile of terrain requiring high-clearance vehicle to safely navigate</td>
+            <td class="td-score">+1 pt</td>
+          </tr>
+          <tr>
+            <td class="td-label">Alternative Transport</td>
+            <td class="td-dim">Any portion of travel completed by boat, aircraft, train, horseback, or non-motorized means</td>
+            <td class="td-score">+1 pt</td>
+          </tr>
+          <tr>
+            <td class="td-label">International Expedition</td>
+            <td class="td-dim">Sunrise position located outside the continental United States</td>
+            <td class="td-score">+3 pts</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Elevation</span></div>
+
+    <p class="section-subtitle">III. Elevation Gain</p>
+    <p>Measured as total feet of elevation gain from the point of vehicle departure to the sunrise
+    position. Cumulative gain on multi-leg approaches counts in full.</p>
+
+    <div class="table-container">
+      <div class="table-label">Elevation Gain Scoring</div>
+      <table>
+        <thead>
+          <tr><th>Total Elevation Gain</th><th>Points Awarded</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 – 200 ft</td><td class="td-score">0 pts</td></tr>
+          <tr><td>201 – 500 ft</td><td class="td-score">1 pt</td></tr>
+          <tr><td>501 – 1,000 ft</td><td class="td-score">2 pts</td></tr>
+          <tr><td>1,001 – 2,000 ft</td><td class="td-score">3 pts</td></tr>
+          <tr><td>2,000+ ft</td><td class="td-score">4 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Pre-Dawn Timing</span></div>
+
+    <p class="section-subtitle">IV. Pre-Dawn Arrival Bonus</p>
+    <p>Measured as the number of minutes between arrival at the sunrise position and official
+    sunrise time. Verified by camera metadata timestamp compared against the official sunrise
+    time for that GPS coordinate on that date.</p>
+
+    <div class="table-container">
+      <div class="table-label">Pre-Dawn Arrival Bonus</div>
+      <table>
+        <thead>
+          <tr><th>Minutes on Position Before Sunrise</th><th>Points Awarded</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Under 30 minutes</td><td class="td-score">0 pts</td></tr>
+          <tr><td>30 – 59 minutes</td><td class="td-score">+1 pt</td></tr>
+          <tr><td>60 minutes or more</td><td class="td-score">+2 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <div class="rule-box-title">Verification Protocol</div>
+      <p>
+        The first photo or video timestamp recorded at the sunrise position, compared against
+        the official sunrise time for those coordinates and that date (sourced from
+        timeanddate.com), determines the arrival bonus. Camera clocks must be synced to accurate
+        network time before each expedition. Disputed timestamps default to 0 bonus points.
+      </p>
+    </div>
+
+    <div class="ornament-divider"><span>Weather Adversity</span></div>
+
+    <p class="section-subtitle">V. Weather Adversity</p>
+    <p>Self-assessed at the time of the expedition and supported by footage evidence.
+    A single point on this scale is selected per episode — these do not stack.</p>
+
+    <div class="table-container">
+      <div class="table-label">Weather Adversity Scale</div>
+      <table>
+        <thead>
+          <tr><th>Conditions</th><th>Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Perfect conditions — calm, comfortable, unremarkable morning</td><td class="td-score">0 pts</td></tr>
+          <tr><td>Notable conditions — significant cold, sustained wind, or unseasonable weather present but manageable</td><td class="td-score">+1 pt</td></tr>
+          <tr><td>Challenging conditions — precipitation (rain or snow), restricted visibility, or conditions requiring protective gear</td><td class="td-score">+2 pts</td></tr>
+          <tr><td>Severe conditions — expedition was genuinely at risk of abandonment; footage shows obvious environmental challenge</td><td class="td-score">+3 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Streak Bonus</span></div>
+
+    <p class="section-subtitle">VI. Consecutive Episode Streak</p>
+    <p>One bonus point is awarded for every four consecutive episodes published on schedule.
+    The streak resets to zero if an episode is missed or significantly delayed.
+    This is the smallest bonus in the system and the hardest to maintain.</p>
+
+    <div class="rule-box">
+      <div class="rule-box-title">Streak Definition</div>
+      <p>
+        "On schedule" means published within the established episode cadence for the current season.
+        If no cadence has been formally established, a streak requires episodes published no more
+        than 21 days apart. The streak counter is displayed on the website at all times.
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER IV ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter IV</p>
+      <h2 class="chapter-title">The Discovery Log</h2>
+      <p class="chapter-lore">
+        "You came for the sunrise. You stayed for the coyote. The ledger records both."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Discovery Log</strong> is the living record of every species, geological formation,
+      cultural site, and natural feature encountered across the series. Every first encounter
+      is an <strong>Unlock</strong>. Every Unlock adds points to the Zora Score of the episode
+      in which it occurs. Every Unlock is permanent — it cannot be erased from the record.
+    </p>
+    <p>
+      The Discovery Log functions as a growing world map of encounters. Over the life of the
+      series, it becomes a documentary record of the natural and human history witnessed during
+      the pursuit of Zora. This is where the game becomes something more than a game.
+    </p>
+
+    <div class="ornament-divider"><span>Discovery Categories</span></div>
+
+    <p class="section-subtitle">I. Four Discovery Categories</p>
+
+    <div class="table-container">
+      <div class="table-label">Discovery Category Reference</div>
+      <table>
+        <thead>
+          <tr><th>Category</th><th>Examples</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Wildlife</td>
+            <td class="td-dim">Birds, mammals, reptiles, amphibians, insects — any living fauna encountered and documented</td>
+          </tr>
+          <tr>
+            <td class="td-label">Flora</td>
+            <td class="td-dim">Notable, rare, or species-specific plants — a desert wildflower bloom, an old-growth specimen, an endemic plant outside its known range</td>
+          </tr>
+          <tr>
+            <td class="td-label">Geographic</td>
+            <td class="td-dim">Geological formations, water bodies, natural arches, caves, lava fields, slot canyons — features of the earth itself</td>
+          </tr>
+          <tr>
+            <td class="td-label">Cultural &amp; Historical</td>
+            <td class="td-dim">Petroglyphs, ruins, abandoned structures, ceremonial sites, mining history, indigenous land markers — evidence of human presence through time</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Rarity Tiers</span></div>
+
+    <p class="section-subtitle">II. Rarity Tiers and Point Values</p>
+    <p>
+      Every discovery is assigned a rarity tier at the time of logging. Tier assignment is based
+      on regional rarity, difficulty of encounter, and documentary significance. Point values
+      are fixed at the time of first unlock and cannot be changed retroactively.
+    </p>
+
+    <div class="table-container">
+      <div class="table-label">Rarity Tier System</div>
+      <table>
+        <thead>
+          <tr><th>Tier</th><th>First Unlock</th><th>Subsequent Finds</th><th>Wildlife Examples</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rarity-common">Common</span></td>
+            <td class="td-score">5 – 10 pts</td>
+            <td class="td-dim">No repeat scoring</td>
+            <td class="td-dim">Gambel's Quail, Desert Cottontail, Cactus Wren</td>
+          </tr>
+          <tr>
+            <td><span class="rarity-uncommon">Uncommon</span></td>
+            <td class="td-score">15 – 20 pts</td>
+            <td class="td-dim">No repeat scoring</td>
+            <td class="td-dim">Gila Woodpecker, Rock Wren, Greater Roadrunner, Javelina</td>
+          </tr>
+          <tr>
+            <td><span class="rarity-rare">Rare</span></td>
+            <td class="td-score">25 – 35 pts</td>
+            <td class="td-score">+1 pt per outing</td>
+            <td class="td-dim">Vermilion Flycatcher, Osprey, Bobcat, Desert Tortoise</td>
+          </tr>
+          <tr>
+            <td><span class="rarity-very-rare">Very Rare</span></td>
+            <td class="td-score">40 – 50 pts</td>
+            <td class="td-score">+1 pt per outing</td>
+            <td class="td-dim">Bald Eagle, Gila Monster, American Black Bear, Mountain Lion</td>
+          </tr>
+          <tr>
+            <td><span class="rarity-exceptional">Exceptional</span></td>
+            <td class="td-score">60 – 75 pts</td>
+            <td class="td-score">+1 pt per outing</td>
+            <td class="td-dim">Once-per-series encounters — rare enough that no list can anticipate them</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-box-title">The Repeat Rule</div>
+      <p>
+        Common and Uncommon discoveries score only on first encounter. Rare, Very Rare, and
+        Exceptional discoveries earn one additional point for each subsequent encounter,
+        provided the encounter occurs on a separate, distinct outing. Multiple encounters
+        during the same episode count as a single encounter.
+      </p>
+    </div>
+
+    <div class="ornament-divider"><span>Cultural &amp; Historical Scoring</span></div>
+
+    <p class="section-subtitle">III. Cultural and Historical Sites</p>
+    <p>
+      Cultural and historical discoveries are scored on significance rather than rarity tier.
+      The following scale applies to first encounter only. Subsequent visits to the same site
+      do not score additional points.
+    </p>
+
+    <div class="table-container">
+      <div class="table-label">Cultural &amp; Historical Discovery Scoring</div>
+      <table>
+        <thead>
+          <tr><th>Significance Level</th><th>Points</th><th>Examples</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Minor</td>
+            <td class="td-score">5 pts</td>
+            <td class="td-dim">Historical marker, pioneer grave, named but unremarkable landmark</td>
+          </tr>
+          <tr>
+            <td class="td-label">Notable</td>
+            <td class="td-score">10 pts</td>
+            <td class="td-dim">Intact ruins, mining camp, documented indigenous use site, named geographic landmark</td>
+          </tr>
+          <tr>
+            <td class="td-label">Significant</td>
+            <td class="td-score">15 pts</td>
+            <td class="td-dim">Petroglyph panels, ceremonial sites, pre-Columbian structures, sites of documented historical events</td>
+          </tr>
+          <tr>
+            <td class="td-label">Exceptional</td>
+            <td class="td-score">20 pts</td>
+            <td class="td-dim">UNESCO-adjacent significance, rare or previously undocumented sites, sites of major archaeological importance</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ornament-divider"><span>Example Unlock</span></div>
+
+    <p class="section-subtitle">IV. How an Unlock Is Logged</p>
+
+    <p>The following is an example of a properly logged discovery entry as it would appear in the Discovery Log:</p>
+
+    <div class="discovery-card">
+      <div class="discovery-icon">🦅</div>
+      <div class="discovery-content">
+        <div class="discovery-name">Vermilion Flycatcher</div>
+        <div class="discovery-scientific">Pyrocephalus rubinus · First Unlock</div>
+        <div class="discovery-meta">
+          <span class="meta-type">Wildlife</span>
+          <span class="meta-rarity">Rare Tier</span>
+          <span class="meta-pts">+30 pts</span>
+        </div>
+        <p style="margin-top:0.75rem; font-size:0.9rem; color:var(--mist-dim);">
+          Spotted perched on a willow branch at the northwest wash, Butcher Jones Recreation Site.
+          The male's scarlet-and-brown plumage caught the first golden light at 6:24 AM.
+          One of the most visually striking birds in the Sonoran riparian corridor.
+          Episode 02 — "The Habitat Flip."
+        </p>
+      </div>
+    </div>
+
+    <div class="rule-box">
+      <div class="rule-box-title">Documentation Standard</div>
+      <p>
+        A discovery is only eligible for points if it is documented with photographic or video
+        evidence sufficient for confident identification. Blurry or inconclusive footage may be
+        supported by audio recording (bird calls, etc.) in combination. The standard is:
+        could a qualified naturalist confirm this identification from the footage provided?
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER V ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter V</p>
+      <h2 class="chapter-title">The Records Board</h2>
+      <p class="chapter-lore">
+        "Records exist to be broken. That is the only reason the board is kept."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Records Board</strong> tracks the all-time bests across a defined set of
+      categories. Unlike the Eos Index leaderboard (which ranks all episodes by sunrise quality)
+      and the Zora Score leaderboard (which ranks all episodes by total score), Records track
+      specific achievements that exist outside the scoring system.
+    </p>
+    <p>
+      A record, once set, belongs to the episode that set it. When a record is broken, the
+      previous holder is noted. Records tell the story of the series' ambition over time —
+      they are the chronicle of how far the pursuit has ranged.
+    </p>
+
+    <div class="table-container">
+      <div class="table-label">Records Board — Active Categories</div>
+      <table>
+        <thead>
+          <tr><th>Record Category</th><th>Current Holder</th><th>Value</th><th>Episode</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">Highest Eos Index Score</td>
+            <td class="td-dim">Ocean cliff silhouette (calibration)</td>
+            <td class="td-score">85</td>
+            <td class="td-dim">Pre-season calibration</td>
+          </tr>
+          <tr>
+            <td class="td-label">Highest Zora Score</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">Season One, Episode One</td>
+          </tr>
+          <tr>
+            <td class="td-label">Highest Elevation Reached</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Greatest Travel Distance</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Most Discoveries in One Episode</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Best Water View</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Hardest Road Travelled</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Most Unusual Location</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Earliest Pre-Dawn Arrival</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Longest Consecutive Streak</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Furthest International Expedition</td>
+            <td class="td-dim">—</td>
+            <td class="td-dim">Unset</td>
+            <td class="td-dim">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">Total Discovery Log Entries</td>
+            <td class="td-dim">Running total — not a record per episode</td>
+            <td class="td-dim">0</td>
+            <td class="td-dim">Season One begins</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <div class="rule-box-title">Adding New Records</div>
+      <p>
+        New record categories may be added at the start of any new season, or mid-season if a
+        sufficiently notable achievement occurs that has no existing category. New categories
+        must be announced on-camera before the relevant episode's record can be claimed.
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER VI ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter VI</p>
+      <h2 class="chapter-title">The Leveling System</h2>
+      <p class="chapter-lore">
+        "Every six outings, if the player has shown up and done the work, something changes. A new tool arrives. A new range becomes possible. The game expands."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Leveling System</strong> is the long arc of the game. Where the Eos Index measures
+      a single dawn and the Zora Score measures a single expedition, the Level measures
+      the cumulative weight of all expeditions — every predawn alarm, every cold trail,
+      every sunrise logged in the record.
+    </p>
+    <p>
+      Every level earned unlocks a specific piece of equipment. This is not incidental.
+      The equipment unlocks are the game's way of justifying the infrastructure of a growing
+      production — the player earns the drone, the player earns the gimbal, the player earns
+      the professional microphone. The better the tools, the higher the potential Eos Index.
+      The higher the Eos Index, the faster the leveling. The loop is intentional.
+    </p>
+
+    <div class="ornament-divider"><span>Calibration</span></div>
+
+    <p class="section-subtitle">I. The Math</p>
+
+    <p>Based on the expected average Zora Score per expedition:</p>
+
+    <div class="table-container">
+      <div class="table-label">Expected Scoring Ranges</div>
+      <table>
+        <thead>
+          <tr><th>Expedition Type</th><th>Expected Zora Score</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-dim">Local — nearby, moderate trail, average sunrise, few discoveries</td><td class="td-score">~55 – 70</td></tr>
+          <tr><td class="td-dim">Standard — regional travel, meaningful trail, solid sunrise, several unlocks</td><td class="td-score">~70 – 90</td></tr>
+          <tr><td class="td-dim">Strong — remote destination, significant elevation, exceptional sunrise, multiple unlocks</td><td class="td-score">~90 – 120</td></tr>
+          <tr><td class="td-dim">Exceptional — maximum effort, rare discoveries, near-perfect sunrise</td><td class="td-score">~120 – 175</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>At an average of approximately <strong class="highlight-amber">80 points per expedition</strong>,
+    each level requires roughly <strong class="highlight-amber">6 outings</strong> to clear.
+    Thresholds increase gradually at higher levels to reflect the player's growing capability and range.</p>
+
+    <div class="ornament-divider"><span>The Full Level Table</span></div>
+
+    <p class="section-subtitle">II. Level Progression Table</p>
+
+    <div class="table-container">
+      <div class="table-label">Finding Zora — Level Progression</div>
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th>Lvl</th>
+            <th>Title</th>
+            <th>Pts to Reach</th>
+            <th>Cumulative</th>
+            <th>Gear Unlocked</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-score">0</td>
+            <td><span class="level-badge badge-scout">Scout</span></td>
+            <td class="td-dim">Starting rank</td>
+            <td class="td-score">0</td>
+            <td class="td-dim">Samsung S25 Ultra · existing kit</td>
+          </tr>
+          <tr>
+            <td class="td-score">1</td>
+            <td><span class="level-badge badge-1">Trailhead</span></td>
+            <td class="td-score">480</td>
+            <td class="td-score">480</td>
+            <td class="td-dim">DJI Mic 2 + Joby GorillaPod 3K</td>
+          </tr>
+          <tr>
+            <td class="td-score">2</td>
+            <td><span class="level-badge badge-2">Desert Fox</span></td>
+            <td class="td-score">500</td>
+            <td class="td-score">980</td>
+            <td class="td-dim">DJI OM 7 Gimbal</td>
+          </tr>
+          <tr>
+            <td class="td-score">3</td>
+            <td><span class="level-badge badge-3">Dawnchaser</span></td>
+            <td class="td-score">520</td>
+            <td class="td-score">1,500</td>
+            <td class="td-dim">GoPro Hero 13 Black</td>
+          </tr>
+          <tr>
+            <td class="td-score">4</td>
+            <td><span class="level-badge badge-4">First Light</span></td>
+            <td class="td-score">540</td>
+            <td class="td-score">2,040</td>
+            <td class="td-dim">DJI Mini 4 Pro — the drone unlocks</td>
+          </tr>
+          <tr>
+            <td class="td-score">5</td>
+            <td><span class="level-badge badge-5">Horizon Hunter</span></td>
+            <td class="td-score">560</td>
+            <td class="td-score">2,600</td>
+            <td class="td-dim">Vortex Monocular + full optics kit</td>
+          </tr>
+          <tr>
+            <td class="td-score">6</td>
+            <td><span class="level-badge badge-6">Zora Seeker</span></td>
+            <td class="td-score">600</td>
+            <td class="td-score">3,200</td>
+            <td class="td-dim">DJI Osmo Action 5 Pro</td>
+          </tr>
+          <tr>
+            <td class="td-score">7</td>
+            <td><span class="level-badge badge-7">Dawn Keeper</span></td>
+            <td class="td-score">650</td>
+            <td class="td-score">3,850</td>
+            <td class="td-dim">Insta360 X4</td>
+          </tr>
+          <tr>
+            <td class="td-score">8</td>
+            <td><span class="level-badge badge-8">Eos Adept</span></td>
+            <td class="td-score">700</td>
+            <td class="td-score">4,550</td>
+            <td class="td-dim">Premium tripod + slider system</td>
+          </tr>
+          <tr>
+            <td class="td-score">9</td>
+            <td><span class="level-badge badge-9">Zora Master</span></td>
+            <td class="td-score">800</td>
+            <td class="td-score">5,350</td>
+            <td class="td-dim">TBD — community vote or personal milestone</td>
+          </tr>
+          <tr>
+            <td class="td-score">10</td>
+            <td><span class="level-badge badge-10">Finding Zora</span></td>
+            <td class="td-score">1,000</td>
+            <td class="td-score">6,350</td>
+            <td class="td-dim">The perfect sunrise. The journey was the reward.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lore-block">
+      <p>
+        Level 10 — "Finding Zora" — carries no gear unlock. The equipment was the means.
+        The perfect sunrise was always the end. Whether the player reaches it, or whether
+        the game continues indefinitely as the horizon keeps retreating, is part of the chronicle.
+        That ambiguity is not a flaw in the design.
+      </p>
+    </div>
+
+    <div class="ornament-divider"><span>Level-Up Ceremony</span></div>
+
+    <p class="section-subtitle">III. The Level-Up Moment</p>
+    <p>
+      When a level threshold is crossed, the level-up is acknowledged in the episode where
+      the cumulative Zora Score first clears the threshold. This occurs during <em>The Verdict</em>
+      segment at the end of the episode — approximately 90 seconds of dedicated screen time:
+    </p>
+    <ol>
+      <li>Current cumulative Zora Score displayed</li>
+      <li>Threshold crossed, announced on-camera</li>
+      <li>New level title revealed</li>
+      <li>Gear unlock announced and briefly justified — why this tool, why at this level</li>
+      <li>Brief look ahead: what the new gear enables for future expeditions</li>
+    </ol>
+    <p>
+      The website updates the level display immediately upon episode publication.
+      A progress bar toward the next threshold is visible on the home page at all times.
+    </p>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ CHAPTER VII ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Chapter VII</p>
+      <h2 class="chapter-title">Field Protocol</h2>
+      <p class="chapter-lore">
+        "The protocol exists because the desert does not wait for the unready. Set your clock the night before."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p>
+      The <strong>Field Protocol</strong> governs the structure of every expedition. It is not a
+      rigid script — the wilderness does not honor scripts — but a framework that ensures
+      scoring integrity, consistent production quality, and the best possible chance of
+      witnessing something worth recording.
+    </p>
+
+    <div class="ornament-divider"><span>Pre-Expedition</span></div>
+
+    <p class="section-subtitle">I. The Night Before</p>
+    <ol>
+      <li><strong>Confirm sunrise time</strong> for the target GPS coordinates and date (timeanddate.com)</li>
+      <li><strong>Check weather forecast</strong> — note cloud cover probability (moderate coverage optimizes Eos Index; clear is moderate; full overcast is poor)</li>
+      <li><strong>Check moon phase</strong> — a dark moon window produces better pre-dawn ambient footage</li>
+      <li><strong>Review eBird</strong> recent sightings for the target location — know what's possible before arrival</li>
+      <li><strong>Charge all batteries</strong> — phone, GoPro, drone, microphone, headlamp</li>
+      <li><strong>Lay out gear and clothing</strong> — nothing searched for at 4AM</li>
+      <li><strong>Set two alarms</strong> — one at wake time, one five minutes later</li>
+    </ol>
+
+    <div class="ornament-divider"><span>Departure</span></div>
+
+    <p class="section-subtitle">II. Departing the Vehicle</p>
+    <ol>
+      <li><strong>Sync all device clocks</strong> — GoPro via Quik app, drone via DJI Fly app, phone via network time. This is the single most important technical step of the expedition.</li>
+      <li><strong>Activate Merlin Bird ID</strong> — begin passive sound logging before stepping out of the vehicle</li>
+      <li><strong>Record a cold open</strong> — minimum 30 seconds to camera: location, current time, target sunrise time, current leaderboard position</li>
+      <li><strong>Note weather conditions</strong> on camera — this supports Weather Adversity scoring in post</li>
+    </ol>
+
+    <div class="ornament-divider"><span>The Discovery Window</span></div>
+
+    <p class="section-subtitle">III. Pre-Dawn Discovery Window</p>
+    <p>The period between arrival and sunrise is the primary discovery window.
+    Wildlife and features encountered here score as the episode's discovery points.</p>
+
+    <ol>
+      <li>Move slowly and deliberately — high-movement approaches clear wildlife from the area</li>
+      <li>Photograph or video every potential discovery before attempting identification</li>
+      <li>Log iNaturalist and Merlin findings in real time — do not rely on memory</li>
+      <li>Note GPS coordinates for significant geographic features</li>
+      <li>Reach the designated sunrise position with a minimum of 30 minutes remaining before sunrise</li>
+    </ol>
+
+    <div class="ornament-divider"><span>The Sunrise</span></div>
+
+    <p class="section-subtitle">IV. Sunrise Protocol</p>
+    <ol>
+      <li><strong>Lock down the primary camera</strong> on tripod or GorillaPod, facing east, minimum 20 minutes before sunrise</li>
+      <li><strong>Set manual settings</strong> — white balance locked at 4000K, 24fps, ISO at minimum viable, exposure locked on sky near horizon</li>
+      <li><strong>Begin timelapse or long-form video</strong> — do not interrupt this recording for any reason short of equipment failure</li>
+      <li>Use secondary cameras (GoPro, drone) for supplementary coverage while primary runs</li>
+      <li>Make a brief audio note of current field assessment of sky conditions — this is your real-time Eos Index preliminary score</li>
+    </ol>
+
+    <div class="ornament-divider"><span>The Verdict</span></div>
+
+    <p class="section-subtitle">V. The Verdict Segment</p>
+    <p>The final segment of every episode. Approximately 60–90 seconds. Delivered to camera
+    in the field or in post, but field delivery is preferred. Contains the following in order:</p>
+
+    <ol>
+      <li><strong>Eos Index breakdown</strong> — Sky, Setting, Conditions scores stated individually with brief justification</li>
+      <li><strong>Eos Index total</strong> — where it sits on the all-time leaderboard</li>
+      <li><strong>Discovery summary</strong> — list all unlocks from this episode, point values, running total</li>
+      <li><strong>Travel and conditions points</strong> — brief summary</li>
+      <li><strong>Zora Score total</strong> — this episode's final score</li>
+      <li><strong>Cumulative Zora Score</strong> — running total, progress toward next level</li>
+      <li><strong>Level-up announcement</strong> — if applicable, see Chapter VI</li>
+      <li><strong>Records broken</strong> — if applicable</li>
+    </ol>
+
+    <div class="rule-box">
+      <div class="rule-box-title">On Disputed Scores</div>
+      <p>
+        The player is the sole authority on all scores. No episode score may be contested
+        by viewers — the scoring system is documented and transparent, but the player's
+        field assessment is final. However, errors in arithmetic may be corrected
+        in the following episode's opening segment, with a note in the record.
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ APPENDIX A ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Appendix A</p>
+      <h2 class="chapter-title">Quick Reference Card</h2>
+      <p class="chapter-lore">
+        "For the field. Laminate if needed."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+
+    <div class="quick-ref-grid">
+      <div class="quick-ref-block">
+        <div class="quick-ref-title">Eos Index — Max 100</div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Sky · Color Intensity</span><span class="quick-ref-val">/ 20</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Sky · Cloud Engagement</span><span class="quick-ref-val">/ 15</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Sky · Horizon Definition</span><span class="quick-ref-val">/ 15</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Setting · Foreground</span><span class="quick-ref-val">/ 15</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Setting · Location Uniqueness</span><span class="quick-ref-val">/ 15</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Conditions · Effort</span><span class="quick-ref-val">/ 10</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Conditions · Environment</span><span class="quick-ref-val">/ 10</span></div>
+      </div>
+
+      <div class="quick-ref-block">
+        <div class="quick-ref-title">Zora Score Additions</div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Travel distance</span><span class="quick-ref-val">0–5 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Off-pavement bonus</span><span class="quick-ref-val">+1</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">High-clearance bonus</span><span class="quick-ref-val">+1</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Alt. transport bonus</span><span class="quick-ref-val">+1</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">International bonus</span><span class="quick-ref-val">+3</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Elevation gain</span><span class="quick-ref-val">0–4 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Pre-dawn arrival</span><span class="quick-ref-val">0–2 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Weather adversity</span><span class="quick-ref-val">0–3 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Streak bonus (per 4 ep)</span><span class="quick-ref-val">+1</span></div>
+      </div>
+
+      <div class="quick-ref-block">
+        <div class="quick-ref-title">Discovery Point Values</div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-common">Common · first</span><span class="quick-ref-val">5–10 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-uncommon">Uncommon · first</span><span class="quick-ref-val">15–20 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-rare">Rare · first</span><span class="quick-ref-val">25–35 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-rare">Rare · repeat</span><span class="quick-ref-val">+1 pt</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-very-rare">Very Rare · first</span><span class="quick-ref-val">40–50 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-very-rare">Very Rare · repeat</span><span class="quick-ref-val">+1 pt</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-exceptional">Exceptional · first</span><span class="quick-ref-val">60–75 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key rarity-exceptional">Exceptional · repeat</span><span class="quick-ref-val">+1 pt</span></div>
+      </div>
+
+      <div class="quick-ref-block">
+        <div class="quick-ref-title">Level Thresholds</div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 1 Trailhead</span><span class="quick-ref-val">480 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 2 Desert Fox</span><span class="quick-ref-val">980 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 3 Dawnchaser</span><span class="quick-ref-val">1,500 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 4 First Light</span><span class="quick-ref-val">2,040 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 5 Horizon Hunter</span><span class="quick-ref-val">2,600 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 6 Zora Seeker</span><span class="quick-ref-val">3,200 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 7 Dawn Keeper</span><span class="quick-ref-val">3,850 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 8 Eos Adept</span><span class="quick-ref-val">4,550 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 9 Zora Master</span><span class="quick-ref-val">5,350 pts</span></div>
+        <div class="quick-ref-item"><span class="quick-ref-key">Lv 10 Finding Zora</span><span class="quick-ref-val">6,350 pts</span></div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-label">Complete Formula — Reference</div>
+      <div class="formula-text">
+        <span class="f-var">Zora Score</span>
+        <span class="f-op"> = </span>
+        <span class="f-teal">Eos Index</span>
+        <span class="f-op"> + Discovery + Travel + Elevation + Pre-Dawn + Weather + Streak</span>
+        <span class="f-max">Eos Index max: 100 · Theoretical Zora Score max: ~215 · Perfect Eos Index of 100 = Finding Zora</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer-lg"></div>
+
+  <!-- ═══ APPENDIX B ═══ -->
+  <div class="chapter-opener" style="margin-left:-2rem; margin-right:-2rem;">
+    <div class="page">
+      <p class="chapter-number">Appendix B</p>
+      <h2 class="chapter-title">Glossary of Terms</h2>
+      <p class="chapter-lore">
+        "Know the language of the pursuit."
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+
+    <div class="glossary-term">
+      <div class="glossary-word">Blue Hour</div>
+      <div class="glossary-def">The 20–30 minute window before sunrise when the sky transitions from deep navy to pale gold. Often more cinematic than sunrise itself. The primary pre-positioning window for the Eos Index locked-down shot.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Calibration Session</div>
+      <div class="glossary-def">The pre-season scoring exercise in which existing photographs and footage are scored using the Eos Index rubric to establish leaderboard benchmarks and test rubric consistency before Season One begins.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Cumulative Zora Score</div>
+      <div class="glossary-def">The running total of all Zora Scores across all episodes. Determines the player's current Level. Displayed on the website at all times.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Discovery Window</div>
+      <div class="glossary-def">The period between arrival at a location and official sunrise time. The primary window for wildlife encounters and feature discovery. Extended pre-dawn arrivals produce longer discovery windows.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Eos Index</div>
+      <div class="glossary-def">The pure sunrise quality score for a single episode. Scored across three components (Sky, Setting, Conditions) with a maximum of 100 points. Named for Eos, the Greek goddess of dawn.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Episode Score</div>
+      <div class="glossary-def">Synonymous with Zora Score for a specific episode. Each episode produces both an Eos Index and a Zora Score.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Exceptional Tier</div>
+      <div class="glossary-def">The highest rarity tier in the Discovery Log. Encounters so rare that no definitive list can anticipate them. Worth 60–75 points on first unlock. Examples may only become clear in the moment of encounter.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Finding Zora</div>
+      <div class="glossary-def">The name of the flagship series within The Zora Files channel. Also the name of Level 10 — the theoretical culmination of the pursuit. Also the show's ultimate objective: a perfect 100 Eos Index score.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">First Unlock</div>
+      <div class="glossary-def">The first confirmed encounter with a species, feature, or cultural site that has not previously appeared in the Discovery Log. Earns the full point value for that rarity tier. Each species, site, or feature can only produce one First Unlock.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Home Base</div>
+      <div class="glossary-def">Queen Creek / Chandler Heights, Arizona. The player's primary residence and the geographic origin point for travel distance calculations when no overnight location has been established.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">The Level-Up Moment</div>
+      <div class="glossary-def">The on-camera announcement at the end of an episode when a Level threshold is crossed. Includes new title reveal, gear unlock announcement, and forward-looking commentary on what the new gear enables.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">The Records Board</div>
+      <div class="glossary-def">The all-time best achievements tracking board, separate from the Eos Index and Zora Score leaderboards. Tracks non-scoring achievements such as highest elevation, longest streak, and most unusual location.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">The Verdict</div>
+      <div class="glossary-def">The closing segment of every Finding Zora episode. Approximately 60–90 seconds. Contains the complete score breakdown, discovery summary, level progress update, and any records broken.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">The Zora Files</div>
+      <div class="glossary-def">The YouTube channel and brand that houses the Finding Zora series and all related content. The full operation.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Unlock</div>
+      <div class="glossary-def">A first confirmed encounter with a species, geographic feature, or cultural site. Once unlocked, an entry appears permanently in the Discovery Log.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">The Verdict</div>
+      <div class="glossary-def">The structured closing segment of every episode where all scores are announced, discoveries logged, and progress updated.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Zora</div>
+      <div class="glossary-def">The Slavic word for dawn. The name of the pursuit, the channel, the series, and the theoretical destination at the end of the game. A perfect sunrise. The one that scores 100.</div>
+    </div>
+
+    <div class="glossary-term">
+      <div class="glossary-word">Zora Score</div>
+      <div class="glossary-def">The complete expedition score for a single episode. The Eos Index is the foundation; travel points, elevation points, discovery points, pre-dawn arrival bonus, weather adversity, and streak bonus stack on top. Theoretical maximum: approximately 215 points.</div>
+    </div>
+
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="page-footer">
+    <p>The Zora Files · Finding Zora Official Rulebook · First Edition · Season One</p>
+    <p style="margin-top:0.5rem;">thezorafiles.com · @TheZoraFiles · The pursuit of the perfect dawn</p>
+    <p style="margin-top:0.5rem; opacity:0.3;">Every sunrise belongs to someone. This is the record of one.</p>
+  </div>
+
+</div><!-- end .page -->
+
+</body>
+</html>
