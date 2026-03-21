@@ -29,7 +29,7 @@ This folder holds platform-specific content, assets, and notes for each social c
 | YouTube | @TheZoraFiles | Secured |
 | Instagram | @thezorafiles | Secured |
 | TikTok | @thezorafiles | Secured |
-| X/Twitter | @thezorafiles | Pending registration |
+| X/Twitter | @thezorafiles | Secured |
 
 ## Bio consistency
 All platforms should use the same core bio language. Draft it once, adapt the length per platform. Core message: sunrise-chasing desert series, scored with the Eos Index, based in Arizona.
