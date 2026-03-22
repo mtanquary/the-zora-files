@@ -86,6 +86,7 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 /discovery-log      → Species + feature unlocks — every discovery with point value and episode
 /records            → All-time bests — highest elevation, best road, best water view, etc.
 /episodes           → Episode archive with scores and locations
+/rules              → How it works — scoring, leveling, streaks, discoveries
 /about              → The concept, the host, the mission
 ```
 
@@ -98,19 +99,19 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 
 ---
 
-## Scoring System — Two Named Components
+## Scoring System — Three Pillars
 
 ### How they relate
 ```
-ZORA SCORE = Eos Index + Discovery Points + Travel Points + Conditions Points
+ZORA SCORE = Eos Index + Effort Rating + Discovery Points
 ```
 - **Eos Index** is the pure sunrise quality score (0–100). Photography-focused viewers follow this.
+- **Effort Rating** is a single post-expedition assessment of journey difficulty (0–20 pts, 5 levels).
+- **Discovery Points** are earned from wildlife, flora, geographic, and cultural encounters logged during the expedition.
 - **Zora Score** is the full episode score. Adventure-focused viewers follow this.
-- Both are displayed every episode. The Eos Index is the largest single contributor to the Zora Score.
-- Theoretical maximum Zora Score: ~215 points (perfect episode across all categories).
-- The Zora Score is under active reconsideration. A visual effort rating system may replace or supplement the numeric Zora Score on the Expedition Share Card. No final decision made.
+- Both the Eos Index and Zora Score are displayed every episode. The Eos Index is the largest single contributor.
 
-> **Two scoring systems, used precisely.** The Eos Index scores sunrise quality only (0–100). The Zora Score is the full episode score (~215 max). Never conflate them or rename them.
+> **Two scores, displayed precisely.** The Eos Index scores sunrise quality only (0–100). The Zora Score is the full episode score (Eos Index + Effort + Discovery). Never conflate them or rename them.
 
 ---
 
@@ -132,7 +133,7 @@ ZORA SCORE = Eos Index + Discovery Points + Travel Points + Conditions Points
 #### Conditions — 20 points
 | Component | Max | Description |
 |-----------|-----|-------------|
-| Effort to reach | 10 | Roadside pull-off = 1–2; serious pre-dawn hike = 8–10 |
+| Access difficulty | 10 | Drive-up viewpoint = 1–2; technical terrain or pre-dawn scramble to reach the vantage = 8–10 |
 | Weather/environmental challenge | 10 | Perfect calm = 3–4; dramatic or difficult conditions = 7–10 |
 
 ### Scoring philosophy
@@ -145,101 +146,50 @@ An AI-assisted scoring prompt is a confirmed planned feature for solo players. E
 
 ---
 
-## Zora Score — Additional Points (stacks on top of Eos Index)
+## Effort Rating — Journey Difficulty (0–20 pts)
 
-### Travel Distance
-| Distance | Points |
-|----------|--------|
-| 0–5 mi | 0 |
-| 6–15 mi | 1 |
-| 16–30 mi | 2 |
-| 31–75 mi | 3 |
-| 76–150 mi | 4 |
-| 150+ mi | 5 |
+A single post-expedition assessment of the total difficulty of the journey. Replaces granular tracking of travel distance, elevation, weather, and timing with one honest judgment call.
 
-### Travel Difficulty Bonuses (stackable)
-| Condition | Points |
-|-----------|--------|
-| At least 1 mile off-pavement | +1 |
-| At least 1 mile requiring high-clearance vehicle | +1 |
-| Any mode other than car/truck (boat, plane, train, etc.) | +1 |
-| International — outside continental US | +3 |
+| Level | Label | Points | What this looks like |
+|-------|-------|--------|---------------------|
+| 1 | Roadside | 0 | Drove to a pulloff, watched from beside the vehicle |
+| 2 | Trail | 5 | Deliberate outing with a real hike, a meaningful drive, or both |
+| 3 | Summit | 10 | Serious pre-dawn ascent, long approach, significant elevation |
+| 4 | Remote | 15 | Real logistics: long travel, off-pavement, backcountry, harsh weather |
+| 5 | Expedition | 20 | Full commitment: international travel, multi-day approach, extreme conditions |
 
-### Elevation Gain
-| Gain | Points |
-|------|--------|
-| 0–200 ft | 0 |
-| 201–500 ft | 1 |
-| 501–1,000 ft | 2 |
-| 1,001–2,000 ft | 3 |
-| 2,000+ ft | 4 |
+The details that inform the rating (distance driven, elevation gained, arrival time, weather) are noted in the expedition log for context but are not individually scored.
 
-### Pre-Dawn Arrival Bonus
-| Arrival before sunrise | Points |
-|----------------------|--------|
-| 30–59 min early | 1 |
-| 60+ min early | 2 |
-Verified by camera metadata timestamp.
+---
 
-### Weather Adversity
-| Conditions | Points |
-|-----------|--------|
-| Perfect calm morning | 0 |
-| Notable cold or wind | 1 |
-| Rain or snow present | 2 |
-| Genuinely difficult — nearly turned back | 3 |
+## Consecutive Episode Streak
 
-### Discovery Points
-First unlock by rarity tier:
-| Tier | First unlock | Subsequent finds |
-|------|-------------|-----------------|
-| Common | 5–10 pts | 0 (no repeat scoring) |
-| Uncommon | 15–20 pts | 0 (no repeat scoring) |
-| Rare | 25–35 pts | 1 pt each (separate outings only) |
-| Very rare | 40–50 pts | 1 pt each (separate outings only) |
-| Exceptional | 60–75 pts | 1 pt each (separate outings only) |
-
-Discovery categories:
-- **Wildlife** — birds, mammals, reptiles, insects
-- **Plants** — notable or rare species
-- **Geographic** — formations, water bodies, elevation records
-- **Cultural/Historical** — petroglyphs, ruins, abandoned structures, mining history (5–20 pts by significance)
-
-### Human History Discovery (own category)
-Ancient or significant human history sites — separate from wildlife/plant unlocks.
-| Significance | Points |
-|-------------|--------|
-| Minor historical marker | 5 |
-| Notable site (ruins, mining camp) | 10 |
-| Significant site (petroglyphs, ceremonial) | 15–20 |
-
-### Consecutive Episode Streak Bonus
-+1 point for every 4 consecutive episodes published on schedule. Rewards discipline.
-
-### Current leaderboard (from calibration shots)
-
-| Rank | Location | Score | Notes |
-|------|----------|-------|-------|
-| 1 | Ocean cliff silhouette | 85 | Series benchmark — open ocean, coastal cliff hike |
-| 2 | Mesa canyon starburst | 73 | Mesa silhouettes framing sun through saddle |
-| 3 | Airport tarmac | 67 | Near-perfect sky, zero effort — scoring system working as intended |
-| 4 | Desert wildflowers | 62 | Sand verbena foreground, golden sunburst |
-| 5 | Saguaro silhouette | 60 | Single saguaro, clean gradient, mountain backdrop |
-| 6 | Desert saguaro trail | 58 | Rocky trail leading lines, strong silhouettes |
-| 7 | Sandy wash road | 54 | Ground-level composition, muted amber haze |
-| 8 | Ponderosa pine forest | 53 | Forest blocks sky — high setting, penalized sky |
-| 9 | Suburban crepuscular | 50 | Spectacular rays, power lines and rooftops hurt it |
-| 9 | High desert silhouette | 50 | Elegant blush gradient, minimalist |
-| 11 | Riparian canal | 45 | Suburban houses visible in background |
+The streak is earned by completing all 6 outings for a level within 6 calendar weeks. It is a **visual honor only** — the earned medallion gains a sunburst crown (permanently distinguishing it from a non-streak medallion), and a gold bar appears on the expedition share card. The streak does not add points to the Zora Score.
 
 ---
 
 ## Level-Up System — Medallion Progression
 
 ### Philosophy
-Leveling is triggered by participation, not performance. Each level requires exactly 6 completed excursions. Points and scores do not gate progression — showing up does. This keeps the system accessible while rewarding consistency.
+Leveling is driven purely by participation. Each level requires 6 completed expeditions — score has no effect on progression. Show up, do the work, level up.
 
 Level 10 "Finding Zora" is the show's narrative endpoint. Every episode, every scored sunrise, every earned medallion is a step toward it.
+
+### Level Thresholds
+
+| Level | Title | Expeditions required |
+|-------|-------|---------------------|
+| 0 | Scout | 0 (starting rank) |
+| 1 | Trailhead | 6 |
+| 2 | Desert Fox | 12 |
+| 3 | Dawnchaser | 18 |
+| 4 | First Light | 24 |
+| 5 | Horizon Hunter | 30 |
+| 6 | Zora Seeker | 36 |
+| 7 | Dawn Keeper | 42 |
+| 8 | Eos Adept | 48 |
+| 9 | Zora Master | 54 |
+| 10 | Finding Zora | 60 |
 
 ### The Medallion
 
@@ -248,7 +198,7 @@ Each of the 10 earned levels (1–10) has a unique medallion. Scout (Level 0) ha
 - A circular coin rendered in 3D with depth, lighting, and a distinct metallic hue
 - Six recessed sundog-shaped gem slots around the edge
 - A ghost impression of the level emblem engraved on the face when empty
-- Gems fill one at a time as excursions are completed
+- Gems fill one at a time as the player progresses toward the next level threshold
 - On the 6th gem: the medallion "awakens" — the emblem fully engraves, the coin glistens, an achievement sound plays
 - Streak bonus (all 6 outings within 6 weeks): a sunburst crown of rays appears outside the coin edge with its own reveal animation and sound — a visually unmistakable distinction from a base-completion medallion
 
@@ -280,24 +230,8 @@ Each level has a distinct metallic hue and a matched gemstone color:
 
 **Finding Zora (Level 10):** Categorically different from all others — white gold and diamond. The visual endpoint of the arc.
 
-### Level Titles (confirmed final)
-
-| Level | Title |
-|-------|-------|
-| 0 | Scout |
-| 1 | Trailhead |
-| 2 | Desert Fox |
-| 3 | Dawnchaser |
-| 4 | First Light |
-| 5 | Horizon Hunter |
-| 6 | Zora Seeker |
-| 7 | Dawn Keeper |
-| 8 | Eos Adept |
-| 9 | Zora Master |
-| 10 | Finding Zora |
-
 ### Notes
-- No cumulative point thresholds. 6 outings = level up, period.
+- Level progression is driven by expedition count (6 outings per level) — score does not affect leveling
 - Level-up moments get 90 seconds of dedicated on-camera time at episode end
 - Streak bonus requires all 6 outings within 6 calendar weeks
 - Virtual display case on website shows all earned medallions
@@ -311,12 +245,6 @@ Each level has a distinct metallic hue and a matched gemstone color:
 Badges replace gear unlocks as sub-objectives. Badge collection is a secondary goal alongside medallion progression. The log tracks when items are recorded; badges represent collection achievement milestones. Full badge structure is TBD.
 
 > **Gear unlocks removed.** The original level-up table with gear unlock rewards has been superseded by the medallion + badge system. The equipment section of this document remains as a planning reference but is no longer tied to level gates.
-
----
-
-## Leaderboard
-
-The leaderboard tracks top Eos Index scores. It is a record board — documentary, not adversarial. The framing is "these are the scores that have been earned" not a competitive ranking. Group play is each player scoring independently; there is no head-to-head mechanic.
 
 ---
 
@@ -341,10 +269,11 @@ A single shareable visual artifact generated per episode. Tells the whole story 
 - Scout (Level 0) shows the Scout starting token
 - When actual medallion artwork is finalized, it replaces the canvas-drawn placeholder at icon size
 
-### Open questions (not yet decided)
-- Whether weather adversity in the stats strip is redundant with the effort level indicator
-- Whether discovery count should appear in the stats strip
-- Final form of the Zora Score on the card — a visual effort rating may replace or accompany the numeric score
+### Scoring on card
+- The Eos Index is the primary score displayed (large teal number)
+- The Effort Rating is shown via 5 sundog shapes (filled = effort level) + label
+- The Zora Score is not displayed as a separate number on the card — the Eos Index and effort sundogs tell the story visually
+- Stats strip (elevation, distance, pre-dawn, conditions) provides contextual flavor, not scoring inputs
 
 ---
 
@@ -383,16 +312,22 @@ Each player scores independently. No exceptions. Group outings are social, not m
 
 ---
 
-## Records Board (ongoing)
+## Records Board & Leaderboard
+
+The leaderboard tracks top Eos Index scores. It is a record board — documentary, not adversarial. The framing is "these are the scores that have been earned," not a competitive ranking. Group play is each player scoring independently; there is no head-to-head mechanic.
+
+### Record categories
 
 | Record | Current holder | Score/Value | Episode |
 |--------|---------------|-------------|---------|
-| Best Eos Index score | Ocean cliff | 85 | Calibration |
-| Highest elevation | TBD | — | — |
-| Hardest road travelled | TBD | — | — |
-| Best water view | TBD | — | — |
+| Highest Eos Index score | TBD | — | — |
+| Highest Zora Score | TBD | — | — |
+| Most discoveries in one expedition | TBD | — | — |
 | Most unusual location | TBD | — | — |
-| Most species in one episode | TBD | — | — |
+| Longest consecutive streak | TBD | — | — |
+| Total Discovery Log entries | — | 0 | — |
+
+New record categories may be added as the pursuit evolves (e.g., highest elevation, furthest expedition).
 
 ---
 
@@ -403,7 +338,7 @@ Each player scores independently. No exceptions. Group outings are social, not m
 2. **The approach** — pre-dawn travel, road conditions, gear talk lives here naturally
 3. **Discovery window** — dark-to-dawn wildlife and feature hunting
 4. **The sunrise** — camera locked down, scoring live
-5. **The verdict** — score breakdown, leaderboard update, 60–90 sec max
+5. **The verdict** — Eos Index breakdown, effort rating, discoveries, Zora Score total, leaderboard update, 60–90 sec max
 
 ### Naming convention
 - `S01E01 — "The Benchmark" — Lost Dutchman SP`
@@ -457,11 +392,11 @@ Each player scores independently. No exceptions. Group outings are social, not m
 2. Check weather forecast — look for cloud cover (good for scoring) vs. clear (moderate sky score)
 3. Check moon phase — dark moon = better pre-dawn shots
 4. Review eBird recent sightings for the location
-5. Sync all device clocks via their apps before leaving
+5. Sync device clocks for multi-cam editing
 6. Charge all batteries the night before
 
 ### On location
-- All devices clock-synced on arrival
+- Device clocks synced for multi-cam editing
 - Filmic Pro: manual WB 4000K, 24fps, ISO low, lock before sunrise
 - Locked timelapse running from tripod — don't disturb it
 - Merlin Bird ID: passive sound logging from arrival
@@ -492,7 +427,7 @@ Each player scores independently. No exceptions. Group outings are social, not m
 - **Framework:** Next.js (React) — good for SEO, fast, easy to deploy
 - **Hosting:** Vercel — free tier sufficient to start, deploys from GitHub
 - **Database:** Supabase (Postgres) — free tier, stores Eos Index scores, discovery log, records
-- **CMS:** Markdown files in repo for episode content, or Notion as headless CMS
+- **CMS:** Markdown files in repo for episode content
 - **Email:** Google Workspace → hello@thezorafiles.com
 - **Domain:** Cloudflare (already registered)
 - **DNS:** Point Cloudflare DNS to Vercel
@@ -521,29 +456,23 @@ Each player scores independently. No exceptions. Group outings are social, not m
     total: number                    // max 100
   }
 
+  effort_rating: number              // 1–5 (Roadside/Trail/Summit/Remote/Expedition)
+  effort_points: number              // 0, 5, 10, 15, or 20
+
   zora_score: {
     eos_index: number                // from above
+    effort_points: number            // from effort rating
     discovery_points: number
-    travel_distance_points: number
-    travel_difficulty_bonus: number
-    elevation_points: number
-    predawn_bonus: number
-    weather_adversity: number
-    streak_bonus: number
-    total: number                    // theoretical max ~215
+    total: number                    // Eos Index + Effort + Discovery
   }
 
-  travel: {
-    distance_miles: number
-    off_pavement_miles: number
-    high_clearance: boolean
-    alt_transport: boolean
-    international: boolean
-  }
+  // Contextual details (not scored, for the expedition log)
+  distance_miles?: number
+  elevation_gain_ft?: number
+  minutes_before_sunrise?: number
+  weather_notes?: string
+  streak_active: boolean             // visual honor, not scored
 
-  elevation_gain_ft: number
-  minutes_before_sunrise: number     // for pre-dawn bonus verification
-  weather_adversity_score: number    // 0–3
   thumbnail_url: string
   notes: string
 }
@@ -552,7 +481,7 @@ Each player scores independently. No exceptions. Group outings are social, not m
 {
   id: string
   episode_id: string
-  type: 'wildlife' | 'plant' | 'geographic' | 'cultural' | 'historical'
+  type: 'wildlife' | 'plant' | 'geographic' | 'cultural_historical'
   name: string
   scientific_name?: string
   country: string                    // where it was found — not assumed
@@ -578,12 +507,15 @@ Each player scores independently. No exceptions. Group outings are social, not m
 
 // PlayerProgress
 {
+  id: string
+  user_id: string                    // supports community/watch group members
   current_level: number              // 0–10
   current_level_title: string
-  excursions_this_level: number      // 0–6
-  excursions_total: number
-  streak_active: boolean             // all 6 within 6 weeks in progress
-  streak_weeks_elapsed: number
+  cumulative_zora_score: number      // running total across all expeditions (leaderboard, not leveling)
+  expeditions_to_next_level: number  // 6 per level — countdown to next medallion
+  expeditions_total: number
+  streak_count: number               // consecutive expeditions on cadence
+  streak_active: boolean             // currently maintaining streak
   medallions_earned: MedallionRecord[]
   badges_earned: string[]
 }
@@ -593,7 +525,7 @@ Each player scores independently. No exceptions. Group outings are social, not m
   level: number
   earned_date: Date
   streak_bonus: boolean              // all 6 outings completed within 6 weeks
-  excursion_dates: Date[]            // the 6 dates that completed it
+  expedition_number_at_earn: number  // which expedition number triggered the level-up
 }
 ```
 
@@ -680,28 +612,17 @@ Each player scores independently. No exceptions. Group outings are social, not m
 
 ---
 
-## Notes & Decisions Log
+## Decisions Log
+
+Key decision points and their rationale. Details are documented in the relevant sections above — this log captures *when and why* things changed.
 
 - **2026-03** — Concept originated from morning nature walks in Queen Creek/Chandler Heights area
 - **2026-03** — Zora chosen over Akatsuki, Fajr, Madrugada for brevity and owability
-- **2026-03** — Eos Index chosen as scoring system name — clinical, named after Greek goddess of dawn
-- **2026-03** — "The Zora Files" = channel name; "Finding Zora" = show name within channel
-- **2026-03** — Calibration scoring session completed on 11 existing photos — ocean cliff holds series record at 85
-- **2026-03** — All platform handles secured: @TheZoraFiles (YouTube), @thezorafiles (Instagram, TikTok)
-- **2026-03** — Domain thezorafiles.com registered
-- **2026-03** — Dual scoring system established: Eos Index (sunrise quality, 0–100) + Zora Score (full episode, ~215 max)
-- **2026-03** — Geographic scope confirmed as global — Arizona/desert Southwest is home base and brand identity for early seasons; travel episodes are expeditions not a pivot; website architecture must never hardcode regional assumptions
-- **2026-03** — Level titles confirmed final: Scout, Trailhead, Desert Fox, Dawnchaser, First Light, Horizon Hunter, Zora Seeker, Dawn Keeper, Eos Adept, Zora Master, Finding Zora
-- **2026-03** — Group competition mechanics removed. Group play = each player scores independently. No head-to-head mechanics.
-- **2026-03** — Watch system = social feed layer only, not competitive.
-- **2026-03** — Global leaderboard = record board (documentary, not ranking). Tracks top Eos Index scores.
-- **2026-03** — AI-assisted Eos Index scoring prompt confirmed as planned feature for solo players.
-- **2026-03** — Point-based level progression replaced with Medallion System. 6 excursions per level, participation-gated not performance-gated.
-- **2026-03** — Sundog gem shape confirmed: elongated teardrop/compass-pointer form.
-- **2026-03** — Streak bonus = all 6 outings within 6 calendar weeks. Visible as sunburst crown on medallion — unmistakably distinct from base-completion medallion.
-- **2026-03** — Full medallion palette confirmed (see Medallion Palette table above).
-- **2026-03** — Scout (Level 0) gets a dedicated pewter starting token with compass rose or sun-ring engraving. No gem slots.
-- **2026-03** — Gear unlocks removed. Badge system replaces them as sub-objectives. Badge structure TBD.
-- **2026-03** — Expedition Share Card direction confirmed. Completed medallion (not in-progress) displayed on card. Level name text omitted from card.
-- **2026-03** — Zora Score final form on share card is under reconsideration — visual effort rating may replace numeric score. Not yet decided.
-- **2026-03** — Desert Fox medallion (Level 2) design reference built in Canvas/SVG. Warm bronze, amber topaz, fox ghost-to-engraving reveal on 6th gem, streak crown with 36-ray sunburst. Design system established for all subsequent medallions.
+- **2026-03** — Eos Index chosen as scoring system name — clinical, precise, named after the goddess of dawn
+- **2026-03** — Geographic scope confirmed as global — Arizona is home base and brand identity, not a constraint
+- **2026-03** — Point-based level progression replaced with Medallion System — participation-gated, not performance-gated
+- **2026-03** — Gear unlocks removed; badge system replaces them as sub-objectives (structure TBD)
+- **2026-03** — Desert Fox medallion (Level 2) design reference built — established the visual design system for all subsequent medallions
+- **2026-03-21** — Zora Score simplified: all granular bonus categories replaced with a single Effort Rating (5 levels, 0–20 pts). Streak became visual honor only — no points
+- **2026-03-21** — Level progression confirmed as purely participation-gated: 6 expeditions per level, score irrelevant
+- **2026-03-21** — Share card scoring resolved: Eos Index as primary display, effort via sundog indicators, Zora Score not shown as separate number

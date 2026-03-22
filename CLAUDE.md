@@ -32,15 +32,17 @@ The Zora Files is a sunrise-chasing YouTube channel brand based in Arizona. This
 - **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; never use pure black or pure white
 - **Geographic scope**: Arizona is home base but the show is global. **Never hardcode Arizona or "desert" as assumptions** in website architecture, data models, or UI copy. All fields must work for any location worldwide.
 
-## Dual scoring system
+## Scoring system
 
 - **Eos Index** (0–100): Pure sunrise quality score. Sky (50) + Setting (30) + Conditions (20).
-- **Zora Score** (~215 max): Full episode score. Eos Index + Travel Distance + Travel Difficulty + Elevation + Pre-Dawn Arrival + Weather Adversity + Discovery Points + Streak Bonus.
-- Both are displayed every episode. Leaderboards sortable by either.
+- **Effort Rating** (0–20): Post-expedition journey difficulty. 5 levels: Roadside (0) / Trail (5) / Summit (10) / Remote (15) / Expedition (20).
+- **Zora Score**: Full episode score. Eos Index + Effort + Discovery Points.
+- **Streak**: Consecutive expeditions on cadence. Visual honor only (gold bar on card, crown on medallion) — no points.
+- Both Eos Index and Zora Score are displayed every episode. Leaderboards sortable by either.
 
 ## Level-up system
 
-D&D-style progression, 11 levels (0–10). Gear unlocks at each level, earned by cumulative Zora Score (~6 outings per level). Level 10 "Finding Zora" is the narrative endpoint — no gear reward, it IS the reward. Full level table in ZORA_PROJECT.md.
+D&D-style progression, 11 levels (0–10). Purely participation-gated — 6 expeditions per level, 60 total to reach Finding Zora. Score has no effect on leveling (it drives leaderboard position instead). Each level earns a unique medallion. Level 10 "Finding Zora" is the narrative endpoint. Full level table and medallion palette in ZORA_PROJECT.md.
 
 ## Website (when initialized)
 

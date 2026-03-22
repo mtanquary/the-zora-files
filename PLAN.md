@@ -1,6 +1,6 @@
 # The Zora Files — project plan
 
-> Last updated: 2026-03-18
+> Last updated: 2026-03-21
 
 This is the living task tracker for the project. Phases are roughly sequential but items within a phase can be tackled in any order.
 
@@ -41,29 +41,24 @@ This is the living task tracker for the project. Phases are roughly sequential b
 
 ---
 
-## Phase 2 — Gear (level-gated progression)
+## Phase 2 — Gear acquisition
 
-Gear is earned by leveling up via cumulative Zora Score, not purchased on a budget timeline. The show starts at Level 0 (Scout) with phone + existing kit only.
+Gear is organized by priority tier, not level-gated. The show starts with phone + existing kit. See ZORA_PROJECT.md Equipment section for full details.
 
-### Level 0 — Scout (start)
+### Current
 - [x] Samsung S25 Ultra (primary camera)
 
-### Level 1 — Trailhead (480 pts)
-- [ ] DJI Mic 2 + Joby GorillaPod 3K
+### Tier 1 — acquire first
+- [ ] DJI Mic 2 (wireless audio)
+- [ ] Joby GorillaPod 3K + phone mount (timelapse stability)
+- [ ] DJI OM 7 Gimbal (walking footage)
+- [ ] DJI Mini 4 Pro (aerial)
 
-### Level 2 — Desert Fox (980 cumulative)
-- [ ] DJI OM 7 Gimbal
+### Tier 2 — acquire soon
+- [ ] GoPro Hero 13 Black (always-on wide POV)
+- [ ] Vortex Solo 8x36 Monocular (wildlife spotting)
 
-### Level 3 — Dawnchaser (1,500 cumulative)
-- [ ] GoPro Hero 13 Black
-
-### Level 4 — First Light (2,040 cumulative)
-- [ ] DJI Mini 4 Pro (drone)
-
-### Level 5 — Horizon Hunter (2,600 cumulative)
-- [ ] Vortex Monocular + optics kit
-
-### Level 6–10 — see ZORA_PROJECT.md for full level table
+### Tier 3 — level up (see ZORA_PROJECT.md)
 
 ---
 
@@ -130,7 +125,6 @@ Gear is earned by leveling up via cumulative Zora Score, not purchased on a budg
 - [ ] Build About page — concept, host, mission
 
 ### Data
-- [ ] Seed Eos Index leaderboard with calibration scores
 - [ ] Seed Discovery Log with E01-E03 data (after filming)
 - [ ] Set up Records board with initial data
 
@@ -150,14 +144,16 @@ Gear is earned by leveling up via cumulative Zora Score, not purchased on a budg
 
 ## Phase 8 — Progression system (on-screen and website)
 
-_Level system defined in ZORA_PROJECT.md. 11 levels (0-10), D&D-style, ~6 outings per level._
+_Level system defined in ZORA_PROJECT.md. 11 levels (0-10), participation-gated (6 expeditions per level). Level titles and medallion palette confirmed final._
 
-- [ ] Finalize level titles (currently working placeholders — make them personal)
+- [x] Finalize level titles (Scout through Finding Zora — confirmed)
+- [ ] Design medallion artwork for each level (palette defined in ZORA_PROJECT.md)
 - [ ] Design "level up" on-screen motion graphic (90 sec dedicated moment)
-- [ ] Design "gear unlock" reveal moment template
-- [ ] Build progression tracker on website (current level, progress bar, next gear unlock)
-- [ ] Build cumulative Zora Score tracking in Supabase
-- [ ] Build streak tracking logic (consecutive on-schedule episodes)
+- [ ] Design medallion "awakening" animation (6th gem reveal)
+- [ ] Design streak crown animation (sunburst crown reveal)
+- [ ] Build progression tracker on website (current level, expedition count, medallion display)
+- [ ] Build virtual medallion display case on website
+- [ ] Build streak tracking logic (6 outings within 6 calendar weeks per level)
 
 ## Phase 9 — Community scoring and global Eos Index map
 
