@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { getEpisodes } from "@/lib/queries";
+import { getEpisodes, getAllDiscoveries } from "@/lib/queries";
+import { extractEosSub } from "@/lib/eos-helpers";
+import { groupDiscoveries } from "@/components/discovery-card";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { LevelEmblem } from "@/components/level-emblem";
 import { MedallionEmblem } from "@/components/medallion-emblem";
+import { EosExpandable } from "@/components/eos-expandable";
 import {
   Stars,
   HorizonGlow,
@@ -115,13 +118,15 @@ export default async function Home() {
                 </p>
 
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-pre-dawn-light border border-rule rounded px-3 py-2 text-center">
+                  <div className="bg-pre-dawn-light border border-rule rounded px-3 py-2 flex flex-col items-center">
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase tracking-wider mb-1">
                       eos index
                     </p>
-                    <p className="font-mono text-2xl font-bold text-teal-light">
-                      {latest.eos_total}
-                    </p>
+                    <EosExpandable
+                      total={latest.eos_total}
+                      sub={extractEosSub(latest.eos_index)}
+                      size="lg"
+                    />
                   </div>
                   <div className="bg-pre-dawn-light border border-rule rounded px-3 py-2 text-center">
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase tracking-wider mb-1">
@@ -248,21 +253,22 @@ export default async function Home() {
                     <div>
                       <p className="font-display text-sm text-dawn-mist">
                         S{String(ep.season).padStart(2, "0")}E
-                        {String(ep.episode_number).padStart(2, "0")} —{" "}
+                        {String(ep.episode_number).padStart(2, "0")} ·{" "}
                         &ldquo;{ep.title}&rdquo;
                       </p>
                       <p className="text-xs text-mist-dim">
                         {ep.location_name}
                       </p>
                     </div>
-                    <div className="flex gap-6 text-right">
+                    <div className="flex gap-6 text-right items-start">
                       <div>
                         <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
                           eos
                         </p>
-                        <p className="font-mono text-teal-light">
-                          {ep.eos_total}
-                        </p>
+                        <EosExpandable
+                          total={ep.eos_total}
+                          sub={extractEosSub(ep.eos_index)}
+                        />
                       </div>
                       <div>
                         <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
@@ -289,13 +295,9 @@ export default async function Home() {
         )}
 
         {/* Discovery log preview */}
-        <Ornament label="Discovery log" />
-        <p className="text-mist-dim">
-          No discoveries yet. Species, features, and landmarks unlock as
-          expeditions happen.
-        </p>
+        <DiscoveryPreview />
 
-        {/* Subscribe CTA */}
+        {/* Subscribe CTA - rendered below DiscoveryPreview */}
         <div className="bg-pre-dawn-mid border border-rule rounded-lg p-8 mt-12 text-center">
           <p className="font-display text-lg text-zora-amber mb-3">
             Follow the pursuit
@@ -320,5 +322,73 @@ export default async function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+const RARITY_COLORS: Record<string, string> = {
+  common: "text-mist-dim",
+  uncommon: "text-teal-light",
+  rare: "text-zora-amber",
+  very_rare: "text-sunrise-orange",
+  exceptional: "text-amber-light",
+};
+
+async function DiscoveryPreview() {
+  const discoveries = await getAllDiscoveries();
+  const grouped = groupDiscoveries(discoveries);
+  const limit = 6;
+
+  return (
+    <>
+      <Ornament label="Discovery log" />
+      {grouped.length > 0 ? (
+        <div className="bg-pre-dawn-mid border border-rule rounded-md">
+          {grouped.slice(0, limit).map((d, i) => (
+            <div
+              key={d.name}
+              className={`flex items-center justify-between px-5 py-3 ${
+                i < Math.min(grouped.length, limit) - 1
+                  ? "border-b border-dawn-mist/[0.05]"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={`font-mono text-[0.6rem] uppercase tracking-wider w-16 ${
+                    RARITY_COLORS[d.rarity_tier]
+                  }`}
+                >
+                  {d.rarity_tier.replace("_", " ")}
+                </span>
+                <span className="font-display text-sm text-dawn-mist">
+                  {d.name}
+                </span>
+                {d.count > 1 && (
+                  <span className="font-mono text-[0.6rem] text-mist-dim/40">
+                    ×{d.count}
+                  </span>
+                )}
+              </div>
+              <span className="font-mono text-xs text-amber-light">
+                +{d.total_points}
+              </span>
+            </div>
+          ))}
+          {grouped.length > limit && (
+            <Link
+              href="/discovery-log"
+              className="block text-center py-3 border-t border-dawn-mist/[0.05] font-mono text-xs text-zora-amber hover:text-amber-light transition-colors"
+            >
+              view all {grouped.length} discoveries →
+            </Link>
+          )}
+        </div>
+      ) : (
+        <p className="text-mist-dim">
+          No discoveries yet. Species, features, and landmarks unlock as
+          expeditions happen.
+        </p>
+      )}
+    </>
   );
 }

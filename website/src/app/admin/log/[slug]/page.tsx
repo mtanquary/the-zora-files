@@ -68,7 +68,7 @@ export default async function EditEpisodePage({
       </h1>
       <p className="text-dawn-mist/60 mb-8">
         S{String(ep.season).padStart(2, "0")}E
-        {String(ep.episode_number).padStart(2, "0")} — &ldquo;{ep.title}&rdquo;
+        {String(ep.episode_number).padStart(2, "0")} · &ldquo;{ep.title}&rdquo;
       </p>
       <LogForm
         hasApiKey={hasApiKey}

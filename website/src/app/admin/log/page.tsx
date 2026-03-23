@@ -44,11 +44,11 @@ export default async function AdminLogPage() {
                   <div>
                     <p className="text-sm text-dawn-mist">
                       S{String(ep.season).padStart(2, "0")}E
-                      {String(ep.episode_number).padStart(2, "0")} —{" "}
+                      {String(ep.episode_number).padStart(2, "0")} ·{" "}
                       &ldquo;{ep.title}&rdquo;
                     </p>
                     <p className="text-xs text-dawn-mist/40">
-                      {ep.location_name} — Eos {ep.eos_total}
+                      {ep.location_name} · Eos {ep.eos_total}
                     </p>
                   </div>
                   <div className="flex gap-2">

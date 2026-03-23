@@ -18,20 +18,20 @@ export function buildEosPrompt(context?: {
 
 ## Scoring rubric
 
-### Sky — 50 points
+### Sky: 50 points
 | Component | Max | Description |
 |-----------|-----|-------------|
 | Color intensity | 20 | Saturation, vividness, range of hues |
 | Cloud engagement | 15 | Dramatic lit clouds score high; clear sky moderate; flat overcast low |
 | Horizon definition | 15 | Clean readable horizon = high; obstructed or flat = low |
 
-### Setting — 30 points
+### Setting: 30 points
 | Component | Max | Description |
 |-----------|-----|-------------|
-| Foreground composition | 15 | Trail, cactus, water, flowers, person — compelling element in frame |
+| Foreground composition | 15 | Trail, cactus, water, flowers, person: compelling element in frame |
 | Location uniqueness | 15 | Suburban roadside = low; remote wilderness = high |
 
-### Conditions — 20 points
+### Conditions: 20 points
 | Component | Max | Description |
 |-----------|-----|-------------|
 | Access difficulty | 10 | Drive-up viewpoint = 1–2; technical terrain or pre-dawn scramble to reach the vantage = 8–10 |
@@ -41,7 +41,7 @@ export function buildEosPrompt(context?: {
 The system rewards intentionality and effort, not just lucky weather. A spectacular sky at a roadside pull-off scores lower than a modest sky earned at the top of a difficult pre-dawn hike.
 ${contextBlock}
 ## Instructions
-Evaluate the attached sunrise photo against the rubric above. Return ONLY a JSON object — no explanation, no markdown code fences, no commentary. Include a brief rationale string for each sub-score.
+Evaluate the attached sunrise photo against the rubric above. Return ONLY a JSON object: no explanation, no markdown code fences, no commentary. Include a brief rationale string for each sub-score.
 
 Use this exact schema:
 

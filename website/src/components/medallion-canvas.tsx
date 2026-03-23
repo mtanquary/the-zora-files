@@ -197,7 +197,7 @@ export const MedallionCanvas = forwardRef<MedallionHandle, Props>(
         }
       }
 
-      // Emblem placeholder — simple circle with level initial
+      // Emblem placeholder: simple circle with level initial
       const emblAlpha = st.done ? st.emblA : Math.max(0.07, st.emblA);
       c.save(); c.globalAlpha = emblAlpha;
       const eg = c.createRadialGradient(CX - 10, CY - 14, 0, CX, CY, 60);
@@ -353,7 +353,7 @@ export const MedallionCanvas = forwardRef<MedallionHandle, Props>(
       await singGems();
     }, [anim, sfxClick, sfxWhoosh, singGems, render]);
 
-    // Streak crown sound — ascending 7-note arpeggio
+    // Streak crown sound: ascending 7-note arpeggio
     const sfxStreak = useCallback(() => {
       const a = getAudio(), now = a.currentTime;
       const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568, 2093];

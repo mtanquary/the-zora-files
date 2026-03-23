@@ -109,7 +109,7 @@ export default function RulesPage() {
       <Ornament label="Leveling up" />
 
       <p>
-        Six expeditions per level. Score has no effect on leveling — it drives
+        Six expeditions per level. Score has no effect on leveling. It drives
         leaderboard position instead. Show up, do the work, level up.
       </p>
 
@@ -153,7 +153,7 @@ export default function RulesPage() {
       <p>
         Complete all 6 outings for a level within 6 calendar weeks to earn a
         streak. The medallion gains a sunburst crown and the expedition card
-        shows a gold bar. Visual honor only — no bonus points.
+        shows a gold bar. Visual honor only, no bonus points.
       </p>
     </div>
   );

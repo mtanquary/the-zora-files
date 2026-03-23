@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { getEpisodeByNumber, getEpisodes } from "@/lib/queries";
+import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode } from "@/lib/queries";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { MedallionEmblem } from "@/components/medallion-emblem";
+import { Ornament } from "@/components/atmosphere";
+import { DiscoveryCard, groupDiscoveries } from "@/components/discovery-card";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -58,7 +60,7 @@ export default async function EpisodeDetailPage({
       </div>
       <div className="flex items-center gap-4 mb-8">
         <p className="text-dawn-mist/50">
-          {ep.location_name} — {new Date(ep.shoot_date).toLocaleDateString()}
+          {ep.location_name} · {new Date(ep.shoot_date).toLocaleDateString()}
         </p>
         <Link
           href={`/admin/card/${slug}`}
@@ -141,6 +143,9 @@ export default async function EpisodeDetailPage({
         </div>
       </section>
 
+      {/* Discoveries */}
+      <DiscoveriesSection episodeId={ep.id} />
+
       {/* Field notes */}
       {ep.notes && (
         <section>
@@ -151,6 +156,24 @@ export default async function EpisodeDetailPage({
         </section>
       )}
     </div>
+  );
+}
+
+async function DiscoveriesSection({ episodeId }: { episodeId: string }) {
+  const discoveries = await getDiscoveriesByEpisode(episodeId);
+  if (discoveries.length === 0) return null;
+
+  const grouped = groupDiscoveries(discoveries);
+
+  return (
+    <section className="mb-10">
+      <Ornament label="Discoveries" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        {grouped.map((d) => (
+          <DiscoveryCard key={d.name} discovery={d} showUnlockBadge />
+        ))}
+      </div>
+    </section>
   );
 }
 

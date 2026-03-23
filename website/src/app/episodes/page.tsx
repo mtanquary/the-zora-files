@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getEpisodes } from "@/lib/queries";
+import { extractEosSub } from "@/lib/eos-helpers";
 import { EFFORT_LEVELS } from "@/lib/types";
+import { EosExpandable } from "@/components/eos-expandable";
 import { Ornament } from "@/components/atmosphere";
 
 export const metadata: Metadata = { title: "episodes" };
@@ -37,18 +39,22 @@ export default async function EpisodesPage() {
                 <div>
                   <p className="font-display text-dawn-mist">
                     S{String(ep.season).padStart(2, "0")}E
-                    {String(ep.episode_number).padStart(2, "0")} —{" "}
+                    {String(ep.episode_number).padStart(2, "0")} ·{" "}
                     &ldquo;{ep.title}&rdquo;
                   </p>
                   <p className="text-xs text-mist-dim mt-1">
-                    {ep.location_name} —{" "}
+                    {ep.location_name} ·{" "}
                     {new Date(ep.shoot_date).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex gap-6 text-right">
                   <div>
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase">eos</p>
-                    <p className="font-mono text-lg text-teal-light">{ep.eos_total}</p>
+                    <EosExpandable
+                      total={ep.eos_total}
+                      sub={extractEosSub(ep.eos_index)}
+                      size="lg"
+                    />
                   </div>
                   <div>
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase">effort</p>

@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "the zora files",
-    template: "%s — the zora files",
+    template: "%s · the zora files",
   },
   description:
     "Every sunrise gets scored. A pursuit of the perfect dawn, one expedition at a time.",

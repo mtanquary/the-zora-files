@@ -106,7 +106,7 @@ export function GemCeremony({
         <div className="w-full max-w-xs">
           <div className="flex justify-between text-xs text-dawn-mist/40 mb-1">
             <span>
-              Level {level} — {currentLevel.title}
+              Level {level} · {currentLevel.title}
             </span>
             <span>{gemsAfter}/6</span>
           </div>
@@ -121,7 +121,7 @@ export function GemCeremony({
         {/* Streak indicator */}
         {streakEarned && isLevelUp && phase === "done" && (
           <p className="text-xs text-zora-amber/70">
-            All 6 expeditions within 6 weeks — streak crown earned
+            All 6 expeditions within 6 weeks. Streak crown earned
           </p>
         )}
 

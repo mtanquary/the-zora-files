@@ -40,7 +40,7 @@ export function EosScorePanel({
     [location, trail, effortLabel]
   );
 
-  // Direct mode — send photo to /api/eos-score
+  // Direct mode: send photo to /api/eos-score
   const handleDirectScore = async () => {
     if (!photo) {
       setError("Upload a sunrise photo first.");
@@ -70,13 +70,13 @@ export function EosScorePanel({
       onApply(data.eos_index);
       setIsOpen(false);
     } catch {
-      setError("Network error — could not reach the scoring endpoint.");
+      setError("Network error: could not reach the scoring endpoint.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Copy-paste mode — validate and apply pasted JSON
+  // Copy-paste mode: validate and apply pasted JSON
   const handlePasteApply = () => {
     setError(null);
     const result = parseEosResponse(jsonInput);

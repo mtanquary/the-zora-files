@@ -49,7 +49,7 @@ export function LevelEmblem({ level, size = 44 }: Props) {
 type DrawFn = (c: CanvasRenderingContext2D, cx: number, cy: number) => void;
 
 const EMBLEMS: DrawFn[] = [
-  // 0 — Scout: Compass rose
+  // 0 - Scout: Compass rose
   (c, cx, cy) => {
     const col = "rgba(200,200,210,0.7)";
     const colDark = "rgba(140,140,155,0.5)";
@@ -115,7 +115,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 1 — Trailhead: Cairn (stacked stones)
+  // 1 - Trailhead: Cairn (stacked stones)
   (c, cx, cy) => {
     const stones = [
       { cx, cy: cy + 18, rx: 30, ry: 11 },
@@ -141,7 +141,7 @@ const EMBLEMS: DrawFn[] = [
     });
   },
 
-  // 2 — Desert Fox: Fox head silhouette
+  // 2 - Desert Fox: Fox head silhouette
   (c, cx, cy) => {
     const s = 0.65;
     const fpx = (x: number) => cx + x * s;
@@ -191,7 +191,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 3 — Dawnchaser: Running figure
+  // 3 - Dawnchaser: Running figure
   (c, cx, cy) => {
     const col = "#E8C020";
     c.strokeStyle = col;
@@ -246,7 +246,7 @@ const EMBLEMS: DrawFn[] = [
     }
   },
 
-  // 4 — First Light: Half-sun with beams
+  // 4 - First Light: Half-sun with beams
   (c, cx, cy) => {
     const hY = cy + 8;
     const sunR = 22;
@@ -284,7 +284,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 5 — Horizon Hunter: Eye with horizon
+  // 5 - Horizon Hunter: Eye with horizon
   (c, cx, cy) => {
     // Almond eye shape
     c.beginPath();
@@ -328,7 +328,7 @@ const EMBLEMS: DrawFn[] = [
     c.stroke();
   },
 
-  // 6 — Zora Seeker: Compass rose (violet-platinum)
+  // 6 - Zora Seeker: Compass rose (violet-platinum)
   (c, cx, cy) => {
     const col = "rgba(200,190,220,0.7)";
     const colDark = "rgba(140,130,170,0.5)";
@@ -372,7 +372,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 7 — Dawn Keeper: Lantern with flame
+  // 7 - Dawn Keeper: Lantern with flame
   (c, cx, cy) => {
     const col = "rgba(200,140,50,0.85)";
 
@@ -427,7 +427,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 8 — Eos Adept: Sun disc with eye (teal)
+  // 8 - Eos Adept: Sun disc with eye (teal)
   (c, cx, cy) => {
     const discR = 24;
 
@@ -471,7 +471,7 @@ const EMBLEMS: DrawFn[] = [
     c.fill();
   },
 
-  // 9 — Zora Master: Crown
+  // 9 - Zora Master: Crown
   (c, cx, cy) => {
     const bandY = cy + 10, bandH = 14, bandW = 38;
     const peakH = 40;
@@ -508,7 +508,7 @@ const EMBLEMS: DrawFn[] = [
     c.strokeRect(cx - bandW, bandY, bandW * 2, bandH);
   },
 
-  // 10 — Finding Zora: Radiant Z
+  // 10 - Finding Zora: Radiant Z
   (c, cx, cy) => {
     // Rays from center
     for (let i = 0; i < 12; i++) {

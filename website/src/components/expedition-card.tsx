@@ -4,6 +4,16 @@ import { forwardRef } from "react";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { LevelEmblem } from "./level-emblem";
 
+export interface EosSubScores {
+  ci: number; // color intensity
+  ce: number; // cloud engagement
+  hd: number; // horizon definition
+  fc: number; // foreground composition
+  lu: number; // location uniqueness
+  ad: number; // access difficulty
+  wc: number; // weather challenge
+}
+
 export interface ExpeditionCardData {
   title: string;
   episode_number: number;
@@ -11,6 +21,7 @@ export interface ExpeditionCardData {
   location_name: string;
   shoot_date: string;
   eos_total: number;
+  eos_sub?: EosSubScores;
   effort_rating: number;
   effort_points: number;
   streak_active: boolean;
@@ -58,7 +69,7 @@ export const ExpeditionCard = forwardRef<HTMLDivElement, Props>(
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-zora-amber z-20" />
         )}
 
-        {/* Photo zone — upper portion */}
+        {/* Photo zone - upper portion */}
         <div className="absolute inset-0 flex flex-col">
           {/* Photo area */}
           <div className="relative flex-1 min-h-0">
@@ -103,7 +114,7 @@ export const ExpeditionCard = forwardRef<HTMLDivElement, Props>(
           {/* Score zone */}
           <div className="relative z-10 bg-pre-dawn px-5 py-4">
             <div className="flex items-end justify-between">
-              {/* Eos Index — large teal number */}
+              {/* Eos Index - large teal number */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-eos-teal/60 mb-0.5">
                   eos index
@@ -113,7 +124,7 @@ export const ExpeditionCard = forwardRef<HTMLDivElement, Props>(
                 </p>
               </div>
 
-              {/* Effort indicator — sundogs + label */}
+              {/* Effort indicator - sundogs + label */}
               <div className="text-right">
                 <div className="flex justify-end gap-1 mb-1">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -127,8 +138,27 @@ export const ExpeditionCard = forwardRef<HTMLDivElement, Props>(
               </div>
             </div>
 
+            {/* Eos sub-scores - abbreviated */}
+            {data.eos_sub && (
+              <div className="flex gap-2 mt-2 text-[8px] font-mono text-dawn-mist/35 tracking-wide">
+                <span>CI {data.eos_sub.ci}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>CE {data.eos_sub.ce}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>HD {data.eos_sub.hd}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>FC {data.eos_sub.fc}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>LU {data.eos_sub.lu}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>AD {data.eos_sub.ad}</span>
+                <span className="text-dawn-mist/15">·</span>
+                <span>WC {data.eos_sub.wc}</span>
+              </div>
+            )}
+
             {/* Stats strip */}
-            <div className="flex gap-4 mt-3 text-[10px] text-dawn-mist/40">
+            <div className="flex gap-4 mt-2 text-[10px] text-dawn-mist/40">
               {data.elevation_gain_ft != null && (
                 <span>{Math.round(data.elevation_gain_ft)} ft gain</span>
               )}
@@ -154,7 +184,7 @@ export const ExpeditionCard = forwardRef<HTMLDivElement, Props>(
   }
 );
 
-/** Sundog gem shape — elongated teardrop */
+/** Sundog gem shape: elongated teardrop */
 function Sundog({ filled }: { filled: boolean }) {
   return (
     <svg width="8" height="18" viewBox="0 0 8 18" className="inline-block">

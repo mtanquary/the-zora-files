@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { LEVELS } from "@/lib/types";
 
-/** Tiny medallion emblem for the share card — just the coin face with center initial. */
+/** Tiny medallion emblem for the share card: just the coin face with center initial. */
 export function MedallionIcon({
   level,
   gems,

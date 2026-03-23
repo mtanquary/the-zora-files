@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getEpisodesSortedByEos } from "@/lib/queries";
+import { extractEosSub } from "@/lib/eos-helpers";
 import { EFFORT_LEVELS } from "@/lib/types";
+import { EosExpandable } from "@/components/eos-expandable";
 import { Ornament } from "@/components/atmosphere";
 
 export const metadata: Metadata = { title: "eos index" };
@@ -20,7 +22,7 @@ export default async function EosIndexPage() {
 
       <Ornament label="Leaderboard" />
 
-      <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden">
+      <div className="bg-pre-dawn-mid border border-rule rounded-md">
         <table className="w-full font-mono text-xs">
           <thead>
             <tr className="bg-zora-amber/[0.12] border-b border-zora-amber">
@@ -58,14 +60,19 @@ export default async function EosIndexPage() {
                     <td className="px-4 py-2.5 text-mist-dim">{i + 1}</td>
                     <td className="px-4 py-2.5 text-dawn-mist">
                       S{String(ep.season).padStart(2, "0")}E
-                      {String(ep.episode_number).padStart(2, "0")} —{" "}
+                      {String(ep.episode_number).padStart(2, "0")} ·{" "}
                       &ldquo;{ep.title}&rdquo;
                     </td>
                     <td className="px-4 py-2.5 text-mist-dim">
                       {ep.location_name}
                     </td>
-                    <td className="px-4 py-2.5 text-right text-teal-light font-bold">
-                      {ep.eos_total}
+                    <td className="px-4 py-2.5 text-right">
+                      <div className="flex justify-end">
+                        <EosExpandable
+                          total={ep.eos_total}
+                          sub={extractEosSub(ep.eos_index)}
+                        />
+                      </div>
                     </td>
                     <td className="px-4 py-2.5 text-right text-sunrise-orange">
                       {effort?.label}

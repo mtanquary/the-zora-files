@@ -76,7 +76,10 @@ export function CardExport({ data }: { data: ExpeditionCardData }) {
         pixelRatio: 2,
         backgroundColor: "#0D0F14",
       });
-      window.open(dataUrl, "_blank");
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank");
     } catch (err) {
       console.error("Open failed:", err);
     } finally {

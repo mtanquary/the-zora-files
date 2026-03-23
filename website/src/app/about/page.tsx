@@ -30,7 +30,7 @@ export default function AboutPage() {
 
         <p>
           The Zora Files is a sunrise-chasing pursuit. Every episode is a scored
-          attempt at the perfect dawn — the desert doesn&apos;t care about your
+          attempt at the perfect dawn. The desert doesn&apos;t care about your
           plan.
         </p>
 
@@ -49,7 +49,7 @@ export default function AboutPage() {
 
         <p>
           The host is a systems thinker who is allergic to chaos but keeps
-          getting surprised by nature — a veteran, technical infrastructure
+          getting surprised by nature, a veteran, technical infrastructure
           consultant, bassoonist, and desert hiker based in the Queen Creek area
           of Arizona. Home base is the Sonoran Desert, but the pursuit goes
           wherever the next scored sunrise leads.

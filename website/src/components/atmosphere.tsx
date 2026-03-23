@@ -1,6 +1,6 @@
 /** Shared atmospheric and ornamental elements from the teaser design. */
 
-/** Stars field — subtle pre-dawn sky dots */
+/** Stars field: subtle pre-dawn sky dots */
 export function Stars() {
   return (
     <div
@@ -26,7 +26,7 @@ export function Stars() {
   );
 }
 
-/** Horizon glow — warm amber/orange gradient at the bottom */
+/** Horizon glow: warm amber/orange gradient at the bottom */
 export function HorizonGlow() {
   return (
     <div
@@ -40,7 +40,7 @@ export function HorizonGlow() {
   );
 }
 
-/** Mountain silhouette SVG — desert ridge with saguaro cacti */
+/** Mountain silhouette SVG: desert ridge with saguaro cacti */
 export function Mountains() {
   return (
     <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
@@ -89,7 +89,7 @@ export function Mountains() {
   );
 }
 
-/** Sun icon — geometric dawn symbol */
+/** Sun icon: geometric dawn symbol */
 export function SunIcon({ size = 64 }: { size?: number }) {
   return (
     <svg
@@ -130,7 +130,7 @@ export function Ornament({ label }: { label: string }) {
   );
 }
 
-/** Lore/quote block — amber left border */
+/** Lore/quote block: amber left border */
 export function Lore({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-pre-dawn-mid border-l-3 border-zora-amber rounded-r-sm px-6 py-4 my-6 italic text-mist-dim text-[1.05rem] leading-relaxed">
@@ -139,7 +139,7 @@ export function Lore({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Score section card — predawn-mid with colored title */
+/** Score section card: predawn-mid with colored title */
 export function ScoreSection({
   title,
   color,
@@ -166,7 +166,7 @@ export function ScoreSection({
   );
 }
 
-/** Score row — monospace key/value pair with dotted separator */
+/** Score row: monospace key/value pair with dotted separator */
 export function ScoreRow({
   label,
   value,

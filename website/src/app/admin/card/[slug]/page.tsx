@@ -1,4 +1,5 @@
 import { getEpisodeByNumber, getEpisodes } from "@/lib/queries";
+import { extractEosSub } from "@/lib/eos-helpers";
 import { notFound } from "next/navigation";
 import { CardExport } from "./card-export";
 
@@ -28,7 +29,7 @@ export default async function CardPage({
       </h1>
       <p className="text-dawn-mist/50 text-sm mb-8">
         S{String(ep.season).padStart(2, "0")}E
-        {String(ep.episode_number).padStart(2, "0")} — &ldquo;{ep.title}&rdquo;
+        {String(ep.episode_number).padStart(2, "0")} · &ldquo;{ep.title}&rdquo;
       </p>
       <CardExport
         data={{
@@ -38,6 +39,7 @@ export default async function CardPage({
           location_name: ep.location_name,
           shoot_date: ep.shoot_date,
           eos_total: ep.eos_total,
+          eos_sub: extractEosSub(ep.eos_index),
           effort_rating: ep.effort_rating,
           effort_points: ep.effort_points,
           streak_active: ep.streak_active,

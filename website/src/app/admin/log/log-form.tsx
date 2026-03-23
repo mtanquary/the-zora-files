@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 import { EosScorePanel } from "./eos-score-panel";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { GemCeremony } from "@/components/gem-ceremony";
+import { DiscoveryEntry, emptyDiscovery, type DiscoveryDraft } from "@/components/discovery-entry";
+import { DiscoveryUnlockCeremony, type UnlockItem } from "@/components/discovery-unlock";
 import type { EosResponseData } from "@/lib/eos-prompt";
 
 export interface EditData {
@@ -72,13 +74,18 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
   const [notes, setNotes] = useState(editData?.notes ?? "");
   const [existingThumbnail] = useState(editData?.thumbnailUrl ?? "");
 
+  // Discoveries
+  const [discoveries, setDiscoveries] = useState<DiscoveryDraft[]>([]);
+  const [showUnlocks, setShowUnlocks] = useState(false);
+  const [unlockItems, setUnlockItems] = useState<UnlockItem[]>([]);
+
   // Save state
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showCeremony, setShowCeremony] = useState(false);
 
-  // Level calculation — gems go on the NEXT medallion (the one being earned)
+  // Level calculation: gems go on the NEXT medallion (the one being earned)
   const currentLevel = LEVELS.filter((l) => totalExpeditions >= l.expeditions).pop()!;
   const nextLevel = LEVELS.find((l) => l.expeditions > totalExpeditions);
   const gemsInCurrentLevel = totalExpeditions - currentLevel.expeditions;
@@ -168,6 +175,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
 
     // Upload photo to Supabase storage if present
     let thumbnailUrl: string | null = null;
+    let photoCoordinates: { lat: number; lng: number } | null = null;
     if (photo) {
       const formData = new FormData();
       formData.append("file", photo);
@@ -177,6 +185,9 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
         const uploadData = await uploadRes.json();
         if (uploadRes.ok) {
           thumbnailUrl = uploadData.url;
+          if (uploadData.exif?.coordinates) {
+            photoCoordinates = uploadData.exif.coordinates;
+          }
         } else {
           console.error("Photo upload failed:", uploadData.error);
         }
@@ -192,7 +203,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
       location_name: location,
       country,
       region: region || null,
-      coordinates: { lat: 0, lng: 0 },
+      coordinates: photoCoordinates || { lat: 0, lng: 0 },
       shoot_date: shootDate,
       eos_index: {
         sky: {
@@ -215,8 +226,8 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
       zora_score: {
         eos_index: eosTotal,
         effort_points: effortInfo.points,
-        discovery_points: 0,
-        total: eosTotal + effortInfo.points,
+        discovery_points: discoveries.reduce((sum, d) => sum + d.points, 0),
+        total: eosTotal + effortInfo.points + discoveries.reduce((sum, d) => sum + d.points, 0),
       },
       thumbnail_url: thumbnailUrl || existingThumbnail || null,
       notes: notes || null,
@@ -233,17 +244,86 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
       const data = await res.json();
       if (!res.ok) {
         setSaveError(data.error || "Save failed.");
-      } else if (isEdit) {
-        setSaved(true);
       } else {
-        setShowCeremony(true);
+        // Save discoveries
+        const episodeId = data.id || editData?.id;
+        const validDiscoveries = discoveries.filter((d) => d.name.trim());
+        if (episodeId && validDiscoveries.length > 0) {
+          for (const disc of validDiscoveries) {
+            // Upload discovery photo if present
+            let discPhotoUrl: string | null = null;
+            if (disc.photo) {
+              const fd = new FormData();
+              fd.append("file", disc.photo);
+              fd.append("folder", "discoveries");
+              try {
+                const upRes = await fetch("/api/upload", { method: "POST", body: fd });
+                const upData = await upRes.json();
+                if (upRes.ok) discPhotoUrl = upData.url;
+              } catch { /* continue without photo */ }
+            }
+
+            await fetch("/api/discoveries", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                episode_id: episodeId,
+                type: disc.type,
+                name: disc.name,
+                rarity_tier: disc.rarity_tier,
+                points: disc.points,
+                photo_url: discPhotoUrl,
+                fun_fact: disc.fun_fact || null,
+                first_spotted: shootDate,
+                location_name: location,
+                is_first_unlock: disc.is_first_unlock,
+              }),
+            });
+          }
+        }
+
+        // Check for first unlocks to show ceremony (both new and edit)
+        const firstUnlocks = discoveries.filter((d) => d.is_first_unlock && d.name);
+        if (firstUnlocks.length > 0) {
+          setUnlockItems(
+            firstUnlocks.map((d) => ({
+              name: d.name,
+              type: d.type,
+              rarity: d.rarity_tier,
+              points: d.points,
+              photoUrl: d.photoPreview || null,
+            }))
+          );
+          setShowUnlocks(true);
+        } else if (isEdit) {
+          setSaved(true);
+        } else {
+          setShowCeremony(true);
+        }
       }
     } catch {
-      setSaveError("Network error — could not save.");
+      setSaveError("Network error: could not save.");
     } finally {
       setSaving(false);
     }
   };
+
+  // Discovery unlock ceremony: plays before gem ceremony
+  if (showUnlocks) {
+    return (
+      <DiscoveryUnlockCeremony
+        items={unlockItems}
+        onComplete={() => {
+          setShowUnlocks(false);
+          if (isEdit) {
+            setSaved(true);
+          } else {
+            setShowCeremony(true);
+          }
+        }}
+      />
+    );
+  }
 
   // Gem ceremony overlay
   if (showCeremony) {
@@ -270,7 +350,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
           expedition logged
         </h2>
         <p className="text-dawn-mist/60 mb-2">
-          S{String(season).padStart(2, "0")}E{String(episodeNumber).padStart(2, "0")} — &ldquo;{title}&rdquo;
+          S{String(season).padStart(2, "0")}E{String(episodeNumber).padStart(2, "0")} · &ldquo;{title}&rdquo;
         </p>
         <div className="flex justify-center gap-8 my-6 text-sm">
           <div>
@@ -622,6 +702,44 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
           </div>
         </section>
 
+        {/* Discoveries */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-zora-amber">
+              discoveries
+            </h2>
+            <span className="font-mono text-sm text-amber-light">
+              {discoveries.reduce((sum, d) => sum + d.points, 0)} pts
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {discoveries.map((disc, i) => (
+              <DiscoveryEntry
+                key={i}
+                draft={disc}
+                index={i}
+                onChange={(updated) => {
+                  const next = [...discoveries];
+                  next[i] = updated;
+                  setDiscoveries(next);
+                }}
+                onRemove={() => {
+                  setDiscoveries(discoveries.filter((_, j) => j !== i));
+                }}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setDiscoveries([...discoveries, emptyDiscovery()])}
+            className="mt-3 w-full rounded-md border border-dashed border-rule py-3 text-sm text-mist-dim hover:border-zora-amber/40 hover:text-zora-amber transition-colors"
+          >
+            + add discovery
+          </button>
+        </section>
+
         {/* Field notes */}
         <section>
           <h2 className="font-display text-lg font-semibold text-dawn-mist mb-4">
@@ -706,10 +824,18 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
                 {effortInfo.label} ({effortInfo.points})
               </span>
             </div>
+            {discoveries.length > 0 && (
+              <div className="border-t border-dawn-mist/10 pt-3 flex justify-between">
+                <span className="text-dawn-mist/50">discoveries</span>
+                <span className="text-amber-light text-sm">
+                  {discoveries.length} ({discoveries.reduce((s, d) => s + d.points, 0)} pts)
+                </span>
+              </div>
+            )}
             <div className="border-t border-dawn-mist/10 pt-3 flex justify-between">
               <span className="text-dawn-mist/50">zora score</span>
               <span className="font-mono text-zora-amber font-semibold">
-                {eosTotal + effortInfo.points}+
+                {eosTotal + effortInfo.points + discoveries.reduce((s, d) => s + d.points, 0)}
               </span>
             </div>
           </div>
