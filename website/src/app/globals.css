@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Fonts — local via fontsource */
+@import "@fontsource/cinzel/400.css";
+@import "@fontsource/cinzel/600.css";
+@import "@fontsource/cinzel/700.css";
+@import "@fontsource/cinzel-decorative/400.css";
+@import "@fontsource/cinzel-decorative/700.css";
+@import "@fontsource/crimson-text/400.css";
+@import "@fontsource/crimson-text/400-italic.css";
+@import "@fontsource/crimson-text/600.css";
+@import "@fontsource/crimson-text/600-italic.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+
+:root {
+  /* Brand palette */
+  --pre-dawn: #0D0F14;
+  --pre-dawn-mid: #141820;
+  --pre-dawn-light: #1C2230;
+  --zora-amber: #F0A500;
+  --amber-dark: #B87800;
+  --amber-light: #FFD166;
+  --amber-glow: rgba(240,165,0,0.10);
+  --sunrise-orange: #E8520A;
+  --eos-teal: #1D9E75;
+  --teal-light: #2CC48F;
+  --dawn-mist: #C8D4E0;
+  --mist-dim: #8A9AAE;
+  --rule: rgba(240,165,0,0.22);
+
+  /* Semantic */
+  --background: var(--pre-dawn);
+  --foreground: var(--dawn-mist);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-pre-dawn: var(--pre-dawn);
+  --color-pre-dawn-mid: var(--pre-dawn-mid);
+  --color-pre-dawn-light: var(--pre-dawn-light);
+  --color-dawn-mist: var(--dawn-mist);
+  --color-mist-dim: var(--mist-dim);
+  --color-zora-amber: var(--zora-amber);
+  --color-amber-dark: var(--amber-dark);
+  --color-amber-light: var(--amber-light);
+  --color-sunrise-orange: var(--sunrise-orange);
+  --color-eos-teal: var(--eos-teal);
+  --color-teal-light: var(--teal-light);
+  --color-rule: var(--rule);
+  --font-body: "Crimson Text", Georgia, serif;
+  --font-display: "Cinzel", serif;
+  --font-display-ornate: "Cinzel Decorative", serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* Utility classes for the teaser design language */
+.ornament-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--zora-amber), transparent);
+}
+
+strong { color: var(--amber-light); }

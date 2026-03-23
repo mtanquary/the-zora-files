@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(mkdir -p _website_backup)",
+      "Bash(mv website/artifacts website/_GUIDE.md website/rule-book.htm website/teaser.htm _website_backup/)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(where node:*)",
+      "Bash(where npm:*)",
+      "Bash(where npx:*)",
+      "Bash(cmd.exe /c \"where node && where npm && where npx\")",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --turbopack)",
+      "Bash(rm -rf node_modules package.json package-lock.json tsconfig.json next.config.ts .gitignore next-env.d.ts src public AGENTS.md)",
+      "Bash(printf nnyn:*)",
+      "Bash(yes)",
+      "Bash(cp -r _website_backup/artifacts website/public/artifacts)",
+      "Bash(cp _website_backup/_GUIDE.md website/)",
+      "Bash(cp _website_backup/rule-book.htm _website_backup/teaser.htm website/public/)",
+      "Bash(npx next:*)",
+      "Bash(npm install:*)",
+      "Bash(createdb -U postgres zorafiles)",
+      "Bash(PGPASSWORD=myP0stgr3s2026 psql -U postgres -d zorafiles -f scripts/setup-db.sql)",
+      "Bash(taskkill /PID 9980 /F)",
+      "Bash(PGPASSWORD=myP0stgr3s2026 psql -U postgres -d zorafiles -c \"SELECT id, episode_number, title, location_name, eos_total, effort_rating, effort_points FROM episodes;\")",
+      "Bash(PGPASSWORD=myP0stgr3s2026 psql \"postgresql://postgres@db.bdszbuchldnxlywxylbo.supabase.co:5432/postgres\" -f \"c:/Users/mattt/Documents/the-zora-files/website/scripts/setup-db.sql\")",
+      "Bash(nslookup db.bdszbuchldnxlywxylbo.supabase.co)",
+      "Bash(curl -s \"https://bdszbuchldnxlywxylbo.supabase.co/rest/v1/\" -H \"apikey: sb_publishable_gLxQPh0eiG519VaxtjdzhQ_I3obhZ45\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(node -e \":*)"
+    ]
+  }
+}

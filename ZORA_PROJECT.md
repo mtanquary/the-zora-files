@@ -81,21 +81,102 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 ### Pages
 
 ```
-/                   → Home — latest episode hero, current Eos Index leader, subscribe CTA
-/eos-index          → Records board — all scored episodes, sortable by Eos Index
+/                   → Home — latest expedition card hero, current level + medallion, subscribe CTA
+/eos-index          → Leaderboard — all scored episodes, sortable by Eos Index or Zora Score
 /discovery-log      → Species + feature unlocks — every discovery with point value and episode
 /records            → All-time bests — highest elevation, best road, best water view, etc.
 /episodes           → Episode archive with scores and locations
-/rules              → How it works — scoring, leveling, streaks, discoveries
+/episodes/:slug     → Episode detail — full card, YouTube embed, score breakdown, discoveries
+/rules              → How it works — scoring, leveling, streaks, discoveries, medallion display case
 /about              → The concept, the host, the mission
+/admin/log          → Authenticated — expedition logging form with live card preview and score ceremony
 ```
 
 ### Home page sections
-1. Hero — channel name, tagline, latest episode embed
-2. Current series leader — highest Eos Index score to date
-3. Recent episodes — last 3, with score badges
+1. Hero — latest expedition card (full `<ExpeditionCard>` component) with YouTube embed
+2. Current level — medallion at current state (e.g., Desert Fox with 3/6 gems) + progress bar to next level
+3. Recent episodes — last 3 as compact expedition cards
 4. Discovery Log preview — last 5 unlocks
 5. Subscribe CTA — YouTube + newsletter
+
+### Reusable components from artifacts
+
+The HTML files in `website/artifacts/` are the design source for these React components:
+
+| Artifact source | Component | Props | Used on |
+|-----------------|-----------|-------|---------|
+| 11 `*_medallion.html` files | `<Medallion>` | `level`, `gems`, `streak`, `animated` | Home, episode cards, episode detail, rules, level-up ceremony |
+| `expedition_card.html` | `<ExpeditionCard>` | `episode` data object | Home hero, episode list, episode detail, card export, social og:image |
+| Sundog gem rendering | `<EffortGems>` | `rating` (1–5) | Inside expedition card, log form, leaderboard rows |
+| Web Audio (click, whoosh, chime) | `useCeremonyAudio` hook | — | Level-up ceremony, gem placement, streak crown |
+
+All medallion rendering uses HTML Canvas. The expedition card is DOM-based with a canvas-rendered medallion emblem inset.
+
+### Expedition logging flow (`/admin/log`)
+
+Authenticated route — host only. This is the post-expedition entry point.
+
+**The form:**
+- Episode metadata: number, title, location, coordinates, date
+- Sunrise photo upload
+- Eos Index sub-scores: Sky (0–50), Setting (0–30), Conditions (0–20)
+- Effort rating: 1–5 selector with live sundog gem preview
+- Discovery entries: name, type, rarity, photo, fun fact (add multiple)
+- Contextual data: elevation, distance, pre-dawn minutes, weather
+
+A live `<ExpeditionCard>` preview renders beside the form, updating as fields are filled.
+
+**The score ceremony (on submit):**
+
+1. **Eos Index reveal** — teal number counts up to the final score
+2. **Effort gems fill** — sundogs light up one by one
+3. **Discovery tally** — each discovery flashes with its point value
+4. **Zora Score total** — three pillars sum into the final number
+5. **Record check** — if any all-time records broken, a record callout fires
+
+**The level-up moment:**
+
+The site tracks expedition count. Every 6th expedition triggers a level-up:
+
+1. Current medallion animates its **final gem** into place — click sound, glow effect
+2. Etching sharpens, text completes — **medallion earned**
+3. If streak maintained (all 6 within window), the **streak crown** animates on with whoosh
+4. Brief hold, then the **new level medallion** fades in — empty, faint impression, first gem slot waiting
+5. Level title updates (e.g., "Level 2 — Desert Fox")
+
+If not a level-up: the current medallion receives its next gem (gem 2 of 6, etc.) with the click sound. Every expedition is a visible step forward.
+
+**Card export (after ceremony):**
+
+- Expedition card rendered at share-ready resolution
+- Export options: download PNG, copy to clipboard, open in new tab
+- Aspect ratio presets: Instagram story (9:16), Instagram post (1:1), X/Twitter (16:9), YouTube community (16:9)
+- Card includes current medallion emblem, streak bar if active, all scored data
+
+### Rules page — medallion display case
+
+The `/rules` page includes an interactive display case showing all 11 medallion levels:
+
+- **Level 0 (Scout) and Level 1 (Trailhead)** — fully interactive. Visitors click to watch gem placement animations with sound effects. The full demo experience.
+- **Levels 2–10** — displayed as static, fully-earned renders. Visually distinct (the metal and gem escalation from pewter to white gold is visible) but clicking triggers a soft CTA instead of the demo:
+  - *"Watch the journey to unlock Desert Fox"* → episode archive
+  - *"Play Finding Zora to earn this medallion"* → game site (when available)
+
+The locked animations create incentive to watch the show or play the game. The visual progression alone — copper to bronze to gold to platinum to white gold — sells the system.
+
+### Episode detail pages
+
+Each episode at `/episodes/:slug` shows:
+- Full expedition card at top
+- YouTube embed
+- Complete score breakdown (Eos Index sub-scores, effort, discoveries, Zora Score total)
+- Discovery list with cards for each find
+- Field notes and contextual stats
+- The medallion emblem reflects the host's level **at the time of that episode** — creating a visual timeline of progression across the archive
+
+### Medallion as progression spine
+
+The medallion is not decoration — it is the progression spine of the entire site. Every page that shows an episode also shows the level at the time of filming. The home page always shows current medallion state. The log flow always advances it. Visitors see gems fill over weeks and feel the momentum.
 
 ---
 
@@ -142,7 +223,75 @@ The system rewards **intentionality and effort**, not just lucky weather. A spec
 A score of 100 is the theoretical perfect sunrise — the show's ultimate objective and the definition of "Finding Zora."
 
 ### AI-assisted Eos Index scoring
-An AI-assisted scoring prompt is a confirmed planned feature for solo players. Enables consistent self-scoring between episodes using the rubric above.
+
+The admin log form includes an AI-assisted scoring flow that uses Claude to seed Eos Index sub-scores from a sunrise photo.
+
+**The flow:**
+
+1. In the Eos Index section of `/admin/log`, a "Score with Claude" button sits above the sub-score inputs
+2. Clicking it opens a panel with:
+   - A pre-built prompt (read-only textarea) containing the full Eos Index rubric, sub-score ranges, and scoring philosophy — plus instructions for Claude to return structured JSON
+   - A "Copy prompt" button
+   - A JSON input textarea labeled "Paste Claude's response"
+   - An "Apply scores" button (disabled until valid JSON is pasted)
+3. The user copies the prompt, opens Claude (claude.ai or the API), pastes it along with the sunrise photo
+4. Claude analyzes the image against the rubric and returns a JSON object
+5. The user pastes Claude's JSON response back into the input field
+6. "Apply scores" parses the JSON and auto-fills all Eos Index sub-score fields in the form
+7. The live `<ExpeditionCard>` preview updates immediately with the AI-suggested scores
+8. The user adjusts any sub-scores as needed before saving — Claude's output is a starting point, not final
+
+**The prompt template:**
+
+The generated prompt must include:
+- The full Eos Index rubric (Sky, Setting, Conditions with all sub-components and max values)
+- The scoring philosophy ("rewards intentionality and effort, not just lucky weather")
+- Contextual fields from the form if already filled: location name, trail/position, effort rating
+- Instruction to evaluate the attached photo and return ONLY a JSON object — no explanation
+- Instruction to include a brief `rationale` string per sub-score (displayed as helper text in the form)
+
+**The JSON schema (Claude's output):**
+
+```json
+{
+  "eos_index": {
+    "sky": {
+      "color_intensity": { "score": 14, "max": 20, "rationale": "Strong orange-to-pink gradient but narrow band above ridge" },
+      "cloud_engagement": { "score": 11, "max": 15, "rationale": "Mid-level clouds lit from below, good structure" },
+      "horizon_definition": { "score": 9, "max": 15, "rationale": "Mountain ridgeline obscures disk — glow only" }
+    },
+    "setting": {
+      "foreground_composition": { "score": 12, "max": 15, "rationale": "Saguaro silhouettes provide strong layering" },
+      "location_uniqueness": { "score": 13, "max": 15, "rationale": "Superstition Mountains — iconic and visually distinct" }
+    },
+    "conditions": {
+      "access_difficulty": { "score": 4, "max": 10, "rationale": "Short moderate trail, paved access" },
+      "weather_challenge": { "score": 3, "max": 10, "rationale": "Calm, mild conditions — no adversity" }
+    }
+  }
+}
+```
+
+**UI behavior:**
+- Sub-score input fields show Claude's rationale as helper text beneath each slider/input after scores are applied
+- Changed scores (user overrides) are visually distinguished from AI-suggested scores (e.g., amber highlight on modified fields)
+- The JSON input validates on paste — malformed JSON shows an inline error
+- "Reset to AI scores" link appears after any manual override, allowing the user to revert individual fields
+- The prompt regenerates dynamically if the user changes location or effort fields — the "Copy prompt" button always reflects current form state
+
+**Two modes:**
+
+1. **Direct mode** (default for authenticated host) — a "Score with Claude" button sends the sunrise photo and prompt directly to the Claude API via a server-side route (`/api/eos-score`). The API key is stored as a server-side environment variable (never exposed to the client). Results populate the form instantly — no copy-paste needed. The same JSON schema and rationale display applies.
+
+2. **Copy-paste mode** (fallback / future community use) — for users without API access. The button opens the prompt panel, user copies it to claude.ai, pastes the JSON response back. No API key required. This is the path for any future public-facing version of the feature.
+
+Mode selection: the server route checks for a configured `ANTHROPIC_API_KEY` env var. If present, direct mode is available. If not, the UI falls back to copy-paste mode automatically. No user configuration needed.
+
+**Why both:**
+- Direct mode removes friction for the host — upload photo, click, scores appear
+- Copy-paste mode requires no API key, no cost, works with free Claude — accessible to anyone
+- Both modes produce identical results — same prompt, same JSON schema, same form behavior
+- The human is always in the loop — scores are suggestions, never auto-saved
 
 ---
 

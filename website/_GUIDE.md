@@ -13,34 +13,78 @@ This folder will contain the **thezorafiles.com** Next.js project. It's not init
 - **Domain:** thezorafiles.com (registered via Cloudflare)
 - **DNS:** Cloudflare DNS pointed to Vercel
 
-## Planned pages
+## Site structure — two halves
+
+The site has a public show side and an authenticated admin side. The game sub-site (`/finding-zora`) is a future addition — see ZORA_PROJECT.md for notes on Watches and community play.
+
+### Public pages (the show)
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Home — latest episode hero, current leader, current level + progress bar, subscribe CTA |
-| `/eos-index` | Full leaderboard — show episodes, sortable by Eos Index or Zora Score |
-| `/eos-index/community` | Community leaderboard — viewer-submitted scored sunrises |
-| `/eos-index/map` | Global Eos Index map — every scored sunrise (show + community) plotted worldwide |
-| `/discovery-log` | Every discovery with point value, episode, and first-unlock status |
+| `/` | Home — latest expedition card hero, current medallion + level progress, last 3 episodes, last 5 discoveries, subscribe CTA |
+| `/eos-index` | Leaderboard — all scored episodes, sortable by Eos Index or Zora Score |
+| `/discovery-log` | Every discovery with point value, episode, rarity, and first-unlock status |
 | `/records` | All-time bests — highest elevation, best road, etc. |
 | `/episodes` | Episode archive with both Eos Index and Zora Score |
-| `/submit` | Community sunrise upload — photo with EXIF validation, AI scoring |
+| `/episodes/:slug` | Episode detail — full expedition card, YouTube embed, score breakdown, discoveries, field notes |
+| `/rules` | How it works — scoring, leveling, streaks, discoveries, interactive medallion display case |
 | `/about` | The concept, the host, the mission |
+
+### Future community pages
+
+| Route | Purpose |
+|-------|---------|
+| `/eos-index/community` | Community leaderboard — viewer-submitted scored sunrises |
+| `/eos-index/map` | Global Eos Index map — every scored sunrise (show + community) plotted worldwide |
+| `/submit` | Community sunrise upload — photo with EXIF validation, AI scoring |
+
+### Admin pages (authenticated, host only)
+
+| Route | Purpose |
+|-------|---------|
+| `/admin/log` | Expedition logging form with live card preview, score ceremony, level-up flow, and card export |
+
+## Key components
+
+Built from the HTML artifacts in `website/artifacts/`:
+
+| Component | Source artifact | Purpose |
+|-----------|----------------|---------|
+| `<Medallion>` | 11 `*_medallion.html` files | Canvas-rendered medallion at any level/gem/streak state |
+| `<ExpeditionCard>` | `expedition_card.html` | Episode display card — used on every page that shows an episode, plus social sharing |
+| `<EffortGems>` | Sundog rendering in card | 1–5 diamond-shaped effort indicators |
+| `useCeremonyAudio` | Web Audio from medallion files | Click, whoosh, chime sounds for level-up and gem placement |
+
+The medallion component is the progression spine — it appears on the home page (current state), on every episode (level at time of filming), on the rules page (display case), and in the admin log flow (gem placement / level-up ceremony).
 
 ## Dual scoring display
 
 The website must display both scoring systems:
-- **Eos Index** (0-100) — sunrise quality score. Photography-focused viewers follow this.
-- **Zora Score** (~215 max) — full episode score including travel, discovery, conditions. Adventure-focused viewers follow this.
-- Leaderboards should be sortable by either score.
+- **Eos Index** (0–100) — sunrise quality score. Photography-focused viewers follow this.
+- **Zora Score** (~215 max) — full episode score including effort, discovery, conditions. Adventure-focused viewers follow this.
+- Leaderboards sortable by either score.
 
 ## Level-up progression display
 
-The home page and a dedicated section should show:
-- Current level number and title (e.g., "Level 2 — Desert Fox")
-- Progress bar toward next level threshold
-- Next gear unlock preview
-- Episode count and current streak
+The home page shows:
+- Current medallion at actual gem state (e.g., 3 of 6 gems filled)
+- Level number and title (e.g., "Level 2 — Desert Fox")
+- Progress bar toward next level (expeditions completed / 6)
+- Current streak status
+
+## Rules page — medallion display case
+
+All 11 medallion levels are shown. Interactivity is gated:
+- **Level 0 (Scout) and Level 1 (Trailhead)** — fully interactive with gem animation and sound
+- **Levels 2–10** — static earned-state renders. Clicking shows a CTA to watch the show or play the game instead of triggering the demo. The visual escalation (pewter → white gold) is visible but the animations are earned.
+
+## Admin logging flow
+
+See ZORA_PROJECT.md "Expedition logging flow" for the full spec. Summary:
+1. Fill form → live expedition card preview updates in real time
+2. Submit → score ceremony (Eos count-up, effort gems, discovery tally, Zora Score total, record check)
+3. Level-up if 6th expedition → medallion earns final gem, streak crown if applicable, new medallion fades in
+4. Card export → download PNG at multiple aspect ratios for social sharing
 
 ## Community scoring architecture
 

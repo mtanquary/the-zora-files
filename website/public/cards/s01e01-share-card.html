@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>S01E01 — The Benchmark — Share Card</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    color: #C8D4E0;
+    padding: 40px;
+  }
+
+  .controls {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+  }
+  .controls button {
+    background: none;
+    border: 1px solid rgba(200,212,224,0.2);
+    color: rgba(200,212,224,0.5);
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .controls button.active {
+    border-color: #F0A500;
+    color: #F0A500;
+    background: rgba(240,165,0,0.08);
+  }
+  .controls button:hover { border-color: rgba(200,212,224,0.4); color: rgba(200,212,224,0.8); }
+
+  .card-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0D0F14;
+    width: 600px;
+  }
+  .card.ratio-16-9 { aspect-ratio: 16/9; }
+  .card.ratio-1-1 { aspect-ratio: 1/1; }
+  .card.ratio-9-16 { aspect-ratio: 9/16; width: 400px; }
+
+  .card-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Photo zone */
+  .photo-zone {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .photo-zone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+  }
+
+  /* Top-left info */
+  .top-left {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    z-index: 10;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7);
+  }
+  .top-left .ep-code {
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .top-left .location {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 1px;
+  }
+  .top-left .date {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 1px;
+  }
+
+  /* Top-right medallion */
+  .medallion {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,1)) drop-shadow(0 0 4px rgba(0,0,0,0.8));
+  }
+  .medallion canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Score zone */
+  .score-zone {
+    background: #0D0F14;
+    padding: 16px 20px 10px;
+    position: relative;
+    z-index: 10;
+  }
+  .score-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .eos-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(29,158,117,0.6);
+    margin-bottom: 2px;
+  }
+  .eos-number {
+    font-family: 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+    font-size: 42px;
+    font-weight: 700;
+    color: #1D9E75;
+    line-height: 1;
+  }
+
+  /* Effort sundogs */
+  .effort-area { text-align: right; }
+  .sundogs {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .sundog {
+    width: 8px;
+    height: 18px;
+  }
+  .effort-label {
+    font-size: 12px;
+    color: rgba(240,165,0,0.75);
+  }
+
+  /* Stats strip */
+  .stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 10px;
+    color: rgba(200,212,224,0.3);
+  }
+
+  /* Footer */
+  .card-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(200,212,224,0.08);
+    text-align: center;
+  }
+  .card-footer span {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(200,212,224,0.2);
+  }
+
+  /* Export buttons */
+  .export-buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+  }
+  .export-buttons button {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary {
+    background: #F0A500;
+    color: #0D0F14;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: #d99500; }
+  .btn-secondary {
+    background: none;
+    border: 1px solid rgba(200,212,224,0.2) !important;
+    color: rgba(200,212,224,0.5);
+  }
+  .btn-secondary:hover { border-color: rgba(200,212,224,0.4) !important; color: rgba(200,212,224,0.7); }
+
+  .hint {
+    margin-top: 16px;
+    font-size: 12px;
+    color: rgba(200,212,224,0.25);
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="active" onclick="setRatio('16-9')">16:9 — X / YouTube</button>
+  <button onclick="setRatio('1-1')">1:1 — Instagram post</button>
+  <button onclick="setRatio('9-16')">9:16 — Story / TikTok</button>
+</div>
+
+<div class="card-wrapper">
+  <div class="card ratio-16-9" id="card">
+    <div class="card-inner">
+      <!-- Photo zone -->
+      <div class="photo-zone">
+        <img src="file:///C:/Users/mattt/Documents/the-zora-files/episodes/season-01/S01E01-the-benchmark/photos/20260322_064427.jpg" alt="Sunrise at Lost Dutchman" id="photo">
+        <div class="photo-overlay"></div>
+
+        <div class="top-left">
+          <div class="ep-code">S01E01</div>
+          <div class="location">Lost Dutchman State Park</div>
+          <div class="date">Mar 22, 2026</div>
+        </div>
+
+        <div class="medallion">
+          <canvas id="emblem" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Score zone -->
+      <div class="score-zone">
+        <div class="score-row">
+          <div>
+            <div class="eos-label">eos index</div>
+            <div class="eos-number">62</div>
+          </div>
+          <div class="effort-area">
+            <div class="sundogs">
+              <svg class="sundog" viewBox="0 0 8 18"><path d="M4 0 C6 4,8 8,8 10 C8 14,6 18,4 18 C2 18,0 14,0 10 C0 8,2 4,4 0Z" fill="#F0A500"/></svg>
+              <svg class="sundog" viewBox="0 0 8 18"><path d="M4 0 C6 4,8 8,8 10 C8 14,6 18,4 18 C2 18,0 14,0 10 C0 8,2 4,4 0Z" fill="#F0A500"/></svg>
+              <svg class="sundog" viewBox="0 0 8 18"><path d="M4 0 C6 4,8 8,8 10 C8 14,6 18,4 18 C2 18,0 14,0 10 C0 8,2 4,4 0Z" fill="rgba(200,212,224,0.1)"/></svg>
+              <svg class="sundog" viewBox="0 0 8 18"><path d="M4 0 C6 4,8 8,8 10 C8 14,6 18,4 18 C2 18,0 14,0 10 C0 8,2 4,4 0Z" fill="rgba(200,212,224,0.1)"/></svg>
+              <svg class="sundog" viewBox="0 0 8 18"><path d="M4 0 C6 4,8 8,8 10 C8 14,6 18,4 18 C2 18,0 14,0 10 C0 8,2 4,4 0Z" fill="rgba(200,212,224,0.1)"/></svg>
+            </div>
+            <div class="effort-label">Trail</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <span>Prospector's View — 0.7 mi</span>
+          <span>~200 ft gain</span>
+          <span>45 min pre-dawn</span>
+        </div>
+
+        <div class="card-footer">
+          <span>the zora files</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="export-buttons">
+  <button class="btn-primary" onclick="saveScreenshot()">right-click the card → Save Image As</button>
+</div>
+<p class="hint">Or press Win+Shift+S to snip just the card. The card renders at native resolution.</p>
+
+<script>
+// Draw Scout compass rose emblem
+(function() {
+  const cv = document.getElementById('emblem');
+  const c = cv.getContext('2d');
+  const S=200, cx=100, cy=100;
+  // Background
+  c.beginPath(); c.arc(cx,cy,92,0,Math.PI*2);
+  c.fillStyle='rgba(13,15,20,0.75)'; c.fill();
+  c.strokeStyle='rgba(200,212,224,0.2)'; c.lineWidth=2; c.stroke();
+  const col='rgba(200,200,210,0.7)', colD='rgba(140,140,155,0.5)';
+  // Intermediate points
+  for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4,co=Math.cos(a),si=Math.sin(a),px=-si,py=co;
+    c.beginPath();c.moveTo(cx+co*28,cy+si*28);c.lineTo(cx+px*6,cy+py*6);c.lineTo(cx,cy);c.lineTo(cx-px*6,cy-py*6);c.closePath();c.fillStyle=colD;c.fill();}
+  // Cardinal points
+  const lens=[42,34,34,34];
+  for(let i=0;i<4;i++){const a=-Math.PI/2+i*Math.PI/2,co=Math.cos(a),si=Math.sin(a),px=-si,py=co,len=lens[i];
+    c.beginPath();c.moveTo(cx+co*len,cy+si*len);c.lineTo(cx+px*9,cy+py*9);c.lineTo(cx,cy);c.closePath();c.fillStyle=col;c.fill();
+    c.beginPath();c.moveTo(cx+co*len,cy+si*len);c.lineTo(cx-px*9,cy-py*9);c.lineTo(cx,cy);c.closePath();c.fillStyle=colD;c.fill();
+    c.beginPath();c.moveTo(cx+co*len,cy+si*len);c.lineTo(cx+px*9,cy+py*9);c.lineTo(cx,cy);c.lineTo(cx-px*9,cy-py*9);c.closePath();c.strokeStyle='rgba(200,200,220,0.3)';c.lineWidth=0.8;c.stroke();}
+  c.beginPath();c.arc(cx,cy,5,0,Math.PI*2);c.fillStyle=col;c.fill();
+})();
+
+function setRatio(ratio) {
+  const card = document.getElementById('card');
+  card.className = 'card ratio-' + ratio;
+  if (ratio === '9-16') card.style.width = '400px';
+  else card.style.width = '600px';
+
+  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
