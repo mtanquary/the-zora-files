@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { getEpisodes } from "@/lib/queries";
 import { Ornament, Lore, Stars, HorizonGlow } from "@/components/atmosphere";
+import { SeasonRecapButton } from "./season-recap-button";
 
 export const metadata: Metadata = { title: "about" };
+export const dynamic = "force-dynamic";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const episodes = await getEpisodes();
+  const hasEpisodes = episodes.length >= 3;
+  const hasApiKey = !!process.env.ANTHROPIC_API_KEY;
   return (
     <div>
       {/* Header with atmosphere */}
@@ -67,6 +73,13 @@ export default function AboutPage() {
           landscape. She has been spotted over the Atlantic, above the treeline in the Rockies,
           rising from the sea off coastal cliffs. Wherever dawn breaks, the game is on.
         </Lore>
+
+        {hasApiKey && hasEpisodes && (
+          <>
+            <Ornament label="Season recap" />
+            <SeasonRecapButton season={1} />
+          </>
+        )}
       </div>
     </div>
   );

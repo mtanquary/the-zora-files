@@ -77,6 +77,7 @@ export interface DiscoveryRow {
   location_name: string;
   is_first_unlock: boolean;
   subsequent_find_number: number | null;
+  detection_method: string;
   created_at: string;
 }
 

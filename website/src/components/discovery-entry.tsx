@@ -2,16 +2,26 @@
 
 import { useState, useEffect, useRef } from "react";
 
+export type DetectionMethod = "photographed" | "visual" | "audio" | "visual_and_audio";
+
 export interface DiscoveryDraft {
   name: string;
   type: "wildlife" | "plant" | "geographic" | "cultural_historical";
   rarity_tier: "common" | "uncommon" | "rare" | "very_rare" | "exceptional";
   points: number;
   fun_fact: string;
+  detection_method: DetectionMethod;
   photo: File | null;
   photoPreview: string | null;
   is_first_unlock: boolean;
 }
+
+const DETECTION_METHODS = [
+  { value: "photographed", label: "Photographed", icon: "📷" },
+  { value: "visual", label: "Seen only", icon: "👁" },
+  { value: "audio", label: "Heard only", icon: "🔊" },
+  { value: "visual_and_audio", label: "Seen and heard", icon: "👁🔊" },
+] as const;
 
 const TYPES = [
   { value: "wildlife", label: "Wildlife" },
@@ -41,6 +51,8 @@ interface Props {
   onChange: (d: DiscoveryDraft) => void;
   onRemove: () => void;
   index: number;
+  hasApiKey?: boolean;
+  location?: string;
 }
 
 interface SearchResult {
@@ -51,11 +63,13 @@ interface SearchResult {
   find_count: string;
 }
 
-export function DiscoveryEntry({ draft, onChange, onRemove, index }: Props) {
+export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, location }: Props) {
   const [query, setQuery] = useState(draft.name);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiWarning, setAiWarning] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -111,6 +125,44 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index }: Props) {
   const setAsNew = () => {
     onChange({ ...draft, name: query, is_first_unlock: true });
     setShowResults(false);
+  };
+
+  const handleAiAssist = async () => {
+    if (!draft.name && !draft.photo) return;
+    setAiLoading(true);
+    setAiWarning(null);
+
+    const fd = new FormData();
+    if (draft.name) fd.append("name", draft.name);
+    if (draft.type) fd.append("type", draft.type);
+    if (location) fd.append("location", location);
+    if (draft.photo) fd.append("photo", draft.photo);
+
+    try {
+      const res = await fetch("/api/discovery-assist", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) return;
+
+      const rarity = RARITIES.find((r) => r.value === data.rarity_tier);
+
+      onChange({
+        ...draft,
+        name: data.corrected_name || draft.name,
+        type: data.type || draft.type,
+        rarity_tier: (data.rarity_tier as DiscoveryDraft["rarity_tier"]) || draft.rarity_tier,
+        points: data.suggested_points || rarity?.default || draft.points,
+        fun_fact: data.fun_fact || draft.fun_fact,
+      });
+      setQuery(data.corrected_name || draft.name);
+
+      if (data.plausibility === "unlikely" || data.plausibility === "impossible") {
+        setAiWarning(data.plausibility_note || `This species seems ${data.plausibility} at this location.`);
+      }
+    } catch {
+      // AI assist is best-effort
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const currentRarity = RARITIES.find((r) => r.value === draft.rarity_tier)!;
@@ -177,6 +229,55 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index }: Props) {
             )}
           </div>
         )}
+      </div>
+
+      {/* AI assist */}
+      {hasApiKey && (
+        <div>
+          <button
+            type="button"
+            onClick={handleAiAssist}
+            disabled={aiLoading || (!draft.name && !draft.photo)}
+            className="w-full rounded-md border border-eos-teal/30 bg-eos-teal/5 px-3 py-2 text-xs text-eos-teal transition-colors hover:bg-eos-teal/10 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            {aiLoading
+              ? "identifying..."
+              : draft.photo
+                ? "identify from photo + name"
+                : "verify and auto-fill"}
+          </button>
+          {aiWarning && (
+            <div className="mt-2 rounded-md border border-sunrise-orange/30 bg-sunrise-orange/5 px-3 py-2 text-xs text-sunrise-orange">
+              {aiWarning}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Detection method */}
+      <div>
+        <label className="block font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider mb-1">
+          how was it identified?
+        </label>
+        <div className="grid grid-cols-4 gap-2">
+          {DETECTION_METHODS.map((m) => (
+            <button
+              key={m.value}
+              type="button"
+              onClick={() =>
+                onChange({ ...draft, detection_method: m.value as DetectionMethod })
+              }
+              className={`rounded-md border px-2 py-2 text-center text-xs transition-colors ${
+                draft.detection_method === m.value
+                  ? "border-zora-amber bg-zora-amber/10 text-zora-amber"
+                  : "border-rule text-mist-dim/40 hover:border-mist-dim/20"
+              }`}
+            >
+              <span className="block text-base mb-0.5">{m.icon}</span>
+              {m.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -251,37 +352,49 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index }: Props) {
       </div>
 
       {/* Photo */}
-      <div>
-        <label className="block font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider mb-1">
-          photo
-        </label>
-        <label className="block cursor-pointer rounded-md border border-dashed border-rule hover:border-zora-amber/30 transition-colors p-3 text-center">
-          {draft.photoPreview ? (
-            <img
-              src={draft.photoPreview}
-              alt={draft.name}
-              className="mx-auto max-h-24 rounded object-cover"
+      {draft.detection_method === "photographed" ? (
+        <div>
+          <label className="block font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider mb-1">
+            photo
+          </label>
+          <label className="block cursor-pointer rounded-md border border-dashed border-rule hover:border-zora-amber/30 transition-colors p-3 text-center">
+            {draft.photoPreview ? (
+              <img
+                src={draft.photoPreview}
+                alt={draft.name}
+                className="mx-auto max-h-24 rounded object-cover"
+              />
+            ) : (
+              <span className="text-xs text-mist-dim/40">Click to add photo</span>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  onChange({
+                    ...draft,
+                    photo: file,
+                    photoPreview: URL.createObjectURL(file),
+                  });
+                }
+              }}
+              className="hidden"
             />
-          ) : (
-            <span className="text-xs text-mist-dim/40">Click to add photo</span>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                onChange({
-                  ...draft,
-                  photo: file,
-                  photoPreview: URL.createObjectURL(file),
-                });
-              }
-            }}
-            className="hidden"
-          />
         </label>
-      </div>
+        </div>
+      ) : (
+        <div className="rounded-md border border-dashed border-rule p-3 text-center">
+          <p className="text-xs text-mist-dim/40">
+            {draft.detection_method === "audio"
+              ? "Identified by sound. Photo can be added later."
+              : draft.detection_method === "visual"
+                ? "Seen but not photographed. Photo can be added later."
+                : "Seen and heard but not photographed. Photo can be added later."}
+          </p>
+        </div>
+      )}
 
       {/* Fun fact */}
       <div>
@@ -307,6 +420,7 @@ export function emptyDiscovery(): DiscoveryDraft {
     rarity_tier: "common",
     points: 8,
     fun_fact: "",
+    detection_method: "photographed",
     photo: null,
     photoPreview: null,
     is_first_unlock: true,

@@ -10,7 +10,9 @@ export default async function DiscoveryLogPage() {
   const discoveries = await getAllDiscoveries();
   const grouped = groupDiscoveries(discoveries);
   const totalPoints = discoveries.reduce((sum, d) => sum + d.points, 0);
-  const firstUnlocks = grouped.filter((d) => d.is_first_unlock).length;
+
+  const photographed = grouped.filter((d) => d.has_photo);
+  const identified = grouped.filter((d) => !d.has_photo);
 
   return (
     <div className="max-w-[780px] mx-auto px-8 py-16">
@@ -35,16 +37,32 @@ export default async function DiscoveryLogPage() {
         </div>
       )}
 
-      <Ornament label="Unlocks" />
+      {/* Photographed discoveries */}
+      {photographed.length > 0 && (
+        <>
+          <Ornament label="Photographed" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {photographed.map((d) => (
+              <DiscoveryCard key={d.name} discovery={d} showEpisodes />
+            ))}
+          </div>
+        </>
+      )}
 
-      {grouped.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {grouped.map((d) => (
-            <DiscoveryCard key={d.name} discovery={d} showEpisodes />
-          ))}
-        </div>
-      ) : (
-        <p className="text-mist-dim">
+      {/* Identified but not yet photographed */}
+      {identified.length > 0 && (
+        <>
+          <Ornament label="Identified · awaiting photo" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {identified.map((d) => (
+              <DiscoveryCard key={d.name} discovery={d} showEpisodes />
+            ))}
+          </div>
+        </>
+      )}
+
+      {grouped.length === 0 && (
+        <p className="text-mist-dim mt-8">
           No discoveries logged yet. First unlocks earn bonus points. The log
           accumulates over the life of the series and becomes its own documentary
           record.

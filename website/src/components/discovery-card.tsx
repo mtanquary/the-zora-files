@@ -8,6 +8,20 @@ const RARITY_COLORS: Record<string, string> = {
   exceptional: "text-amber-light",
 };
 
+const METHOD_ICONS: Record<string, string> = {
+  photographed: "\u{1F4F7}",
+  visual: "\u{1F441}",
+  audio: "\u{1F50A}",
+  visual_and_audio: "\u{1F441}\u{1F50A}",
+};
+
+const METHOD_LABELS: Record<string, string> = {
+  photographed: "Photographed",
+  visual: "Seen",
+  audio: "Heard",
+  visual_and_audio: "Seen + heard",
+};
+
 export interface GroupedDiscovery {
   name: string;
   type: string;
@@ -16,6 +30,8 @@ export interface GroupedDiscovery {
   photo_url: string | null;
   fun_fact: string | null;
   is_first_unlock: boolean;
+  detection_method: string;
+  has_photo: boolean;
   count: number;
   total_points: number;
   episodes: string[];
@@ -36,8 +52,12 @@ export function groupDiscoveries(
       if (d.episode_title && !existing.episodes.includes(d.episode_title)) {
         existing.episodes.push(d.episode_title);
       }
-      // Keep the best photo and fun fact
-      if (!existing.photo_url && d.photo_url) existing.photo_url = d.photo_url;
+      // Promote to photographed if any entry has a photo
+      if (d.photo_url) {
+        existing.photo_url = d.photo_url;
+        existing.has_photo = true;
+        existing.detection_method = "photographed";
+      }
       if (!existing.fun_fact && d.fun_fact) existing.fun_fact = d.fun_fact;
     } else {
       map.set(d.name, {
@@ -48,6 +68,8 @@ export function groupDiscoveries(
         photo_url: d.photo_url,
         fun_fact: d.fun_fact,
         is_first_unlock: d.is_first_unlock,
+        detection_method: (d as { detection_method?: string }).detection_method || "photographed",
+        has_photo: !!d.photo_url,
         count: 1,
         total_points: d.points,
         episodes: d.episode_title ? [d.episode_title] : [],
@@ -71,12 +93,18 @@ export function DiscoveryCard({
 
   return (
     <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden">
-      {d.photo_url && (
+      {d.photo_url ? (
         <img
           src={d.photo_url}
           alt={d.name}
           className="w-full h-32 object-cover"
         />
+      ) : (
+        <div className="w-full h-24 bg-pre-dawn-light flex items-center justify-center">
+          <span className="text-2xl opacity-40">
+            {METHOD_ICONS[d.detection_method] || "?"}
+          </span>
+        </div>
       )}
       <div className="p-4">
         <div className="flex items-center justify-between mb-1">
@@ -84,7 +112,12 @@ export function DiscoveryCard({
           <div className="flex items-center gap-2">
             {d.count > 1 && (
               <span className="font-mono text-[0.6rem] bg-pre-dawn-light border border-rule rounded-full px-2 py-0.5 text-mist-dim">
-                ×{d.count}
+                x{d.count}
+              </span>
+            )}
+            {!d.has_photo && (
+              <span className="font-mono text-[0.55rem] text-mist-dim/50" title={METHOD_LABELS[d.detection_method]}>
+                {METHOD_ICONS[d.detection_method]}
               </span>
             )}
             {showUnlockBadge && d.is_first_unlock && (

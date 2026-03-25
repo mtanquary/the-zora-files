@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
     const {
       episode_id, type, name, rarity_tier, points,
       photo_url, fun_fact, first_spotted, location_name, is_first_unlock,
+      detection_method,
     } = body;
 
     // Count previous finds to set subsequent_find_number
@@ -55,13 +56,13 @@ export async function POST(request: NextRequest) {
       `INSERT INTO discoveries (
         episode_id, type, name, country, rarity_tier, points,
         photo_url, fun_fact, first_spotted, location_name,
-        is_first_unlock, subsequent_find_number
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+        is_first_unlock, subsequent_find_number, detection_method
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
       RETURNING id, is_first_unlock`,
       [
         episode_id, type, name, "US", rarity_tier, points,
         photo_url || null, fun_fact || null, first_spotted, location_name,
-        actualFirstUnlock, subsequentNum,
+        actualFirstUnlock, subsequentNum, detection_method || "photographed",
       ]
     );
 

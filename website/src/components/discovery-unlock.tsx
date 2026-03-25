@@ -8,6 +8,7 @@ export interface UnlockItem {
   rarity: string;
   points: number;
   photoUrl: string | null;
+  detectionMethod: string;
 }
 
 interface Props {
@@ -203,19 +204,30 @@ export function DiscoveryUnlockCeremony({ items, onComplete }: Props) {
             />
           ) : (
             <div
-              className="w-full h-full flex items-center justify-center transition-all duration-700"
+              className="w-full h-full flex flex-col items-center justify-center gap-3 transition-all duration-700"
               style={{
                 background: isRevealed ? glowColor : "#0A0A0F",
               }}
             >
               <span
-                className="font-display-ornate text-6xl transition-all duration-700"
+                className="text-6xl transition-all duration-700"
                 style={{
-                  color: isRevealed ? "rgba(200,212,224,0.8)" : "rgba(200,212,224,0.08)",
+                  opacity: isRevealed ? 0.8 : 0.08,
                 }}
               >
-                ?
+                {item.detectionMethod === "audio" ? "\u{1F50A}" :
+                 item.detectionMethod === "visual" ? "\u{1F441}" :
+                 item.detectionMethod === "visual_and_audio" ? "\u{1F441}" :
+                 "?"}
               </span>
+              {isRevealed && (
+                <span className="font-mono text-xs text-dawn-mist/50 uppercase tracking-wider">
+                  {item.detectionMethod === "audio" ? "identified by sound" :
+                   item.detectionMethod === "visual" ? "seen, not photographed" :
+                   item.detectionMethod === "visual_and_audio" ? "seen and heard" :
+                   ""}
+                </span>
+              )}
             </div>
           )}
 

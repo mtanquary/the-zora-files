@@ -74,6 +74,11 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
   const [notes, setNotes] = useState(editData?.notes ?? "");
   const [existingThumbnail] = useState(editData?.thumbnailUrl ?? "");
 
+  // AI assist
+  const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
+  const [titleLoading, setTitleLoading] = useState(false);
+  const [notesLoading, setNotesLoading] = useState(false);
+
   // Discoveries
   const [discoveries, setDiscoveries] = useState<DiscoveryDraft[]>([]);
   const [showUnlocks, setShowUnlocks] = useState(false);
@@ -163,6 +168,53 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
   const eosTotal = skyTotal + settingTotal + conditionsTotal;
 
   const effortInfo = EFFORT_LEVELS.find((e) => e.level === effortLevel)!;
+  const discoveryPoints = discoveries.reduce((sum, d) => sum + d.points, 0);
+
+  const suggestTitles = async () => {
+    setTitleLoading(true);
+    try {
+      const res = await fetch("/api/ai-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          location,
+          eos_total: eosTotal,
+          effort_label: effortInfo.label,
+          discoveries: discoveries.filter((d) => d.name).map((d) => ({ name: d.name })),
+          notes,
+          weather: "",
+        }),
+      });
+      const data = await res.json();
+      if (data.titles) setTitleSuggestions(data.titles);
+    } catch { /* best effort */ }
+    finally { setTitleLoading(false); }
+  };
+
+  const draftNotes = async () => {
+    setNotesLoading(true);
+    try {
+      const res = await fetch("/api/ai-field-notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          location,
+          shoot_date: shootDate,
+          eos_total: eosTotal,
+          effort_label: effortInfo.label,
+          discoveries: discoveries.filter((d) => d.name).map((d) => ({
+            name: d.name, type: d.type, rarity_tier: d.rarity_tier,
+          })),
+          scores: { sky: skyTotal, setting: settingTotal, conditions: conditionsTotal },
+          notes_so_far: notes,
+        }),
+      });
+      const data = await res.json();
+      if (data.notes) setNotes(data.notes);
+    } catch { /* best effort */ }
+    finally { setNotesLoading(false); }
+  };
 
   const handleSave = async () => {
     if (!title.trim() || !location.trim()) {
@@ -277,6 +329,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
                 first_spotted: shootDate,
                 location_name: location,
                 is_first_unlock: disc.is_first_unlock,
+                detection_method: disc.detection_method,
               }),
             });
           }
@@ -292,6 +345,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
               rarity: d.rarity_tier,
               points: d.points,
               photoUrl: d.photoPreview || null,
+              detectionMethod: d.detection_method,
             }))
           );
           setShowUnlocks(true);
@@ -410,13 +464,40 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
               <label className="block text-xs text-dawn-mist/50 mb-1">
                 episode title
               </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="The Benchmark"
-                className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="The Benchmark"
+                  className="flex-1 rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+                />
+                {hasApiKey && (
+                  <button
+                    type="button"
+                    onClick={suggestTitles}
+                    disabled={titleLoading || !location}
+                    className="rounded-lg border border-eos-teal/30 bg-eos-teal/5 px-3 py-2 text-xs text-eos-teal hover:bg-eos-teal/10 transition-colors disabled:opacity-30 whitespace-nowrap"
+                    title="Suggest titles with AI"
+                  >
+                    {titleLoading ? "..." : "suggest"}
+                  </button>
+                )}
+              </div>
+              {titleSuggestions.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {titleSuggestions.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => { setTitle(t); setTitleSuggestions([]); }}
+                      className="rounded-md border border-rule bg-pre-dawn-mid px-2.5 py-1 text-xs text-dawn-mist hover:border-zora-amber/40 hover:text-zora-amber transition-colors"
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -719,6 +800,8 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
                 key={i}
                 draft={disc}
                 index={i}
+                hasApiKey={hasApiKey}
+                location={location}
                 onChange={(updated) => {
                   const next = [...discoveries];
                   next[i] = updated;
@@ -742,9 +825,21 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: L
 
         {/* Field notes */}
         <section>
-          <h2 className="font-display text-lg font-semibold text-dawn-mist mb-4">
-            field notes
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-dawn-mist">
+              field notes
+            </h2>
+            {hasApiKey && (
+              <button
+                type="button"
+                onClick={draftNotes}
+                disabled={notesLoading || !location}
+                className="rounded-lg border border-eos-teal/30 bg-eos-teal/5 px-3 py-1.5 text-xs text-eos-teal hover:bg-eos-teal/10 transition-colors disabled:opacity-30"
+              >
+                {notesLoading ? "drafting..." : "draft with AI"}
+              </button>
+            )}
+          </div>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
