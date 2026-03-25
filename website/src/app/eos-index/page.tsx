@@ -3,6 +3,7 @@ import { getEpisodesSortedByEos } from "@/lib/queries";
 import { extractEosSub } from "@/lib/eos-helpers";
 import { EFFORT_LEVELS } from "@/lib/types";
 import { EosExpandable } from "@/components/eos-expandable";
+import { ZoraExpandable } from "@/components/zora-expandable";
 import { Ornament } from "@/components/atmosphere";
 
 export const metadata: Metadata = { title: "eos index" };
@@ -77,8 +78,16 @@ export default async function EosIndexPage() {
                     <td className="px-4 py-2.5 text-right text-sunrise-orange">
                       {effort?.label}
                     </td>
-                    <td className="px-4 py-2.5 text-right text-amber-light font-bold">
-                      {ep.zora_score.total}
+                    <td className="px-4 py-2.5 text-right">
+                      <div className="flex justify-end">
+                        <ZoraExpandable
+                          total={ep.zora_score.total}
+                          eosIndex={ep.zora_score.eos_index}
+                          effortPoints={ep.zora_score.effort_points}
+                          effortLabel={effort?.label || ""}
+                          discoveryPoints={ep.zora_score.discovery_points}
+                        />
+                      </div>
                     </td>
                   </tr>
                 );

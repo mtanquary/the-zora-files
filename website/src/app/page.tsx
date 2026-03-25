@@ -6,10 +6,9 @@ import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { LevelEmblem } from "@/components/level-emblem";
 import { MedallionEmblem } from "@/components/medallion-emblem";
 import { EosExpandable } from "@/components/eos-expandable";
+import { ZoraExpandable } from "@/components/zora-expandable";
+import { LivingCover } from "@/components/living-cover";
 import {
-  Stars,
-  HorizonGlow,
-  Mountains,
   SunIcon,
   Ornament,
   Lore,
@@ -32,12 +31,8 @@ export default async function Home() {
   return (
     <div>
       {/* ══ COVER ══ */}
-      <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center overflow-hidden px-6 py-16 border-b border-rule">
-        <Stars />
-        <HorizonGlow />
-        <Mountains />
-
-        <div className="relative z-10 max-w-[600px]">
+      <LivingCover>
+        <div className="max-w-[600px]">
           <p className="font-mono text-[0.65rem] tracking-[0.35em] text-zora-amber uppercase opacity-75 mb-6">
             the zora files presents
           </p>
@@ -85,7 +80,7 @@ export default async function Home() {
             Season one · the zora files
           </span>
         </div>
-      </section>
+      </LivingCover>
 
       {/* ══ CONTENT ══ */}
       <div className="max-w-[780px] mx-auto px-8 pb-16">
@@ -136,13 +131,18 @@ export default async function Home() {
                       {latest.effort_points}
                     </p>
                   </div>
-                  <div className="bg-pre-dawn-light border border-rule rounded px-3 py-2 text-center">
+                  <div className="bg-pre-dawn-light border border-rule rounded px-3 py-2 flex flex-col items-center">
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase tracking-wider mb-1">
                       zora score
                     </p>
-                    <p className="font-mono text-2xl font-bold text-amber-light">
-                      {latest.zora_score.total}
-                    </p>
+                    <ZoraExpandable
+                      total={latest.zora_score.total}
+                      eosIndex={latest.zora_score.eos_index}
+                      effortPoints={latest.zora_score.effort_points}
+                      effortLabel={EFFORT_LEVELS.find((e) => e.level === latest.effort_rating)?.label || ""}
+                      discoveryPoints={latest.zora_score.discovery_points}
+                      size="lg"
+                    />
                   </div>
                 </div>
               </div>
@@ -282,9 +282,13 @@ export default async function Home() {
                         <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
                           zora
                         </p>
-                        <p className="font-mono text-amber-light">
-                          {ep.zora_score.total}
-                        </p>
+                        <ZoraExpandable
+                          total={ep.zora_score.total}
+                          eosIndex={ep.zora_score.eos_index}
+                          effortPoints={ep.zora_score.effort_points}
+                          effortLabel={effort?.label || ""}
+                          discoveryPoints={ep.zora_score.discovery_points}
+                        />
                       </div>
                     </div>
                   </Link>

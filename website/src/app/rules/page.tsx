@@ -100,8 +100,7 @@ export default function RulesPage() {
           {" + Effort + Discovery"}
         </p>
         <p className="font-mono text-[0.7rem] text-mist-dim mt-1">
-          Theoretical maximum: ~215 pts · A perfect Eos Index of 100 is the
-          game&apos;s ultimate objective
+          No fixed ceiling. The Eos Index caps at 100. Everything else is earned.
         </p>
       </div>
 

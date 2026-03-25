@@ -4,6 +4,7 @@ import { getEpisodes } from "@/lib/queries";
 import { extractEosSub } from "@/lib/eos-helpers";
 import { EFFORT_LEVELS } from "@/lib/types";
 import { EosExpandable } from "@/components/eos-expandable";
+import { ZoraExpandable } from "@/components/zora-expandable";
 import { Ornament } from "@/components/atmosphere";
 
 export const metadata: Metadata = { title: "episodes" };
@@ -62,7 +63,14 @@ export default async function EpisodesPage() {
                   </div>
                   <div>
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase">zora</p>
-                    <p className="font-mono text-lg text-amber-light">{ep.zora_score.total}</p>
+                    <ZoraExpandable
+                      total={ep.zora_score.total}
+                      eosIndex={ep.zora_score.eos_index}
+                      effortPoints={ep.zora_score.effort_points}
+                      effortLabel={effort?.label || ""}
+                      discoveryPoints={ep.zora_score.discovery_points}
+                      size="lg"
+                    />
                   </div>
                 </div>
               </Link>

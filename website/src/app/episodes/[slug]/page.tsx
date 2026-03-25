@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode } from "@/lib/queries";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
+import { ZoraExpandable } from "@/components/zora-expandable";
 import { MedallionEmblem } from "@/components/medallion-emblem";
 import { Ornament } from "@/components/atmosphere";
 import { DiscoveryCard, groupDiscoveries } from "@/components/discovery-card";
@@ -92,9 +93,16 @@ export default async function EpisodeDetailPage({
           <p className="font-mono text-3xl text-sunrise-orange">{ep.effort_points}</p>
           <p className="text-xs text-dawn-mist/40 mt-1">{effort?.label}</p>
         </div>
-        <div className="rounded-xl border border-dawn-mist/10 bg-dawn-mist/5 p-6 text-center">
+        <div className="rounded-xl border border-dawn-mist/10 bg-dawn-mist/5 p-6 flex flex-col items-center">
           <p className="text-xs text-dawn-mist/40 mb-1">zora score</p>
-          <p className="font-mono text-3xl text-zora-amber">{ep.zora_score.total}</p>
+          <ZoraExpandable
+            total={ep.zora_score.total}
+            eosIndex={ep.zora_score.eos_index}
+            effortPoints={ep.zora_score.effort_points}
+            effortLabel={effort?.label || ""}
+            discoveryPoints={ep.zora_score.discovery_points}
+            size="lg"
+          />
         </div>
       </div>
 

@@ -61,7 +61,7 @@ The medallion component is the progression spine — it appears on the home page
 
 The website must display both scoring systems:
 - **Eos Index** (0–100) — sunrise quality score. Photography-focused viewers follow this.
-- **Zora Score** (~215 max) — full episode score including effort, discovery, conditions. Adventure-focused viewers follow this.
+- **Zora Score** (no fixed ceiling) — full episode score: Eos Index + effort + discovery points. Adventure-focused viewers follow this.
 - Leaderboards sortable by either score.
 
 ## Level-up progression display

@@ -46,9 +46,9 @@ export function eosTotal(eos: EosIndex): number {
 export const EFFORT_LEVELS = [
   { level: 1, label: "Roadside", points: 0 },
   { level: 2, label: "Trail", points: 5 },
-  { level: 3, label: "Summit", points: 10 },
-  { level: 4, label: "Remote", points: 15 },
-  { level: 5, label: "Expedition", points: 20 },
+  { level: 3, label: "Summit", points: 15 },
+  { level: 4, label: "Remote", points: 25 },
+  { level: 5, label: "Expedition", points: 40 },
 ] as const;
 
 export type EffortLevel = 1 | 2 | 3 | 4 | 5;

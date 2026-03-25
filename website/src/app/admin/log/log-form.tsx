@@ -29,6 +29,8 @@ interface LogFormProps {
   hasApiKey: boolean;
   totalExpeditions: number;
   shootDates: string[];
+  nextEpisodeNumber?: number;
+  nextSeason?: number;
   editData?: EditData;
 }
 
@@ -56,12 +58,12 @@ const INITIAL_SCORES: EosScores = {
   weather_challenge: 0,
 };
 
-export function LogForm({ hasApiKey, totalExpeditions, shootDates, editData }: LogFormProps) {
+export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNumber, nextSeason, editData }: LogFormProps) {
   const isEdit = !!editData;
 
   // Metadata
-  const [episodeNumber, setEpisodeNumber] = useState(editData?.episodeNumber ?? 1);
-  const [season, setSeason] = useState(editData?.season ?? 1);
+  const [episodeNumber, setEpisodeNumber] = useState(editData?.episodeNumber ?? nextEpisodeNumber ?? 1);
+  const [season, setSeason] = useState(editData?.season ?? nextSeason ?? 1);
   const [title, setTitle] = useState(editData?.title ?? "");
   const [location, setLocation] = useState(editData?.location ?? "");
   const [country, setCountry] = useState(editData?.country ?? "US");

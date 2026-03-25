@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS episodes (
 
   -- Effort
   effort_rating INTEGER NOT NULL CHECK (effort_rating BETWEEN 1 AND 5),
-  effort_points INTEGER NOT NULL CHECK (effort_points IN (0, 5, 10, 15, 20)),
+  effort_points INTEGER NOT NULL CHECK (effort_points IN (0, 5, 15, 25, 40)),
 
   -- Zora Score
   zora_score    JSONB NOT NULL,

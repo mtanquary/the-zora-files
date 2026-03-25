@@ -12,6 +12,15 @@ export default async function AdminLogPage() {
   const totalExpeditions = episodes.length;
   const shootDates = episodes.map((e) => e.shoot_date).sort();
 
+  // Auto-compute next episode number and season
+  const currentSeason = episodes.length > 0
+    ? Math.max(...episodes.map((e) => e.season))
+    : 1;
+  const episodesInCurrentSeason = episodes.filter((e) => e.season === currentSeason);
+  const nextEpisodeNumber = episodesInCurrentSeason.length > 0
+    ? Math.max(...episodesInCurrentSeason.map((e) => e.episode_number)) + 1
+    : 1;
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
       <h1 className="font-display text-3xl font-bold text-zora-amber mb-2">
@@ -25,6 +34,8 @@ export default async function AdminLogPage() {
         hasApiKey={hasApiKey}
         totalExpeditions={totalExpeditions}
         shootDates={shootDates}
+        nextEpisodeNumber={nextEpisodeNumber}
+        nextSeason={currentSeason}
       />
 
       {/* Existing episodes */}

@@ -41,7 +41,7 @@ Every episode gets two scores:
 | Setting | 30 | Foreground composition (15) + Location uniqueness (15) |
 | Conditions | 20 | Effort to reach (10) + Weather/environmental challenge (10) |
 
-### Zora Score — full episode (~215 max)
-Eos Index + Travel Distance (0–5) + Travel Difficulty Bonuses (stackable) + Elevation Gain (0–4) + Pre-Dawn Arrival (0–2) + Weather Adversity (0–3) + Discovery Points + Streak Bonus
+### Zora Score (no fixed ceiling)
+Eos Index (0-100) + Effort Rating (0-20) + Discovery Points (variable)
 
 See [ZORA_PROJECT.md](../ZORA_PROJECT.md) for full point tables.

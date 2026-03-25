@@ -204,28 +204,28 @@ export function DiscoveryUnlockCeremony({ items, onComplete }: Props) {
             />
           ) : (
             <div
-              className="w-full h-full flex flex-col items-center justify-center gap-3 transition-all duration-700"
-              style={{
-                background: isRevealed ? glowColor : "#0A0A0F",
-              }}
+              className="w-full h-full flex flex-col items-center justify-center gap-4 transition-all duration-700"
+              style={{ background: isRevealed ? glowColor : "#0A0A0F" }}
             >
+              {/* Type icon with glow on reveal */}
               <span
-                className="text-6xl transition-all duration-700"
+                className="transition-all duration-700"
                 style={{
-                  opacity: isRevealed ? 0.8 : 0.08,
+                  fontSize: isRevealed ? "5rem" : "4rem",
+                  filter: isRevealed ? "grayscale(0) drop-shadow(0 0 20px rgba(240,165,0,0.4))" : "grayscale(1) brightness(0.15)",
                 }}
               >
-                {item.detectionMethod === "audio" ? "\u{1F50A}" :
-                 item.detectionMethod === "visual" ? "\u{1F441}" :
-                 item.detectionMethod === "visual_and_audio" ? "\u{1F441}" :
-                 "?"}
+                {item.type === "wildlife" ? "\u{1F43E}" :
+                 item.type === "plant" ? "\u{1F33F}" :
+                 item.type === "geographic" ? "\u{26F0}\uFE0F" :
+                 "\u{1F3DB}\uFE0F"}
               </span>
               {isRevealed && (
                 <span className="font-mono text-xs text-dawn-mist/50 uppercase tracking-wider">
                   {item.detectionMethod === "audio" ? "identified by sound" :
                    item.detectionMethod === "visual" ? "seen, not photographed" :
                    item.detectionMethod === "visual_and_audio" ? "seen and heard" :
-                   ""}
+                   "awaiting photo"}
                 </span>
               )}
             </div>

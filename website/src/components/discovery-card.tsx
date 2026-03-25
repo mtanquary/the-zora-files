@@ -100,9 +100,15 @@ export function DiscoveryCard({
           className="w-full h-32 object-cover"
         />
       ) : (
-        <div className="w-full h-24 bg-pre-dawn-light flex items-center justify-center">
-          <span className="text-2xl opacity-40">
-            {METHOD_ICONS[d.detection_method] || "?"}
+        <div className="w-full h-28 bg-gradient-to-br from-pre-dawn-light to-pre-dawn-mid flex flex-col items-center justify-center gap-2 border-b border-rule">
+          <span className="text-3xl" style={{ filter: "grayscale(0.4) opacity(0.5)" }}>
+            {d.type === "wildlife" ? "\u{1F43E}" :
+             d.type === "plant" ? "\u{1F33F}" :
+             d.type === "geographic" ? "\u{26F0}\uFE0F" :
+             "\u{1F3DB}\uFE0F"}
+          </span>
+          <span className="font-mono text-[0.55rem] text-mist-dim/40 uppercase tracking-wider">
+            {METHOD_LABELS[d.detection_method] || "awaiting photo"}
           </span>
         </div>
       )}
