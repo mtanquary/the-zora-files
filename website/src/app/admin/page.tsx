@@ -36,6 +36,13 @@ export default async function AdminPage() {
       always: true,
       note: episodes.length > 0 ? undefined : "log an expedition first",
     },
+    {
+      href: "/admin/artifacts",
+      title: "artifact demos",
+      description: "Interactive medallion and card prototypes",
+      icon: "🪙",
+      always: true,
+    },
   ];
 
   const recentEpisodes = episodes.slice(0, 5);
