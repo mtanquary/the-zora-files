@@ -53,6 +53,14 @@ export default async function AboutPage() {
 
         <Ornament label="The host" />
 
+        <div className="float-right ml-6 mb-4">
+          <img
+            src="/images/profile-photo-1.jpg"
+            alt="The host"
+            className="w-40 h-40 rounded-xl object-cover border border-rule"
+          />
+        </div>
+
         <p>
           The host is a systems thinker who is allergic to chaos but keeps
           getting surprised by nature, a veteran, technical infrastructure

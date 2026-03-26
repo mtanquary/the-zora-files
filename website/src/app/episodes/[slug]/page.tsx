@@ -59,17 +59,9 @@ export default async function EpisodeDetailPage({
         </div>
         <MedallionEmblem level={nextLevelAtTime ? nextLevelAtTime.level : levelAtTime.level} gems={gemsAtTime} size={72} />
       </div>
-      <div className="flex items-center gap-4 mb-8">
-        <p className="text-dawn-mist/50">
-          {ep.location_name} · {new Date(ep.shoot_date).toLocaleDateString()}
-        </p>
-        <Link
-          href={`/admin/card/${slug}`}
-          className="rounded-full border border-zora-amber/30 px-4 py-1.5 text-xs text-zora-amber hover:bg-zora-amber/10 transition-colors"
-        >
-          export share card
-        </Link>
-      </div>
+      <p className="text-dawn-mist/50 mb-8">
+        {ep.location_name} · {new Date(ep.shoot_date).toLocaleDateString()}
+      </p>
 
       {/* Sunrise photo */}
       {ep.thumbnail_url && (

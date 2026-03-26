@@ -62,7 +62,7 @@ export function LivingCover({ children }: { children: React.ReactNode }) {
 
       // Sun position: rises slowly from below horizon to just above
       // Takes ~120 seconds to fully rise
-      const sunProgress = Math.min(elapsed / 120, 1);
+      const sunProgress = Math.min(elapsed / 80, 1);
       const horizonY = H * 0.82;
       const sunY = horizonY + 40 - sunProgress * 80;
       const sunX = W * 0.5;
