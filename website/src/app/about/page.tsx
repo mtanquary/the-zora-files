@@ -62,9 +62,9 @@ export default async function AboutPage() {
         </div>
 
         <p>
-          The host is a systems thinker who is allergic to chaos but keeps
-          getting surprised by nature, a veteran, technical infrastructure
-          consultant, bassoonist, and desert hiker based in the Queen Creek area
+          The host is a veteran, devoted husband and grandpa, technical
+          infrastructure consultant, musician, and desert hiker who is allergic
+          to chaos but keeps getting surprised by nature. Based in the Queen Creek area
           of Arizona. Home base is the Sonoran Desert, but the pursuit goes
           wherever the next scored sunrise leads.
         </p>
