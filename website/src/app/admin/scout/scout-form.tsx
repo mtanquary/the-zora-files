@@ -42,10 +42,12 @@ export function ScoutForm() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [loading, setLoading] = useState(false);
   const [intel, setIntel] = useState<Intel | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleScout = async () => {
     if (!location) return;
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/ai-pre-shoot", {
         method: "POST",
@@ -59,9 +61,13 @@ export function ScoutForm() {
         }),
       });
       const data = await res.json();
-      if (res.ok) setIntel(data);
-    } catch {
-      // best effort
+      if (res.ok && !data.error) {
+        setIntel(data);
+      } else {
+        setError(data.error || `Request failed (${res.status})`);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error");
     } finally {
       setLoading(false);
     }
@@ -128,6 +134,12 @@ export function ScoutForm() {
       </div>
 
       {/* Intel results */}
+      {error && (
+        <div className="bg-pre-dawn-mid border border-sunrise-orange/40 rounded-md p-4">
+          <p className="text-sm text-sunrise-orange">{error}</p>
+        </div>
+      )}
+
       {intel && (
         <div className="space-y-6">
           {/* Authoritative sun times banner */}

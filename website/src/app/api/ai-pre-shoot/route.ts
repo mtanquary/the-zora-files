@@ -32,8 +32,8 @@ async function getSunriseTimes(
   tzid?: string
 ): Promise<{
   sunrise: string;
+  sunset: string;
   civil_twilight_begin: string;
-  golden_hour_end: string;
 } | null> {
   const params = new URLSearchParams({
     lat: lat.toString(),
@@ -49,8 +49,8 @@ async function getSunriseTimes(
     if (data?.status === "OK") {
       return {
         sunrise: data.results.sunrise,
+        sunset: data.results.sunset,
         civil_twilight_begin: data.results.civil_twilight_begin,
-        golden_hour_end: data.results.golden_hour_end,
       };
     }
   } catch {
@@ -59,11 +59,25 @@ async function getSunriseTimes(
   return null;
 }
 
-/** Format an ISO timestamp to a readable local time like "6:14 AM". */
+/** Parse time from an ISO 8601 string with offset (e.g. "2026-03-26T06:18:06-07:00").
+ *  Extracts the local time directly from the string so it stays in the target timezone. */
 function formatTime(iso: string): string {
-  const d = new Date(iso);
-  const hours = d.getHours();
-  const minutes = d.getMinutes().toString().padStart(2, "0");
+  const match = iso.match(/T(\d{2}):(\d{2})/);
+  if (!match) return iso;
+  const hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h12 = hours % 12 || 12;
+  return `${h12}:${minutes} ${ampm}`;
+}
+
+/** Estimate golden hour end as ~1 hour after sunrise. */
+function goldenHourEnd(sunriseIso: string): string {
+  const match = sunriseIso.match(/T(\d{2}):(\d{2})/);
+  if (!match) return "";
+  let hours = parseInt(match[1], 10) + 1;
+  if (hours >= 24) hours -= 24;
+  const minutes = match[2];
   const ampm = hours >= 12 ? "PM" : "AM";
   const h12 = hours % 12 || 12;
   return `${h12}:${minutes} ${ampm}`;
@@ -85,7 +99,7 @@ export async function POST(request: NextRequest) {
     if (sunData && coords) {
       const sunrise = formatTime(sunData.sunrise);
       const twilight = formatTime(sunData.civil_twilight_begin);
-      const goldenEnd = formatTime(sunData.golden_hour_end);
+      const goldenEnd = goldenHourEnd(sunData.sunrise);
       sunriseContext = `
 VERIFIED SUNRISE DATA (from astronomy API — use these exact times):
 - Civil twilight begins: ${twilight} (local time)
@@ -138,7 +152,7 @@ Rules:
       (intel as Record<string, unknown>).sun_data = {
         sunrise: formatTime(sunData.sunrise),
         civil_twilight: formatTime(sunData.civil_twilight_begin),
-        golden_hour_end: formatTime(sunData.golden_hour_end),
+        golden_hour_end: goldenHourEnd(sunData.sunrise),
         sunrise_utc: sunData.sunrise,
         coords: { lat: coords.lat, lng: coords.lng },
       };
