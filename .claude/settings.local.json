@@ -25,7 +25,9 @@
       "Bash(PGPASSWORD=myP0stgr3s2026 psql \"postgresql://postgres@db.bdszbuchldnxlywxylbo.supabase.co:5432/postgres\" -f \"c:/Users/mattt/Documents/the-zora-files/website/scripts/setup-db.sql\")",
       "Bash(nslookup db.bdszbuchldnxlywxylbo.supabase.co)",
       "Bash(curl -s \"https://bdszbuchldnxlywxylbo.supabase.co/rest/v1/\" -H \"apikey: sb_publishable_gLxQPh0eiG519VaxtjdzhQ_I3obhZ45\" -o /dev/null -w \"%{http_code}\")",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(find /c/Users/mattt/Documents/the-zora-files -type f -name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

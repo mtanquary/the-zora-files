@@ -8,6 +8,14 @@ interface Discovery {
   type: string;
   rarity: string;
   tip: string;
+  detail: string;
+  wiki_url: string;
+}
+
+interface SunData {
+  sunrise: string;
+  civil_twilight: string;
+  golden_hour_end: string;
 }
 
 interface Intel {
@@ -16,6 +24,7 @@ interface Intel {
   positioning_tip: string;
   weather_watch: string;
   gear_priority: string;
+  sun_data?: SunData;
 }
 
 const RARITY_COLORS: Record<string, string> = {
@@ -41,7 +50,13 @@ export function ScoutForm() {
       const res = await fetch("/api/ai-pre-shoot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location, date, region, country }),
+        body: JSON.stringify({
+          location,
+          date,
+          region,
+          country,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
       });
       const data = await res.json();
       if (res.ok) setIntel(data);
@@ -115,6 +130,36 @@ export function ScoutForm() {
       {/* Intel results */}
       {intel && (
         <div className="space-y-6">
+          {/* Authoritative sun times banner */}
+          {intel.sun_data && (
+            <div className="bg-pre-dawn-mid border border-zora-amber/30 rounded-md p-4 flex items-center gap-6">
+              <div className="text-center">
+                <p className="font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider">
+                  civil twilight
+                </p>
+                <p className="font-display text-lg text-dawn-mist">
+                  {intel.sun_data.civil_twilight}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="font-mono text-[0.6rem] text-zora-amber/80 uppercase tracking-wider">
+                  sunrise
+                </p>
+                <p className="font-display text-xl text-zora-amber">
+                  {intel.sun_data.sunrise}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider">
+                  golden hour ends
+                </p>
+                <p className="font-display text-lg text-dawn-mist">
+                  {intel.sun_data.golden_hour_end}
+                </p>
+              </div>
+            </div>
+          )}
+
           <Ornament label="Sunrise" />
           <p className="text-dawn-mist">{intel.sunrise_notes}</p>
 
@@ -126,26 +171,48 @@ export function ScoutForm() {
             {intel.likely_discoveries.map((d, i) => (
               <div
                 key={d.name}
-                className={`flex items-center justify-between px-5 py-3 ${
+                className={`px-5 py-3 ${
                   i < intel.likely_discoveries.length - 1
                     ? "border-b border-dawn-mist/[0.05]"
                     : ""
                 }`}
               >
-                <div>
-                  <span className="font-display text-sm text-dawn-mist">
-                    {d.name}
-                  </span>
-                  <span className="ml-2 font-mono text-[0.6rem] text-mist-dim">
-                    {d.type}
-                  </span>
+                <div className="flex items-center justify-between">
+                  <div>
+                    {d.wiki_url ? (
+                      <a
+                        href={d.wiki_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-display text-sm text-dawn-mist underline decoration-mist-dim/30 hover:decoration-zora-amber/60 transition-colors"
+                      >
+                        {d.name}
+                      </a>
+                    ) : (
+                      <span className="font-display text-sm text-dawn-mist">
+                        {d.name}
+                      </span>
+                    )}
+                    <span className="ml-2 font-mono text-[0.6rem] text-mist-dim">
+                      {d.type}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span
+                      className={`font-mono text-[0.6rem] uppercase tracking-wider ${RARITY_COLORS[d.rarity]}`}
+                    >
+                      {d.rarity.replace("_", " ")}
+                    </span>
+                    <p className="text-[0.6rem] text-mist-dim/50 mt-0.5">
+                      {d.tip}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className={`font-mono text-[0.6rem] uppercase tracking-wider ${RARITY_COLORS[d.rarity]}`}>
-                    {d.rarity.replace("_", " ")}
-                  </span>
-                  <p className="text-[0.6rem] text-mist-dim/50 mt-0.5">{d.tip}</p>
-                </div>
+                {d.detail && (
+                  <p className="mt-2 text-xs text-mist-dim/70 leading-relaxed pl-1 border-l-2 border-zora-amber/20">
+                    {d.detail}
+                  </p>
+                )}
               </div>
             ))}
           </div>
