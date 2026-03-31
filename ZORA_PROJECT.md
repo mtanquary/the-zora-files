@@ -295,17 +295,17 @@ Mode selection: the server route checks for a configured `ANTHROPIC_API_KEY` env
 
 ---
 
-## Effort Rating — Journey Difficulty (0–20 pts)
+## Effort Rating — Journey Difficulty (0–40 pts)
 
-A single post-expedition assessment of the total difficulty of the journey. Replaces granular tracking of travel distance, elevation, weather, and timing with one honest judgment call.
+A single post-expedition assessment of the total difficulty of the journey. Replaces granular tracking of travel distance, elevation, weather, and timing with one honest judgment call. Points scale non-linearly — each level represents a significantly harder commitment than the last.
 
 | Level | Label | Points | What this looks like |
 |-------|-------|--------|---------------------|
 | 1 | Roadside | 0 | Drove to a pulloff, watched from beside the vehicle |
 | 2 | Trail | 5 | Deliberate outing with a real hike, a meaningful drive, or both |
-| 3 | Summit | 10 | Serious pre-dawn ascent, long approach, significant elevation |
-| 4 | Remote | 15 | Real logistics: long travel, off-pavement, backcountry, harsh weather |
-| 5 | Expedition | 20 | Full commitment: international travel, multi-day approach, extreme conditions |
+| 3 | Summit | 15 | Serious pre-dawn ascent, long approach, significant elevation |
+| 4 | Remote | 25 | Real logistics: long travel, off-pavement, backcountry, harsh weather |
+| 5 | Expedition | 40 | Full commitment: international travel, multi-day approach, extreme conditions |
 
 The details that inform the rating (distance driven, elevation gained, arrival time, weather) are noted in the expedition log for context but are not individually scored.
 
@@ -439,13 +439,15 @@ Each player scores independently. No exceptions. Group outings are social, not m
 ## Discovery Log System
 
 ### Point values by rarity tier
+Points scale non-linearly — each rarity jump carries significantly more weight, like story points. A single very rare find can rival a full effort rating.
+
 | Tier | Examples | Points |
 |------|---------|--------|
 | Common | Gambel's Quail, Cactus Wren, Cottontail | 5–10 |
-| Uncommon | Gila Woodpecker, Rock Wren, Roadrunner | 15–20 |
-| Rare | Vermilion Flycatcher, Osprey, Javelina | 25–35 |
-| Very rare | Bald Eagle, Desert Tortoise, Chuckwalla | 40–50 |
-| Exceptional | Once-per-series finds | 60–75 |
+| Uncommon | Gila Woodpecker, Rock Wren, Roadrunner | 15–25 |
+| Rare | Vermilion Flycatcher, Osprey, Javelina | 35–50 |
+| Very rare | Bald Eagle, Desert Tortoise, Chuckwalla | 65–85 |
+| Exceptional | Once-per-series finds | 100–150 |
 
 ### Discovery types tracked
 - Wildlife species (birds, mammals, reptiles, insects)

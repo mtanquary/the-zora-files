@@ -37,9 +37,9 @@ Sun rises behind the mountains — glow builds above ridgeline, not disk emergen
 |-----------------|------|-------------|--------|---------------|
 | Gambel's Quail | Wildlife | Common | 5-10 | Yes |
 | Cactus Wren | Wildlife | Common | 5-10 | Yes |
-| Gila Woodpecker | Wildlife | Uncommon | 15-20 | Yes |
-| Coyote | Wildlife | Uncommon | 15-20 | Yes |
-| Javelina | Wildlife | Rare | 25-35 | Yes |
+| Gila Woodpecker | Wildlife | Uncommon | 15-25 | Yes |
+| Coyote | Wildlife | Uncommon | 15-25 | Yes |
+| Javelina | Wildlife | Rare | 35-50 | Yes |
 
 ## Shot list
 - [ ] Establishing wide — trailhead parking lot, pre-dawn
@@ -80,7 +80,7 @@ Sun rises behind the mountains — glow builds above ridgeline, not disk emergen
 ### Conditions (max 20)
 | Component | Score | Notes |
 |-----------|-------|-------|
-| Effort to reach (max 10) | | |
+| Access difficulty (max 10) | | |
 | Weather/environmental challenge (max 10) | | |
 | **Conditions total** | **/20** | |
 
@@ -93,13 +93,8 @@ Sun rises behind the mountains — glow builds above ridgeline, not disk emergen
 | Component | Points | Notes |
 |-----------|--------|-------|
 | Eos Index | /100 | From above |
-| Travel distance | /5 | ~35 mi → 3 pts |
-| Travel difficulty bonus | | No bonuses expected |
-| Elevation gain | /4 | ~200 ft → 0 pts |
-| Pre-dawn arrival | /2 | Target 45 min early → 1 pt |
-| Weather adversity | /3 | |
+| Effort Rating | /40 | Trail (5) — short hike, moderate drive |
 | Discovery points | | All first unlocks |
-| Streak bonus | | N/A (first episode) |
 | **Zora Score total** | | |
 
 ---

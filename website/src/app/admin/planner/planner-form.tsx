@@ -96,6 +96,11 @@ export function PlannerForm({
   const [sheetLoading, setSheetLoading] = useState(false);
   const [sheetError, setSheetError] = useState<string | null>(null);
 
+  // Viewing existing plans
+  const [viewingContent, setViewingContent] = useState<string | null>(null);
+  const [viewingLabel, setViewingLabel] = useState("");
+  const [viewingLoading, setViewingLoading] = useState<string | null>(null);
+
   const printRef = useRef<HTMLDivElement>(null);
 
   /* ------ API calls ------ */
@@ -105,6 +110,27 @@ export function PlannerForm({
     const text = await res.text();
     if (!text) return null;
     try { return JSON.parse(text); } catch { return null; }
+  };
+
+  const handleViewFile = async (folder: string, file: string, label: string) => {
+    const key = `${folder}/${file}`;
+    setViewingLoading(key);
+    try {
+      const res = await fetch("/api/ai-episode-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "read-plan", folder, file }),
+      });
+      const data = await safeJson(res);
+      if (res.ok && data?.content) {
+        setViewingContent(data.content);
+        setViewingLabel(label);
+      }
+    } catch {
+      // best effort
+    } finally {
+      setViewingLoading(null);
+    }
   };
 
   const handleSuggestLocations = async () => {
@@ -499,15 +525,52 @@ export function PlannerForm({
                     </div>
                     <div className="flex gap-3">
                       {p.hasPlan && (
-                        <span className="font-mono text-[0.6rem] text-eos-teal">plan</span>
+                        <button
+                          onClick={() => handleViewFile(p.folder, "plan.md", `${p.code} — plan`)}
+                          disabled={viewingLoading === `${p.folder}/plan.md`}
+                          className="font-mono text-[0.6rem] text-eos-teal hover:text-eos-teal/70 transition-colors disabled:opacity-40"
+                        >
+                          {viewingLoading === `${p.folder}/plan.md` ? "loading..." : "plan"}
+                        </button>
                       )}
                       {p.hasProductionSheet && (
-                        <span className="font-mono text-[0.6rem] text-zora-amber">prod sheet</span>
+                        <button
+                          onClick={() => handleViewFile(p.folder, "production-sheet.md", `${p.code} — production sheet`)}
+                          disabled={viewingLoading === `${p.folder}/production-sheet.md`}
+                          className="font-mono text-[0.6rem] text-zora-amber hover:text-zora-amber/70 transition-colors disabled:opacity-40"
+                        >
+                          {viewingLoading === `${p.folder}/production-sheet.md` ? "loading..." : "prod sheet"}
+                        </button>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
+            </>
+          )}
+
+          {/* Viewing an existing plan/production sheet */}
+          {viewingContent && (
+            <>
+              <Ornament label={viewingLabel} />
+              <div className="flex flex-wrap gap-2 mb-2">
+                <button
+                  onClick={() => window.print()}
+                  className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
+                >
+                  print
+                </button>
+                <button
+                  onClick={() => { setViewingContent(null); setViewingLabel(""); }}
+                  className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
+                >
+                  close
+                </button>
+              </div>
+              <div
+                className="bg-pre-dawn-mid border border-rule rounded-md p-6 print:bg-white print:text-black print:border-none"
+                dangerouslySetInnerHTML={{ __html: renderMarkdown(viewingContent) }}
+              />
             </>
           )}
         </div>

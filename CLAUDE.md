@@ -35,7 +35,7 @@ The Zora Files is a sunrise-chasing YouTube channel brand based in Arizona. This
 ## Scoring system
 
 - **Eos Index** (0–100): Pure sunrise quality score. Sky (50) + Setting (30) + Conditions (20).
-- **Effort Rating** (0–20): Post-expedition journey difficulty. 5 levels: Roadside (0) / Trail (5) / Summit (10) / Remote (15) / Expedition (20).
+- **Effort Rating** (0–40): Post-expedition journey difficulty. 5 levels: Roadside (0) / Trail (5) / Summit (15) / Remote (25) / Expedition (40). Non-linear — each level is a significantly harder commitment.
 - **Zora Score**: Full episode score. Eos Index + Effort + Discovery Points.
 - **Streak**: Consecutive expeditions on cadence. Visual honor only (gold bar on card, crown on medallion) — no points.
 - Both Eos Index and Zora Score are displayed every episode. Leaderboards sortable by either.

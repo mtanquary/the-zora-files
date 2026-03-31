@@ -32,10 +32,10 @@ const TYPES = [
 
 const RARITIES = [
   { value: "common", label: "Common", range: "5–10 pts", min: 5, max: 10, default: 8 },
-  { value: "uncommon", label: "Uncommon", range: "15–20 pts", min: 15, max: 20, default: 18 },
-  { value: "rare", label: "Rare", range: "25–35 pts", min: 25, max: 35, default: 30 },
-  { value: "very_rare", label: "Very rare", range: "40–50 pts", min: 40, max: 50, default: 45 },
-  { value: "exceptional", label: "Exceptional", range: "60–75 pts", min: 60, max: 75, default: 65 },
+  { value: "uncommon", label: "Uncommon", range: "15–25 pts", min: 15, max: 25, default: 20 },
+  { value: "rare", label: "Rare", range: "35–50 pts", min: 35, max: 50, default: 40 },
+  { value: "very_rare", label: "Very rare", range: "65–85 pts", min: 65, max: 85, default: 75 },
+  { value: "exceptional", label: "Exceptional", range: "100–150 pts", min: 100, max: 150, default: 125 },
 ] as const;
 
 const RARITY_COLORS: Record<string, string> = {

@@ -58,8 +58,8 @@ Key beats to hit:
 - Explain what the Eos Index is: a 0–100 sunrise quality score
   - Sky (50 pts): color intensity, cloud engagement, horizon definition
   - Setting (30 pts): foreground composition, location uniqueness
-  - Conditions (20 pts): effort to reach, weather/environmental challenge
-- Mention the Zora Score builds on top — adds travel, discoveries, effort
+  - Conditions (20 pts): access difficulty, weather/environmental challenge
+- Mention the Zora Score builds on top — adds effort rating and discovery points
 - "Every episode competes against every other episode. This one sets the floor."
 
 ### During sunrise — narrate what you see
@@ -79,7 +79,7 @@ Don't force it. Pause. Let the sunrise breathe. The tension between your system 
 
 - Walk through each Eos Index category with your rough numbers
 - Add up the Eos Index total
-- Then layer on the Zora Score components: travel, effort, discoveries
+- Then layer on the Zora Score: effort rating (Roadside/Trail/Summit/Remote/Expedition) + discovery points
 - Announce both scores
 - "That's the benchmark. Every expedition from here on competes against this."
 
@@ -105,9 +105,9 @@ When you spot wildlife:
 |---------|------|--------|--------|-------------------|
 | Gambel's Quail | Wildlife | Common | 5–10 | Ground-level, family groups, distinctive topknot |
 | Cactus Wren | Wildlife | Common | 5–10 | Loud, chattery call — often on cholla or saguaro |
-| Gila Woodpecker | Wildlife | Uncommon | 15–20 | Drumming on saguaro, undulating flight |
-| Coyote | Wildlife | Uncommon | 15–20 | Dawn is prime time — listen for howls, check washes |
-| Javelina | Wildlife | Rare | 25–35 | Musky smell before you see them — groups near brush |
+| Gila Woodpecker | Wildlife | Uncommon | 15–25 | Drumming on saguaro, undulating flight |
+| Coyote | Wildlife | Uncommon | 15–25 | Dawn is prime time — listen for howls, check washes |
+| Javelina | Wildlife | Rare | 35–50 | Musky smell before you see them — groups near brush |
 
 **Remember:** Photo-ID everything with iNaturalist. Merlin is running passively for bird audio.
 
@@ -126,7 +126,7 @@ When you spot wildlife:
 | **Setting** | Foreground composition | 15 | |
 | | Location uniqueness | 15 | |
 | | **Setting total** | **30** | |
-| **Conditions** | Effort to reach | 10 | |
+| **Conditions** | Access difficulty | 10 | |
 | | Weather/environmental challenge | 10 | |
 | | **Conditions total** | **20** | |
 | | **Eos Index** | **100** | |
@@ -136,12 +136,8 @@ When you spot wildlife:
 | Component | Points |
 |-----------|--------|
 | Eos Index | /100 |
-| Travel (~35 mi) | ~3 |
-| Elevation (~200 ft) | 0 |
-| Pre-dawn arrival (45 min early) | 1 |
-| Weather adversity | |
+| Effort Rating | /40 — Trail (5) |
 | Discovery points (all first unlocks) | |
-| Streak bonus | N/A (first ep) |
 | **Zora Score total** | |
 
 ---

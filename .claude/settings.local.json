@@ -27,7 +27,8 @@
       "Bash(curl -s \"https://bdszbuchldnxlywxylbo.supabase.co/rest/v1/\" -H \"apikey: sb_publishable_gLxQPh0eiG519VaxtjdzhQ_I3obhZ45\" -o /dev/null -w \"%{http_code}\")",
       "Bash(node -e \":*)",
       "Bash(find /c/Users/mattt/Documents/the-zora-files -type f -name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(grep -r \"5.*10\\\\|15.*20\\\\|25.*35\\\\|40.*50\\\\|60.*75\" c:UsersmatttDocumentsthe-zora-fileswebsitesrc --include=*.ts --include=*.tsx)"
     ]
   }
 }

@@ -52,7 +52,7 @@ Respond with ONLY a JSON object, no explanation or markdown fences:
   "scientific_name": "<scientific/Latin name if applicable, null otherwise>",
   "type": "<wildlife|plant|geographic|cultural_historical>",
   "rarity_tier": "<common|uncommon|rare|very_rare|exceptional>",
-  "suggested_points": <number within the rarity range: common 5-10, uncommon 15-20, rare 25-35, very_rare 40-50, exceptional 60-75>,
+  "suggested_points": <number within the rarity range: common 5-10, uncommon 15-25, rare 35-50, very_rare 65-85, exceptional 100-150>,
   "fun_fact": "<one interesting fact about this species/feature, under 120 characters>",
   "plausibility": "<plausible|unlikely|impossible>",
   "plausibility_note": "<if unlikely or impossible, explain why in under 80 characters, otherwise null>",

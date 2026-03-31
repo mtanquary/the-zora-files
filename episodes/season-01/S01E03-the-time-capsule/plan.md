@@ -17,7 +17,7 @@ Deep edutainment — 1,500-year-old Hohokam petroglyphs, canyon framing. This ep
 - Explain Hohokam history and why these carvings exist here
 - Tinajas (natural water basins) — what they are, why they matter
 - Canyon position delays disk emergence but the canyon wall light show is exceptional
-- Longest hike of the first three — effort score and elevation gain should be highest
+- Longest hike of the first three — highest effort rating of the three
 - First cultural/historical discovery — introduce the Human History category
 - This episode should demonstrate the Zora Score diverging from the Eos Index
 
@@ -35,14 +35,14 @@ Canyon position delays disk emergence but canyon wall light show is exceptional.
 ## Discovery targets
 | Species/feature | Type | Rarity tier | Points | First unlock? |
 |-----------------|------|-------------|--------|---------------|
-| Rock Wren | Wildlife | Uncommon | 15-20 | Yes |
-| Roadrunner | Wildlife | Uncommon | 15-20 | Yes |
-| Desert Tortoise | Wildlife | Very rare | 40-50 | Yes |
-| Chuckwalla | Wildlife | Very rare | 40-50 | Yes |
-| Canyon Towhee | Wildlife | Uncommon | 15-20 | Yes |
-| Cooper's Hawk | Wildlife | Rare | 25-35 | Yes |
-| Hohokam petroglyphs | Cultural/Historical | Significant | 15-20 | Yes |
-| Tinajas | Geographic | — | TBD | Yes |
+| Rock Wren | Wildlife | Uncommon | 15-25 | Yes |
+| Roadrunner | Wildlife | Uncommon | 15-25 | Yes |
+| Desert Tortoise | Wildlife | Very rare | 65-85 | Yes |
+| Chuckwalla | Wildlife | Very rare | 65-85 | Yes |
+| Canyon Towhee | Wildlife | Uncommon | 15-25 | Yes |
+| Cooper's Hawk | Wildlife | Rare | 35-50 | Yes |
+| Hohokam petroglyphs | Cultural/Historical | Rare | 35-50 | Yes |
+| Tinajas | Geographic | Uncommon | 15-25 | Yes |
 
 ## Shot list
 - [ ] Pre-dawn trailhead — 5AM start, headlamps
@@ -84,7 +84,7 @@ Canyon position delays disk emergence but canyon wall light show is exceptional.
 ### Conditions (max 20)
 | Component | Score | Notes |
 |-----------|-------|-------|
-| Effort to reach (max 10) | | 2.8 mi hike, pre-dawn start |
+| Access difficulty (max 10) | | 2.8 mi hike, pre-dawn start |
 | Weather/environmental challenge (max 10) | | |
 | **Conditions total** | **/20** | |
 
@@ -97,13 +97,8 @@ Canyon position delays disk emergence but canyon wall light show is exceptional.
 | Component | Points | Notes |
 |-----------|--------|-------|
 | Eos Index | /100 | From above |
-| Travel distance | /5 | ~25 mi → 2 pts |
-| Travel difficulty bonus | | No bonuses expected |
-| Elevation gain | /4 | ~500 ft → 1 pt |
-| Pre-dawn arrival | /2 | 5AM open, sunrise ~6:30 → 2 pts (60+ min) |
-| Weather adversity | /3 | |
+| Effort Rating | /40 | Summit (15) — pre-dawn 2.8 mi hike, ~500 ft gain, headlamp start |
 | Discovery points | | Richest discovery episode — wildlife + cultural |
-| Streak bonus | | +0 (need 4 consecutive for first bonus) |
 | **Zora Score total** | | |
 
 ---

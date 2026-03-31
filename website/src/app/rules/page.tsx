@@ -55,7 +55,7 @@ export default function RulesPage() {
 
       <p>
         A single post-expedition assessment of the total difficulty of the
-        journey. One honest judgment call, 0–20 points.
+        journey. One honest judgment call, 0–40 points.
       </p>
 
       <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden my-4">

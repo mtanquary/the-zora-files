@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callClaude, parseJsonResponse } from "@/lib/ai-client";
+import fs from "fs";
+import path from "path";
 
 // Allow up to 60s for AI responses (default is 15s on some platforms)
 export const maxDuration = 60;
@@ -58,6 +60,7 @@ export async function POST(request: NextRequest) {
     if (action === "suggest-locations") return suggestLocations(body);
     if (action === "generate-plan") return generatePlan(body);
     if (action === "generate-production-sheet") return generateProductionSheet(body);
+    if (action === "read-plan") return readPlanFile(body);
 
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err) {
@@ -78,7 +81,7 @@ async function suggestLocations(body: Record<string, unknown>) {
   const text = await callClaude(
     `You are a location scout for a sunrise-chasing expedition show called The Zora Files. The host scores every sunrise on a 0-100 Eos Index (Sky 50, Setting 30, Conditions 20) and earns a Zora Score that adds effort, travel, and discovery points.
 
-The show's Discovery Log tracks wildlife, plants, geographic features, and cultural/historical sites. Rarity tiers: common (5-10 pts), uncommon (15-20), rare (25-35), very rare (40-50), exceptional (60-75).
+The show's Discovery Log tracks wildlife, plants, geographic features, and cultural/historical sites. Rarity tiers: common (5-10 pts), uncommon (15-25), rare (35-50), very rare (65-85), exceptional (100-150).
 
 Home base: Queen Creek, Arizona, US.
 
@@ -247,7 +250,7 @@ IMPORTANT: Follow this EXACT markdown template structure. Fill in ALL sections w
 ### Conditions (max 20)
 | Component | Score | Notes |
 |-----------|-------|-------|
-| Effort to reach (max 10) | | <effort context> |
+| Access difficulty (max 10) | | <effort context> |
 | Weather/environmental challenge (max 10) | | |
 | **Conditions total** | **/20** | |
 
@@ -260,13 +263,8 @@ IMPORTANT: Follow this EXACT markdown template structure. Fill in ALL sections w
 | Component | Points | Notes |
 |-----------|--------|-------|
 | Eos Index | /100 | From above |
-| Travel distance | /5 | <distance> → <points> pts |
-| Travel difficulty bonus | | <any bonuses> |
-| Elevation gain | /4 | <elevation> → <points> pts |
-| Pre-dawn arrival | /2 | <arrival plan> → <points> pts |
-| Weather adversity | /3 | |
+| Effort Rating | /40 | Roadside (0) / Trail (5) / Summit (15) / Remote (25) / Expedition (40) — pick one |
 | Discovery points | | <discovery potential note> |
-| Streak bonus | | <streak context> |
 | **Zora Score total** | | |
 
 ---
@@ -400,7 +398,7 @@ Generate a production sheet in this EXACT style and structure. This is a real ex
 | **Setting** | Foreground composition | 15 | |
 | | Location uniqueness | 15 | |
 | | **Setting total** | **30** | |
-| **Conditions** | Effort to reach | 10 | |
+| **Conditions** | Access difficulty | 10 | |
 | | Weather/environmental challenge | 10 | |
 | | **Conditions total** | **20** | |
 | | **Eos Index** | **100** | |
@@ -409,7 +407,10 @@ Generate a production sheet in this EXACT style and structure. This is a real ex
 
 | Component | Points |
 |-----------|--------|
-[Pre-filled with estimates from the plan]
+| Eos Index | /100 |
+| Effort Rating | /40 — <level label> (<points>) |
+| Discovery points | |
+| **Zora Score total** | |
 
 ---
 
@@ -428,4 +429,39 @@ Generate the COMPLETE production sheet for this episode. Be specific — use rea
   }
 
   return NextResponse.json({ production_sheet: sheet });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Action: read an existing plan or production sheet from disk         */
+/* ------------------------------------------------------------------ */
+
+async function readPlanFile(body: Record<string, unknown>) {
+  const { folder, file } = body as { folder?: string; file?: string };
+
+  if (!folder || !file || !["plan.md", "production-sheet.md"].includes(file)) {
+    return NextResponse.json({ error: "Invalid folder or file" }, { status: 400 });
+  }
+
+  // Sanitize folder name to prevent directory traversal
+  const safeFolder = folder.replace(/[^a-zA-Z0-9_-]/g, "");
+  const episodesDir = path.resolve(process.cwd(), "../episodes");
+
+  // Search across season directories
+  try {
+    const seasons = fs.readdirSync(episodesDir).filter((d) =>
+      d.startsWith("season-") && fs.statSync(path.join(episodesDir, d)).isDirectory()
+    );
+
+    for (const season of seasons) {
+      const filePath = path.join(episodesDir, season, safeFolder, file);
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, "utf-8");
+        return NextResponse.json({ content, file, folder: safeFolder });
+      }
+    }
+  } catch {
+    // fall through
+  }
+
+  return NextResponse.json({ error: "File not found" }, { status: 404 });
 }

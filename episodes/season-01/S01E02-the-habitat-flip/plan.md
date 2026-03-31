@@ -34,12 +34,12 @@ Open water horizon — highest scoring ceiling in the Phoenix region. If the sky
 ## Discovery targets
 | Species/feature | Type | Rarity tier | Points | First unlock? |
 |-----------------|------|-------------|--------|---------------|
-| Great Blue Heron | Wildlife | Uncommon | 15-20 | Yes |
-| Great Egret | Wildlife | Uncommon | 15-20 | Yes |
-| Osprey | Wildlife | Rare | 25-35 | Yes |
-| Vermilion Flycatcher | Wildlife | Rare | 25-35 | Yes |
-| Bald Eagle (winter) | Wildlife | Very rare | 40-50 | Yes |
-| Mule Deer | Wildlife | Uncommon | 15-20 | Yes |
+| Great Blue Heron | Wildlife | Uncommon | 15-25 | Yes |
+| Great Egret | Wildlife | Uncommon | 15-25 | Yes |
+| Osprey | Wildlife | Rare | 35-50 | Yes |
+| Vermilion Flycatcher | Wildlife | Rare | 35-50 | Yes |
+| Bald Eagle (winter) | Wildlife | Very rare | 65-85 | Yes |
+| Mule Deer | Wildlife | Uncommon | 15-25 | Yes |
 
 ## Shot list
 - [ ] Pre-dawn drive — longer route, show the distance commitment
@@ -80,7 +80,7 @@ Open water horizon — highest scoring ceiling in the Phoenix region. If the sky
 ### Conditions (max 20)
 | Component | Score | Notes |
 |-----------|-------|-------|
-| Effort to reach (max 10) | | |
+| Access difficulty (max 10) | | |
 | Weather/environmental challenge (max 10) | | |
 | **Conditions total** | **/20** | |
 
@@ -93,13 +93,8 @@ Open water horizon — highest scoring ceiling in the Phoenix region. If the sky
 | Component | Points | Notes |
 |-----------|--------|-------|
 | Eos Index | /100 | From above |
-| Travel distance | /5 | ~50 mi → 3 pts |
-| Travel difficulty bonus | | No bonuses expected |
-| Elevation gain | /4 | Minimal → 0 pts |
-| Pre-dawn arrival | /2 | Gate may limit this |
-| Weather adversity | /3 | |
+| Effort Rating | /40 | Trail (5) — longer drive but minimal hike, gate logistics |
 | Discovery points | | All first unlocks — rich discovery potential |
-| Streak bonus | | +0 (need 4 consecutive for first bonus) |
 | **Zora Score total** | | |
 
 ---

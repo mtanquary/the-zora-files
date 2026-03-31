@@ -71,7 +71,7 @@
 ### Conditions (max 20)
 | Component | Score | Notes |
 |-----------|-------|-------|
-| Effort to reach (max 10) | | |
+| Access difficulty (max 10) | | |
 | Weather/environmental challenge (max 10) | | |
 | **Conditions total** | **/20** | |
 
@@ -84,13 +84,8 @@
 | Component | Points | Notes |
 |-----------|--------|-------|
 | Eos Index | /100 | From above |
-| Travel distance | /5 | 0–5mi=0, 6–15=1, 16–30=2, 31–75=3, 76–150=4, 150+=5 |
-| Travel difficulty bonus | | Off-pavement +1, high-clearance +1, alt transport +1, international +3 |
-| Elevation gain | /4 | 0–200ft=0, 201–500=1, 501–1000=2, 1001–2000=3, 2000+=4 |
-| Pre-dawn arrival | /2 | 30–59min=1, 60+min=2 |
-| Weather adversity | /3 | Calm=0, cold/wind=1, rain/snow=2, nearly turned back=3 |
-| Discovery points | | First unlocks by tier + 1pt rare+ subsequent finds |
-| Streak bonus | | +1 per 4 consecutive on-schedule episodes |
+| Effort Rating | /40 | Roadside (0) / Trail (5) / Summit (15) / Remote (25) / Expedition (40) |
+| Discovery points | | First unlocks by rarity tier |
 | **Zora Score total** | | |
 
 ---
