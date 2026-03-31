@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callClaude, parseJsonResponse } from "@/lib/ai-client";
 
+export const maxDuration = 60;
+
 /** Geocode a location string to lat/lng using OpenStreetMap Nominatim. */
 async function geocode(
   location: string,

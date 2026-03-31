@@ -22,6 +22,13 @@ export default async function AdminPage() {
       always: true,
     },
     {
+      href: "/admin/planner",
+      title: "episode planner",
+      description: "Plan your next expedition — location, date, full shoot plan",
+      icon: "🗺️",
+      always: false,
+    },
+    {
       href: "/admin/scout",
       title: "pre-shoot intel",
       description: "AI scouting report for your next location",
