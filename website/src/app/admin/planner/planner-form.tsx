@@ -273,14 +273,30 @@ export function PlannerForm({
     let inTable = false;
     let inChecklist = false;
 
+    // Sections that should start on a new page when printing
+    const PAGE_BREAK_SECTIONS = [
+      "discovery targets",
+      "discoveries",
+      "eos index",
+      "tonight",
+      "shot list",
+      "what to say on camera",
+      "discovery targets — what to look",
+      "sunrise scoring reference",
+    ];
+
     for (const line of lines) {
       // Headings
       if (line.startsWith("# ")) {
         if (inTable) { html.push("</table>"); inTable = false; }
+        // Episode title — no forced break (it's already first on the page after hiding UI)
         html.push(`<h1 class="font-display-ornate text-2xl text-zora-amber mt-8 mb-3">${esc(line.slice(2))}</h1>`);
       } else if (line.startsWith("## ")) {
         if (inTable) { html.push("</table>"); inTable = false; }
-        html.push(`<h2 class="font-display text-lg text-dawn-mist mt-6 mb-2">${esc(line.slice(3))}</h2>`);
+        const heading = line.slice(3);
+        const needsBreak = PAGE_BREAK_SECTIONS.some((s) => heading.toLowerCase().startsWith(s));
+        const breakStyle = needsBreak ? ' style="break-before: page;"' : "";
+        html.push(`<h2 class="font-display text-lg text-dawn-mist mt-6 mb-2"${breakStyle}>${esc(heading)}</h2>`);
       } else if (line.startsWith("### ")) {
         if (inTable) { html.push("</table>"); inTable = false; }
         html.push(`<h3 class="font-display text-sm text-zora-amber/80 mt-4 mb-1">${esc(line.slice(4))}</h3>`);
@@ -296,7 +312,7 @@ export function PlannerForm({
         // Skip separator rows
         if (cells.every((c) => /^[-:]+$/.test(c))) continue;
         if (!inTable) {
-          html.push(`<table class="w-full text-xs border-collapse my-2">`);
+          html.push(`<table class="w-full text-xs border-collapse my-2" style="break-inside: avoid;">`);
           inTable = true;
           // First row is header
           html.push("<tr>" + cells.map((c) =>
@@ -311,7 +327,7 @@ export function PlannerForm({
       // Checkboxes
       else if (line.match(/^- \[[ x]\] /)) {
         if (inTable) { html.push("</table>"); inTable = false; }
-        if (!inChecklist) { html.push(`<ul class="space-y-1 my-2">`); inChecklist = true; }
+        if (!inChecklist) { html.push(`<ul class="space-y-1 my-2" style="break-inside: avoid;">`); inChecklist = true; }
         const checked = line.includes("[x]");
         const text = line.replace(/^- \[[ x]\] /, "");
         html.push(`<li class="flex items-start gap-2 text-sm text-dawn-mist"><span class="text-mist-dim/40 mt-0.5">${checked ? "☑" : "☐"}</span><span>${formatInline(text)}</span></li>`);
@@ -350,7 +366,7 @@ export function PlannerForm({
   return (
     <div className="mt-8 space-y-8">
       {/* Step indicator */}
-      <div className="flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-wider">
+      <div className="flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-wider print-none">
         {(["inspire", "configure", "plan", "production"] as const).map((s, i) => (
           <span key={s} className="flex items-center gap-2">
             {i > 0 && <span className="text-mist-dim/30">→</span>}
@@ -379,7 +395,7 @@ export function PlannerForm({
       {/* ============================================================ */}
       {step === "inspire" && (
         <div className="space-y-6">
-          <div className="bg-pre-dawn-mid border border-rule rounded-md p-5 space-y-4">
+          <div className="bg-pre-dawn-mid border border-rule rounded-md p-5 space-y-4 print-none">
             <div>
               <label className="block font-mono text-[0.6rem] text-mist-dim/60 uppercase tracking-wider mb-1">
                 what are you looking for?
@@ -426,14 +442,14 @@ export function PlannerForm({
           </div>
 
           {suggestError && (
-            <div className="bg-pre-dawn-mid border border-sunrise-orange/40 rounded-md p-4">
+            <div className="bg-pre-dawn-mid border border-sunrise-orange/40 rounded-md p-4 print-none">
               <p className="text-sm text-sunrise-orange">{suggestError}</p>
             </div>
           )}
 
           {/* Location suggestions */}
           {suggestions.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-3 print-none">
               <Ornament label="Suggested locations" />
               {suggestions.map((loc) => (
                 <button
@@ -508,7 +524,7 @@ export function PlannerForm({
 
           {/* Existing plans */}
           {existingPlans.length > 0 && (
-            <>
+            <div className="print-none">
               <Ornament label="Existing plans" />
               <div className="bg-pre-dawn-mid border border-rule rounded-md">
                 {existingPlans.map((p, i) => (
@@ -546,29 +562,31 @@ export function PlannerForm({
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {/* Viewing an existing plan/production sheet */}
           {viewingContent && (
             <>
-              <Ornament label={viewingLabel} />
-              <div className="flex flex-wrap gap-2 mb-2">
-                <button
-                  onClick={() => window.print()}
-                  className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
-                >
-                  print
-                </button>
-                <button
-                  onClick={() => { setViewingContent(null); setViewingLabel(""); }}
-                  className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
-                >
-                  close
-                </button>
+              <div className="print-none">
+                <Ornament label={viewingLabel} />
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <button
+                    onClick={() => window.print()}
+                    className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
+                  >
+                    print
+                  </button>
+                  <button
+                    onClick={() => { setViewingContent(null); setViewingLabel(""); }}
+                    className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
+                  >
+                    close
+                  </button>
+                </div>
               </div>
               <div
-                className="bg-pre-dawn-mid border border-rule rounded-md p-6 print:bg-white print:text-black print:border-none"
+                className="bg-pre-dawn-mid border border-rule rounded-md p-6 print-only"
                 dangerouslySetInnerHTML={{ __html: renderMarkdown(viewingContent) }}
               />
             </>
@@ -684,8 +702,8 @@ export function PlannerForm({
       {/* ============================================================ */}
       {step === "plan" && planMarkdown && (
         <div className="space-y-6">
-          {/* Actions bar */}
-          <div className="flex flex-wrap gap-2">
+          {/* Actions bar — hidden in print */}
+          <div className="flex flex-wrap gap-2 print-none">
             <button
               onClick={() => downloadMarkdown(planMarkdown, `plan.md`)}
               className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
@@ -708,13 +726,13 @@ export function PlannerForm({
           </div>
 
           {sheetError && (
-            <div className="bg-pre-dawn-mid border border-sunrise-orange/40 rounded-md p-4">
+            <div className="bg-pre-dawn-mid border border-sunrise-orange/40 rounded-md p-4 print-none">
               <p className="text-sm text-sunrise-orange">{sheetError}</p>
             </div>
           )}
 
           {planFolder && (
-            <p className="font-mono text-[0.6rem] text-mist-dim/50">
+            <p className="font-mono text-[0.6rem] text-mist-dim/50 print-none">
               save to: episodes/season-{String(season).padStart(2, "0")}/{planFolder}/
             </p>
           )}
@@ -722,7 +740,7 @@ export function PlannerForm({
           {/* Rendered plan */}
           <div
             ref={printRef}
-            className="bg-pre-dawn-mid border border-rule rounded-md p-6 print:bg-white print:text-black print:border-none"
+            className="bg-pre-dawn-mid border border-rule rounded-md p-6 print-only"
             dangerouslySetInnerHTML={{ __html: renderMarkdown(planMarkdown) }}
           />
         </div>
@@ -733,8 +751,8 @@ export function PlannerForm({
       {/* ============================================================ */}
       {step === "production" && productionSheet && (
         <div className="space-y-6">
-          {/* Actions bar */}
-          <div className="flex flex-wrap gap-2">
+          {/* Actions bar — hidden in print */}
+          <div className="flex flex-wrap gap-2 print-none">
             <button
               onClick={() => downloadMarkdown(productionSheet, `production-sheet.md`)}
               className="rounded-md bg-pre-dawn-mid border border-rule px-4 py-2 text-sm text-dawn-mist hover:border-zora-amber/40 transition-colors"
@@ -757,7 +775,7 @@ export function PlannerForm({
 
           {/* Rendered production sheet */}
           <div
-            className="bg-pre-dawn-mid border border-rule rounded-md p-6 print:bg-white print:text-black print:border-none"
+            className="bg-pre-dawn-mid border border-rule rounded-md p-6 print-only"
             dangerouslySetInnerHTML={{ __html: renderMarkdown(productionSheet) }}
           />
         </div>
@@ -767,7 +785,7 @@ export function PlannerForm({
       {/*  Start over (visible on plan/production steps)                */}
       {/* ============================================================ */}
       {(step === "plan" || step === "production") && (
-        <div className="pt-4 border-t border-rule">
+        <div className="pt-4 border-t border-rule print-none">
           <button
             onClick={() => {
               setStep("inspire");

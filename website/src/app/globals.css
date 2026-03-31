@@ -136,4 +136,15 @@ strong { color: var(--amber-light); }
   button, nav, footer {
     display: none !important;
   }
+
+  /* Planner: hide everything except the rendered plan/sheet content.
+     .print-only is the rendered markdown; .print-none is everything else. */
+  .print-none {
+    display: none !important;
+  }
+  .print-only {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }

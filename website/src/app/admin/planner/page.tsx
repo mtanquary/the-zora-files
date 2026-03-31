@@ -68,10 +68,10 @@ export default function PlannerPage() {
 
   return (
     <div className="max-w-[780px] mx-auto px-8 py-16">
-      <h1 className="font-display-ornate text-3xl text-zora-amber mb-2">
+      <h1 className="font-display-ornate text-3xl text-zora-amber mb-2 print-none">
         episode planner
       </h1>
-      <p className="text-mist-dim">
+      <p className="text-mist-dim print-none">
         Plan your next expedition — from location scouting to production-ready shoot sheet.
       </p>
 
