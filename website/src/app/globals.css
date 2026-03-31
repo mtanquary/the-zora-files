@@ -70,3 +70,70 @@ body {
 }
 
 strong { color: var(--amber-light); }
+
+/* ── Print styles ──
+   Tailwind 4 compiles colors at build time, so overriding CSS variables
+   alone won't help. We use a high-specificity blanket rule to force
+   all text to print-safe colors on white backgrounds. */
+@media print {
+  @page { margin: 0.75in; }
+
+  /* Everything: white bg, dark text, no shadows */
+  *, *::before, *::after {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: #111 !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* All text defaults to near-black */
+  p, span, li, td, th, div, label, code, em,
+  h1, h2, h3, h4, h5, h6,
+  strong, blockquote, a {
+    color: #111 !important;
+  }
+
+  strong { font-weight: 700 !important; }
+  em { color: #333 !important; }
+  code { color: #333 !important; }
+
+  /* Table styling for paper */
+  th {
+    color: #555 !important;
+    border-bottom: 1px solid #999 !important;
+  }
+  td {
+    border-bottom: 1px solid #ddd !important;
+  }
+  table {
+    border-collapse: collapse !important;
+  }
+
+  /* Blockquote left border */
+  blockquote {
+    border-left: 2px solid #999 !important;
+    padding-left: 0.75rem !important;
+    color: #333 !important;
+  }
+
+  /* HR rules */
+  hr {
+    border-color: #ccc !important;
+  }
+
+  /* Borders on containers */
+  div {
+    border-color: #ddd !important;
+  }
+
+  /* Hide interactive elements */
+  button, nav, footer {
+    display: none !important;
+  }
+}
