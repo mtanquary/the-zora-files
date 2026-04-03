@@ -34,7 +34,7 @@ export default async function EpisodesPage() {
             return (
               <Link
                 key={ep.id}
-                href={`/episodes/${slug}`}
+                href={`/finding-zora/episodes/${slug}`}
                 className="flex items-center justify-between bg-pre-dawn-mid border border-rule rounded-md p-5 hover:border-zora-amber/40 transition-colors"
               >
                 <div>

@@ -28,7 +28,12 @@
       "Bash(node -e \":*)",
       "Bash(find /c/Users/mattt/Documents/the-zora-files -type f -name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx)",
       "Bash(npx tsc:*)",
-      "Bash(grep -r \"5.*10\\\\|15.*20\\\\|25.*35\\\\|40.*50\\\\|60.*75\" c:UsersmatttDocumentsthe-zora-fileswebsitesrc --include=*.ts --include=*.tsx)"
+      "Bash(grep -r \"5.*10\\\\|15.*20\\\\|25.*35\\\\|40.*50\\\\|60.*75\" c:UsersmatttDocumentsthe-zora-fileswebsitesrc --include=*.ts --include=*.tsx)",
+      "Bash(cp -r episodes finding-zora/episodes)",
+      "Bash(cp -r eos-index finding-zora/eos-index)",
+      "Bash(cp -r discovery-log finding-zora/discovery-log)",
+      "Bash(cp -r records finding-zora/records)",
+      "Bash(cp -r rules finding-zora/rules)"
     ]
   }
 }

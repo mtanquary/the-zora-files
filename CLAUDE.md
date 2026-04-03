@@ -4,7 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-The Zora Files is a sunrise-chasing YouTube channel brand based in Arizona. This repo is the operational hub — not a traditional codebase. It contains brand guidelines, episode planning, production checklists, discovery tracking, and will eventually contain a Next.js website.
+**The Zora Files** is a YouTube channel brand. Philosophy: "the best things discovered in life come through early to rise." It is an umbrella for multiple series.
+
+**Finding Zora** is the flagship series — a sunrise-chasing expedition game with scoring, discoveries, and level-up progression. This repo is the operational hub for the channel and contains brand guidelines, episode planning, production checklists, discovery tracking, and the companion website.
+
+**Brand hierarchy:**
+- **The Zora Files** (thezorafiles.com) — the channel. May contain multiple series.
+- **Finding Zora** — the flagship series/game within The Zora Files.
+- **Finding Zora community** (future, separate project) — where others sign up and play their own Finding Zora.
 
 ## Key files
 
@@ -44,6 +51,18 @@ The Zora Files is a sunrise-chasing YouTube channel brand based in Arizona. This
 
 D&D-style progression, 11 levels (0–10). Purely participation-gated — 6 expeditions per level, 60 total to reach Finding Zora. Score has no effect on leveling (it drives leaderboard position instead). Each level earns a unique medallion. Level 10 "Finding Zora" is the narrative endpoint. Full level table and medallion palette in ZORA_PROJECT.md.
 
-## Website (when initialized)
+## Website — thezorafiles.com
 
-Tech stack: Next.js, Vercel, Supabase (Postgres), Cloudflare DNS. Data models for Episode, Discovery, Record, and PlayerLevel are defined in ZORA_PROJECT.md. Initialize with `npx create-next-app@latest` inside `website/`.
+Tech stack: Next.js, Vercel, Supabase (Postgres), Cloudflare DNS.
+
+**Route structure:**
+- `/` — channel home (The Zora Files umbrella)
+- `/about` — channel-level about page
+- `/finding-zora/` — Finding Zora series hub
+- `/finding-zora/episodes` — episode archive
+- `/finding-zora/episodes/[slug]` — episode detail
+- `/finding-zora/eos-index` — leaderboard
+- `/finding-zora/discovery-log` — species catalog
+- `/finding-zora/records` — all-time bests
+- `/finding-zora/rules` — how the game works
+- `/admin/` — production tools (protected, host-only)

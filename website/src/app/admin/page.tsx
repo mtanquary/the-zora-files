@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getEpisodes } from "@/lib/queries";
 import { LEVELS } from "@/lib/types";
 import { Ornament } from "@/components/atmosphere";
+import { SeasonRecapButton } from "./season-recap-button";
 
 export const metadata: Metadata = { title: "admin" };
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export default async function AdminPage() {
     {
       href: "/admin/planner",
       title: "episode planner",
-      description: "Plan your next expedition — location, date, full shoot plan",
+      description: "Plan your next expedition. Location, date, full shoot plan.",
       icon: "🗺️",
       always: false,
     },
@@ -129,7 +130,7 @@ export default async function AdminPage() {
                       card
                     </Link>
                     <Link
-                      href={`/episodes/${slug}`}
+                      href={`/finding-zora/episodes/${slug}`}
                       className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
                     >
                       view
@@ -139,6 +140,14 @@ export default async function AdminPage() {
               );
             })}
           </div>
+        </>
+      )}
+
+      {/* Season recap generator */}
+      {hasApiKey && episodes.length >= 3 && (
+        <>
+          <Ornament label="Season recap" />
+          <SeasonRecapButton season={1} />
         </>
       )}
     </div>

@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { getEpisodes } from "@/lib/queries";
 import { Ornament, Lore, Stars, HorizonGlow } from "@/components/atmosphere";
-import { SeasonRecapButton } from "./season-recap-button";
 
 export const metadata: Metadata = { title: "about" };
-export const dynamic = "force-dynamic";
-
-export default async function AboutPage() {
-  const episodes = await getEpisodes();
-  const hasEpisodes = episodes.length >= 3;
-  const hasApiKey = !!process.env.ANTHROPIC_API_KEY;
+export default function AboutPage() {
   return (
     <div>
       {/* Header with atmosphere */}
@@ -32,19 +25,24 @@ export default async function AboutPage() {
       </section>
 
       <div className="max-w-[780px] mx-auto px-8 pb-16">
-        <Ornament label="The pursuit" />
+        <Ornament label="The channel" />
 
         <p>
-          The Zora Files is a sunrise-chasing pursuit. Every episode is a scored
-          attempt at the perfect dawn. The desert doesn&apos;t care about your
-          plan.
+          The Zora Files is built on a simple idea: the best things discovered
+          in life come through early to rise. The name comes from{" "}
+          <strong>Zora</strong>, the Slavic word for dawn.
         </p>
 
         <p>
-          <strong>Zora</strong> is the Slavic word for dawn. <strong>Eos</strong>{" "}
-          is the Greek goddess of dawn. Together they frame the two things this
-          show measures: the quality of the sunrise and the full weight of the
-          expedition.
+          The flagship series is{" "}
+          <strong>
+            <a href="/finding-zora" className="text-zora-amber hover:text-amber-light transition-colors">
+              Finding Zora
+            </a>
+          </strong>{" "}
+          , a sunrise-chasing expedition game with its own scoring system,
+          discovery log, and level-up progression. Every episode is a scored
+          attempt at the perfect dawn.
         </p>
 
         <Lore>
@@ -77,17 +75,10 @@ export default async function AboutPage() {
         </p>
 
         <Lore>
-          Home base is the Sonoran Desert of Arizona. But Zora does not belong to any single
-          landscape. She has been spotted over the Atlantic, above the treeline in the Rockies,
-          rising from the sea off coastal cliffs. Wherever dawn breaks, the game is on.
+          Home base is the Sonoran Desert of Arizona. But the pursuit does not
+          belong to any single landscape. Wherever dawn breaks, the game is on.
         </Lore>
 
-        {hasApiKey && hasEpisodes && (
-          <>
-            <Ornament label="Season recap" />
-            <SeasonRecapButton season={1} />
-          </>
-        )}
       </div>
     </div>
   );

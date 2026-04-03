@@ -72,7 +72,7 @@ export default function PlannerPage() {
         episode planner
       </h1>
       <p className="text-mist-dim print-none">
-        Plan your next expedition — from location scouting to production-ready shoot sheet.
+        Plan your next expedition. From location scouting to production-ready shoot sheet.
       </p>
 
       {hasApiKey ? (
