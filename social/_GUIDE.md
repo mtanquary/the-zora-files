@@ -32,4 +32,6 @@ This folder holds platform-specific content, assets, and notes for each social c
 | X/Twitter | @thezorafiles | Secured |
 
 ## Bio consistency
-All platforms should use the same core bio language. Draft it once, adapt the length per platform. Core message: sunrise-chasing desert series, scored with the Eos Index, based in Arizona.
+All platforms use the same core line, adapted for length. See `bios.md` for platform-specific versions.
+
+Core line: "The true beauty in every sunrise is the journey you took to witness it."

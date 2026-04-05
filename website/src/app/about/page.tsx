@@ -53,7 +53,7 @@ export default function AboutPage() {
 
         <div className="float-right ml-6 mb-4">
           <img
-            src="/images/profile-photo-1.jpg"
+            src="/images/profile-photo-2.jpg"
             alt="The host"
             className="w-40 h-40 rounded-xl object-cover border border-rule"
           />

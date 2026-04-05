@@ -33,7 +33,10 @@
       "Bash(cp -r eos-index finding-zora/eos-index)",
       "Bash(cp -r discovery-log finding-zora/discovery-log)",
       "Bash(cp -r records finding-zora/records)",
-      "Bash(cp -r rules finding-zora/rules)"
+      "Bash(cp -r rules finding-zora/rules)",
+      "Bash(node scripts/score-archives.mjs)",
+      "Bash(npm ls:*)",
+      "Bash(node scripts/export-social-images.mjs)"
     ]
   }
 }

@@ -10,7 +10,7 @@ This is the living task tracker for the project. Phases are roughly sequential b
 
 ### Accounts and platforms
 - [ ] Set up Google Workspace for hello@thezorafiles.com
-- [ ] Connect hello@ to YouTube channel Google account
+- [x] Connect hello@ to YouTube channel Google account
 - [ ] Register X/Twitter @thezorafiles (defensive)
 - [ ] Write consistent bio across YouTube, Instagram, TikTok
 

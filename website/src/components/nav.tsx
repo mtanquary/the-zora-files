@@ -16,6 +16,7 @@ const findingZoraLinks = [
   { href: "/finding-zora/discovery-log", label: "discoveries" },
   { href: "/finding-zora/records", label: "records" },
   { href: "/finding-zora/rules", label: "rules" },
+  { href: "/finding-zora/archives", label: "archives" },
 ];
 
 export function Nav() {

@@ -1,0 +1,758 @@
+[
+  {
+    "filename": "20250708_061430.jpg",
+    "taken_at": "2025-07-08T13:14:30.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 18,
+        "cloud_engagement": 13,
+        "horizon_definition": 15
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 8,
+        "weather_challenge": 7
+      },
+      "sky_total": 46,
+      "setting_total": 27,
+      "conditions_total": 15,
+      "eos_total": 88
+    },
+    "vibe": "A beacon of hope stands sentinel against the golden Pacific dawn, where dramatic clouds dance with brilliant sunrise colors over endless ocean."
+  },
+  {
+    "filename": "20250708_055733.jpg",
+    "taken_at": "2025-07-08T12:57:33.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 18,
+        "cloud_engagement": 14,
+        "horizon_definition": 14
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 7
+      },
+      "sky_total": 46,
+      "setting_total": 24,
+      "conditions_total": 13,
+      "eos_total": 83
+    },
+    "vibe": "A contemplative moment where golden storm light breaks through dramatic clouds over the endless ocean, witnessed in peaceful solitude."
+  },
+  {
+    "filename": "IMG_2280.JPG",
+    "taken_at": "2015-10-07T13:40:45.000Z",
+    "camera": "Apple iPhone 4",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 17,
+        "cloud_engagement": 13,
+        "horizon_definition": 14
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 7
+      },
+      "sky_total": 44,
+      "setting_total": 24,
+      "conditions_total": 13,
+      "eos_total": 81
+    },
+    "vibe": "A dramatic tropical sunrise breaks through stormy clouds over rugged coastline, casting golden light across churning waters."
+  },
+  {
+    "filename": "20240224_064946.jpg",
+    "taken_at": "2024-02-24T13:49:46.000Z",
+    "camera": "samsung SM-G781U",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 18,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 14
+      },
+      "conditions": {
+        "access_difficulty": 8,
+        "weather_challenge": 6
+      },
+      "sky_total": 38,
+      "setting_total": 28,
+      "conditions_total": 14,
+      "eos_total": 80
+    },
+    "vibe": "A mystical desert dawn where ancient rock formations stand sentinel against a canvas of purple and gold light."
+  },
+  {
+    "filename": "20241228_070943.jpg",
+    "taken_at": "2024-12-28T14:09:43.000Z",
+    "camera": "samsung SM-G781U",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 37,
+      "setting_total": 27,
+      "conditions_total": 13,
+      "eos_total": 77
+    },
+    "vibe": "A serene desert awakening where chollas stand like sentinels in the soft purple-gold light filtering across the Sonoran landscape."
+  },
+  {
+    "filename": "20250126_073317.jpg",
+    "taken_at": "2025-01-26T14:33:17.000Z",
+    "camera": "samsung SM-G781U",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 5
+      },
+      "sky_total": 37,
+      "setting_total": 27,
+      "conditions_total": 12,
+      "eos_total": 76
+    },
+    "vibe": "A serene desert awakening where ancient cholla cacti stand sentinel against golden mountains in the peaceful morning light."
+  },
+  {
+    "filename": "20260325_054929(1).jpg",
+    "taken_at": "2026-03-25T13:43:48.000Z",
+    "camera": "Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 10,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 11,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 39,
+      "setting_total": 24,
+      "conditions_total": 13,
+      "eos_total": 76
+    },
+    "vibe": "A serene desert sunrise piercing through layered mountain ridges with golden warmth breaking the morning silence."
+  },
+  {
+    "filename": "20250126_071117.jpg",
+    "taken_at": "2025-01-26T14:11:17.000Z",
+    "camera": "samsung SM-G781U",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 14
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 4
+      },
+      "sky_total": 38,
+      "setting_total": 27,
+      "conditions_total": 10,
+      "eos_total": 75
+    },
+    "vibe": "A serene desert awakening where towering saguaros stand as silent sentinels against the golden morning light."
+  },
+  {
+    "filename": "20260312_061707.jpg",
+    "taken_at": "2026-03-12T13:17:07.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 11,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 8
+      },
+      "sky_total": 37,
+      "setting_total": 23,
+      "conditions_total": 15,
+      "eos_total": 75
+    },
+    "vibe": "A serene mountain dawn where rising mist dances above still waters, creating an ethereal boundary between earth and sky."
+  },
+  {
+    "filename": "IMG_1343.JPEG",
+    "taken_at": "2019-10-07T13:48:08.000Z",
+    "camera": "Apple iPhone 8 Plus",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 12,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 11
+      },
+      "conditions": {
+        "access_difficulty": 4,
+        "weather_challenge": 6
+      },
+      "sky_total": 41,
+      "setting_total": 24,
+      "conditions_total": 10,
+      "eos_total": 75
+    },
+    "vibe": "A serene coastal sunrise with golden warmth breaking through moody clouds over a rocky shoreline."
+  },
+  {
+    "filename": "20260110_070702.jpg",
+    "taken_at": "2026-01-10T14:07:02.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 18,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 5
+      },
+      "sky_total": 38,
+      "setting_total": 26,
+      "conditions_total": 11,
+      "eos_total": 75
+    },
+    "vibe": "A dramatic desert silhouette against a fiery gradient sky that transforms the harsh landscape into a moment of wild beauty."
+  },
+  {
+    "filename": "IMG_1618.JPG",
+    "taken_at": "2019-10-03T14:06:58.000Z",
+    "camera": "Apple iPhone 7 Plus",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 12,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 37,
+      "setting_total": 25,
+      "conditions_total": 13,
+      "eos_total": 75
+    },
+    "vibe": "A moody coastal dawn where dramatic clouds and churning seas create an atmosphere of wild, untamed beauty against weathered limestone cliffs."
+  },
+  {
+    "filename": "20240224_074640.jpg",
+    "taken_at": "2024-02-24T14:46:41.000Z",
+    "camera": "samsung SM-G781U",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 14
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 32,
+      "setting_total": 27,
+      "conditions_total": 13,
+      "eos_total": 72
+    },
+    "vibe": "A serene desert awakening where ancient rock formations catch the first gentle light in pristine wilderness solitude."
+  },
+  {
+    "filename": "20260110_070635.jpg",
+    "taken_at": "2026-01-10T14:06:35.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 5
+      },
+      "sky_total": 36,
+      "setting_total": 25,
+      "conditions_total": 11,
+      "eos_total": 72
+    },
+    "vibe": "A serene desert dawn unfolds with soft purple and orange hues silhouetting the iconic saguaro cactus against rugged mountain peaks."
+  },
+  {
+    "filename": "20260322_073446.jpg",
+    "taken_at": "2026-03-22T14:34:46.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 10,
+        "horizon_definition": 8
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 14
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 30,
+      "setting_total": 27,
+      "conditions_total": 13,
+      "eos_total": 70
+    },
+    "vibe": "A dramatic desert sunrise pierces through towering rock spires, casting ethereal light across the rugged wilderness landscape."
+  },
+  {
+    "filename": "20260312_063808.jpg",
+    "taken_at": "2026-03-12T13:38:08.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 14,
+        "cloud_engagement": 8,
+        "horizon_definition": 13
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 4
+      },
+      "sky_total": 35,
+      "setting_total": 25,
+      "conditions_total": 10,
+      "eos_total": 70
+    },
+    "vibe": "A serene desert awakening with golden light painting the Sonoran landscape while a majestic saguaro stands sentinel against the morning sky."
+  },
+  {
+    "filename": "20250830_053153.jpg",
+    "taken_at": "2025-08-30T12:31:54.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 10
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 6
+      },
+      "sky_total": 30,
+      "setting_total": 25,
+      "conditions_total": 13,
+      "eos_total": 68
+    },
+    "vibe": "A quiet pause beside a weathered old tree as dawn breaks softly over wild terrain."
+  },
+  {
+    "filename": "20250711_062353.jpg",
+    "taken_at": "2025-07-11T13:23:53.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 11,
+        "location_uniqueness": 9
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 5
+      },
+      "sky_total": 36,
+      "setting_total": 20,
+      "conditions_total": 11,
+      "eos_total": 67
+    },
+    "vibe": "A warm, golden sunrise illuminates a peaceful sandy path through coastal dunes, creating an inviting journey toward the light."
+  },
+  {
+    "filename": "20260131_081642.jpg",
+    "taken_at": "2026-01-31T15:16:42.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 10
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 13
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 5
+      },
+      "sky_total": 30,
+      "setting_total": 25,
+      "conditions_total": 12,
+      "eos_total": 67
+    },
+    "vibe": "A serene desert awakening with golden sunburst piercing through layered canyon walls while native shrubs catch the first warming light."
+  },
+  {
+    "filename": "20260314_071517.jpg",
+    "taken_at": "2026-03-14T14:15:17.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 4
+      },
+      "sky_total": 32,
+      "setting_total": 25,
+      "conditions_total": 10,
+      "eos_total": 67
+    },
+    "vibe": "A solitary figure walks toward golden light through pristine Sonoran Desert wilderness, creating a sense of peaceful adventure and natural discovery."
+  },
+  {
+    "filename": "20260214_080757.jpg",
+    "taken_at": "2026-02-14T15:07:57.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 4
+      },
+      "sky_total": 32,
+      "setting_total": 24,
+      "conditions_total": 10,
+      "eos_total": 66
+    },
+    "vibe": "A serene desert awakening with gentle sunbeams filtering through bare branches along a peaceful wilderness trail."
+  },
+  {
+    "filename": "20260322_064242.jpg",
+    "taken_at": "2026-03-22T13:42:42.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 10
+      },
+      "setting": {
+        "foreground_composition": 11,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 5
+      },
+      "sky_total": 30,
+      "setting_total": 23,
+      "conditions_total": 11,
+      "eos_total": 64
+    },
+    "vibe": "A serene desert dawn unfolds along a winding trail, where soft golden light kisses ancient rock formations in peaceful solitude."
+  },
+  {
+    "filename": "20260117_074243.jpg",
+    "taken_at": "2026-01-17T14:42:43.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 14,
+        "cloud_engagement": 8,
+        "horizon_definition": 12
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 8
+      },
+      "conditions": {
+        "access_difficulty": 4,
+        "weather_challenge": 5
+      },
+      "sky_total": 34,
+      "setting_total": 20,
+      "conditions_total": 9,
+      "eos_total": 63
+    },
+    "vibe": "A peaceful wetland awakening with golden light filtering through wild grasses and reflecting on still water."
+  },
+  {
+    "filename": "20260308_071111.jpg",
+    "taken_at": "2026-03-08T14:11:11.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 12,
+        "cloud_engagement": 8,
+        "horizon_definition": 6
+      },
+      "setting": {
+        "foreground_composition": 14,
+        "location_uniqueness": 11
+      },
+      "conditions": {
+        "access_difficulty": 6,
+        "weather_challenge": 5
+      },
+      "sky_total": 26,
+      "setting_total": 25,
+      "conditions_total": 11,
+      "eos_total": 62
+    },
+    "vibe": "Delicate purple wildflowers create a striking contrast against the harsh desert landscape as golden sunrise light bathes the rugged terrain."
+  },
+  {
+    "filename": "1299443311234331007.jpg",
+    "taken_at": null,
+    "camera": null,
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 18,
+        "cloud_engagement": 12,
+        "horizon_definition": 8
+      },
+      "setting": {
+        "foreground_composition": 12,
+        "location_uniqueness": 3
+      },
+      "conditions": {
+        "access_difficulty": 2,
+        "weather_challenge": 4
+      },
+      "sky_total": 38,
+      "setting_total": 15,
+      "conditions_total": 6,
+      "eos_total": 59
+    },
+    "vibe": "A spectacular fiery sunset transforms the mundane airport tarmac into a dramatic stage where commercial aviation meets nature's daily theater."
+  },
+  {
+    "filename": "20250912_062912.jpg",
+    "taken_at": "2025-09-12T13:29:12.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 16,
+        "cloud_engagement": 13,
+        "horizon_definition": 8
+      },
+      "setting": {
+        "foreground_composition": 10,
+        "location_uniqueness": 4
+      },
+      "conditions": {
+        "access_difficulty": 2,
+        "weather_challenge": 6
+      },
+      "sky_total": 37,
+      "setting_total": 14,
+      "conditions_total": 8,
+      "eos_total": 59
+    },
+    "vibe": "A warm suburban sunrise filtering through dramatic clouds and silhouetted trees, creating golden rays that pierce the morning sky with gentle intensity."
+  },
+  {
+    "filename": "20260314_073620.jpg",
+    "taken_at": "2026-03-14T14:36:20.000Z",
+    "camera": "samsung Galaxy S25 Ultra",
+    "lat": null,
+    "lng": null,
+    "location_name": null,
+    "scores": {
+      "sky": {
+        "color_intensity": 8,
+        "cloud_engagement": 6,
+        "horizon_definition": 4
+      },
+      "setting": {
+        "foreground_composition": 13,
+        "location_uniqueness": 12
+      },
+      "conditions": {
+        "access_difficulty": 7,
+        "weather_challenge": 5
+      },
+      "sky_total": 18,
+      "setting_total": 25,
+      "conditions_total": 12,
+      "eos_total": 55
+    },
+    "vibe": "A rugged desert awakening where ancient saguaro sentinels stand guard over a rocky trail leading toward the gentle promise of dawn."
+  }
+]
