@@ -2,7 +2,7 @@
 
 ## Caption
 
-I scored 27 of my old sunrise photos with AI. Top score: 88/100. Worst: 55. These are the sunrises that started it all. Finding Zora starts soon. thezorafiles.com/finding-zora/archives
+I scored 27 of my old sunrise photos. Top score: 88/100. Worst: 55. These are the sunrises that started it all. Finding Zora starts soon. thezorafiles.com/finding-zora/archives
 
 #sunrise #sunrisechaser #arizona #thezorafiles #findingzora #earlytorisetribe
 
