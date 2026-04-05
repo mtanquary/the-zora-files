@@ -101,12 +101,17 @@ export async function POST(request: NextRequest) {
       composites.push({ input: zSvg, top: 0, left: 0 });
     }
 
+    // For tall formats (TikTok 9:16 etc), push overlays above the bottom 25%
+    // where platform UI (caption, buttons) covers the image
+    const isTall = height / width > 1.4;
+    const bottomMargin = isTall ? Math.round(height * 0.27) : Math.round(height * 0.04);
+
     // Score badge overlay
     if (score != null) {
       const badgeW = Math.round(width * 0.18);
       const badgeH = Math.round(badgeW * 0.55);
       const badgeX = width - badgeW - Math.round(width * 0.04);
-      const badgeY = height - badgeH - Math.round(height * 0.04);
+      const badgeY = height - badgeH - bottomMargin;
       const fontSize = Math.round(badgeW * 0.42);
       const labelSize = Math.round(badgeW * 0.15);
       const r = Math.round(badgeH * 0.15);
@@ -123,7 +128,7 @@ export async function POST(request: NextRequest) {
     if (showBrand) {
       const brandSize = Math.round(width * 0.018);
       const bx = Math.round(width * 0.04);
-      const by = height - Math.round(height * 0.04);
+      const by = height - bottomMargin;
 
       const brandSvg = Buffer.from(`<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
         <text x="${bx}" y="${by}" font-family="monospace" font-size="${brandSize}" fill="rgba(240,165,0,0.6)" letter-spacing="1.5">thezorafiles.com</text>
