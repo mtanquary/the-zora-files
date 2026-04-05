@@ -11,7 +11,7 @@ This is the living task tracker for the project. Phases are roughly sequential b
 ### Accounts and platforms
 - [ ] Set up Google Workspace for hello@thezorafiles.com
 - [x] Connect hello@ to YouTube channel Google account
-- [ ] Register X/Twitter @thezorafiles (defensive)
+- [x] Register X/Twitter @thezorafiles (defensive)
 - [ ] Write consistent bio across YouTube, Instagram, TikTok
 
 ### Brand identity
@@ -19,7 +19,7 @@ This is the living task tracker for the project. Phases are roughly sequential b
 - [ ] Choose body font
 - [ ] Choose monospace font for Eos Index / Zora Score data
 - [ ] Design channel icon — amber sunrise motif or Zora wordmark
-- [ ] Design YouTube channel banner
+- [x] Design YouTube channel banner
 - [ ] Design thumbnail template — consistent visual language
 - [ ] Design Eos Index score card graphic (for on-screen use)
 - [ ] Design Zora Score breakdown graphic (for on-screen use)
