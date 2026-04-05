@@ -123,7 +123,7 @@ export default function ArchivesPage() {
         <Ornament label="Gallery" />
         <p className="text-mist-dim text-sm mb-6">
           Sorted by Eos Index score. These are the sunrises that started it all,
-          scored retroactively by AI.
+          scored retroactively.
         </p>
 
         <ArchiveGallery entries={entries} />
