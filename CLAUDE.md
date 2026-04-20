@@ -27,7 +27,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `episodes/` | Per-episode planning, Eos Index scoring, field notes. Template in `_templates/` |
 | `discoveries/` | Discovery Log — species/features found, points, master list in `discovery-log.md` |
 | `production/` | Checklists (pre-shoot, on-location, post), LUTs, DaVinci templates |
-| `website/` | Future Next.js site for thezorafiles.com (not yet initialized) |
+| `website/` | Next.js 16 / React 19 site for thezorafiles.com — public pages, admin tools, and AI-scoring API routes |
 | `social/` | Per-platform content and assets (YouTube, Instagram, TikTok, X) |
 | `planning/` | Strategic research, location scouting, gear evaluation |
 
@@ -53,7 +53,32 @@ D&D-style progression, 11 levels (0–10). Purely participation-gated — 6 expe
 
 ## Website — thezorafiles.com
 
-Tech stack: Next.js, Vercel, Supabase (Postgres), Cloudflare DNS.
+Tech stack: Next.js 16, React 19, Tailwind 4, Postgres (via `pg`), Supabase (client SDK), Vercel, Cloudflare DNS.
+
+> **IMPORTANT — read before writing website code.** `website/AGENTS.md` warns that this is "NOT the Next.js you know" — Next.js 16 has breaking changes from training-data versions. Consult `website/node_modules/next/dist/docs/` for the relevant guide before writing or modifying Next.js code, and heed any deprecation notices.
+
+### Dev commands (run from `website/`)
+
+- `npm run dev` — start dev server (http://localhost:3000)
+- `npm run build` — production build
+- `npm run start` — serve production build
+- `npm run lint` — ESLint (flat config, `eslint.config.mjs`)
+- `node scripts/score-archives.mjs` — bulk-score archive photos via AI
+- `node scripts/export-social-images.mjs` — export social share images
+
+No test runner is configured — verify UI changes by running `npm run dev` and exercising the feature in a browser.
+
+### Database
+
+Two access paths, pick the right one:
+- `src/lib/db.ts` — `pg` Pool using `DATABASE_URL` (server-side queries in `src/lib/queries.ts`)
+- `src/lib/supabase.ts` — Supabase JS client using `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` (client-side and auth flows)
+
+Schema lives in `website/scripts/setup-db.sql`. Core tables: `episodes`, `discoveries`, plus related records. The `episodes` table stores `eos_index` and `zora_score` as JSONB so sub-score rationale is preserved.
+
+### Admin tools (`/admin/*`, host-only)
+
+Production surfaces beyond the spec in `website/_GUIDE.md`: `log` (expedition logging + ceremony), `card` (expedition card editor/export), `planner` (episode prep), `scout` (location scouting), `banner`, `social-export`, `artifacts`, `watermark`. AI endpoints under `/api/ai-*` back these tools (episode plan, field notes, pre-shoot, season recap, title, Eos scoring, discovery assist).
 
 **Route structure:**
 - `/` — channel home (The Zora Files umbrella)
@@ -64,5 +89,6 @@ Tech stack: Next.js, Vercel, Supabase (Postgres), Cloudflare DNS.
 - `/finding-zora/eos-index` — leaderboard
 - `/finding-zora/discovery-log` — species catalog
 - `/finding-zora/records` — all-time bests
+- `/finding-zora/archives` — scored archive photos gallery
 - `/finding-zora/rules` — how the game works
 - `/admin/` — production tools (protected, host-only)
