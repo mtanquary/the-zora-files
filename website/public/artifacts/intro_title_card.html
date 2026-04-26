@@ -1,0 +1,2707 @@
+<!--
+  The Zora Files · Finding Zora
+  Intro title card · Unit B of the episode intro
+  16:9 frame · displays current state mid-series
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --pre-dawn: #0D0F14;
+    --zora-amber: #F0A500;
+    --sunrise-orange: #E8520A;
+    --eos-teal: #1D9E75;
+    --dawn-mist: #C8D4E0;
+    --dawn-mist-dim: rgba(200, 212, 224, 0.45);
+    --dawn-mist-faint: rgba(200, 212, 224, 0.18);
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+  }
+
+  .zf-wrap {
+    background: #050709;
+    padding: 1.6rem;
+    border-radius: 14px;
+    color: var(--dawn-mist);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── THE CARD ── 16:9 ── */
+  .zf-card {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(232, 82, 10, 0.22) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 80% at 50% 120%, rgba(240, 165, 0, 0.12) 0%, transparent 50%),
+      linear-gradient(180deg, #060910 0%, #0a0d14 55%, #130c0a 100%);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  /* subtle noise / grain — atmospheric depth */
+  .zf-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 60% 60%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 85% 15%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 30% 80%, rgba(200,212,224,0.04) 50%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* vignette */
+  .zf-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 60%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .zf-streak-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #D89000 0%, #F0A500 25%, #FAC75A 50%, #F0A500 75%, #D89000 100%);
+    display: none;
+    z-index: 3;
+    box-shadow: 0 0 12px rgba(240, 165, 0, 0.4);
+  }
+  .zf-streak-bar.is-on { display: block; }
+
+  .zf-card-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: 4%;
+    padding: 6% 6%;
+    height: 100%;
+    align-items: center;
+  }
+
+  /* medallion side */
+  .zf-medallion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .zf-medallion canvas {
+    width: 100%;
+    height: auto;
+    max-width: 340px;
+    filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.65));
+  }
+
+  /* text side */
+  .zf-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .zf-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68em;
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    color: var(--zora-amber);
+    text-transform: lowercase;
+  }
+
+  .zf-location {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--dawn-mist);
+    font-variation-settings: "opsz" 120;
+    margin-top: 0.15rem;
+  }
+
+  .zf-sublocation {
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--dawn-mist-dim);
+    margin-top: 0.25rem;
+    letter-spacing: 0.005em;
+  }
+
+  .zf-rule {
+    width: 46%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(240, 165, 0, 0.55) 0%, rgba(240, 165, 0, 0) 100%);
+    margin: 0.9rem 0 0.5rem;
+  }
+
+  .zf-rank-line {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .zf-rank-label {
+    font-family: var(--font-mono);
+    font-size: 0.52em;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: var(--dawn-mist-faint);
+    text-transform: lowercase;
+  }
+  .zf-rank-name {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    font-weight: 500;
+    color: var(--zora-amber);
+    letter-spacing: 0.02em;
+  }
+
+  .zf-gems {
+    font-family: var(--font-mono);
+    font-size: 0.6em;
+    color: var(--dawn-mist-dim);
+    letter-spacing: 0.12em;
+    margin-top: 0.1rem;
+  }
+
+  .zf-streak {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 0.58em;
+    color: var(--eos-teal);
+    letter-spacing: 0.2em;
+    text-transform: lowercase;
+    margin-top: 0.35rem;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .zf-streak.is-on { display: inline-flex; }
+  .zf-streak::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--eos-teal);
+    box-shadow: 0 0 8px var(--eos-teal);
+  }
+
+  .zf-brandmark {
+    position: absolute;
+    bottom: 4%;
+    right: 5%;
+    font-family: var(--font-mono);
+    font-size: 0.5em;
+    font-weight: 400;
+    letter-spacing: 0.32em;
+    color: rgba(200, 212, 224, 0.32);
+    text-transform: lowercase;
+    z-index: 2;
+  }
+
+  /* ── CONTROLS ── */
+  .zf-panel {
+    background: #0a0d13;
+    border: 1px solid rgba(200, 212, 224, 0.08);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+
+  .zf-panel-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+    margin-bottom: 1rem;
+  }
+
+  .zf-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem 1.4rem;
+  }
+
+  .zf-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .zf-field label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+  }
+
+  .zf-field input[type=text],
+  .zf-field input[type=number],
+  .zf-field select {
+    background: #0d0f14;
+    color: var(--dawn-mist);
+    border: 1px solid rgba(200, 212, 224, 0.13);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .zf-field input:focus, .zf-field select:focus {
+    border-color: var(--zora-amber);
+  }
+
+  .zf-field input[type=range] {
+    accent-color: var(--zora-amber);
+    width: 100%;
+  }
+
+  .zf-row { display: flex; align-items: center; gap: 0.6rem; }
+  .zf-readout {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--zora-amber);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .zf-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--dawn-mist);
+    user-select: none;
+  }
+  .zf-toggle input { accent-color: var(--zora-amber); }
+
+  .zf-note {
+    margin-top: 1rem;
+    padding: 0.75rem 0.95rem;
+    background: rgba(29, 158, 117, 0.06);
+    border-left: 2px solid var(--eos-teal);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dawn-mist);
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── EXPORT PANEL ── */
+  .zf-export {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem 1.4rem;
+    align-items: center;
+  }
+  .zf-export-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .zf-radio-group {
+    display: inline-flex;
+    gap: 0.65rem;
+  }
+  .zf-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dawn-mist);
+    user-select: none;
+  }
+  .zf-radio input { accent-color: var(--zora-amber); }
+  .zf-btn {
+    background: transparent;
+    border: 1px solid rgba(240, 165, 0, 0.4);
+    color: var(--zora-amber);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .zf-btn:hover {
+    background: rgba(240, 165, 0, 0.08);
+    border-color: var(--zora-amber);
+  }
+  .zf-btn:disabled {
+    opacity: 0.45;
+    cursor: wait;
+  }
+  .zf-export-meta {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dawn-mist-dim);
+    letter-spacing: 0.04em;
+    min-height: 14px;
+  }
+  .zf-export-meta .zf-fname {
+    color: var(--dawn-mist);
+    word-break: break-all;
+  }
+  .zf-export-meta .zf-status {
+    color: var(--eos-teal);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .zf-export-meta .zf-status.is-on { opacity: 1; }
+  .zf-export-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+  }
+</style>
+
+<div class="zf-wrap">
+
+  <!-- ═══ THE CARD ═══ -->
+  <div class="zf-card">
+    <div class="zf-streak-bar" id="streak-bar"></div>
+
+    <div class="zf-card-grid">
+      <div class="zf-medallion">
+        <canvas id="medallion" width="520" height="520"></canvas>
+      </div>
+
+      <div class="zf-text">
+        <div class="zf-eyebrow" id="eyebrow">episode 03 · finding zora</div>
+        <div class="zf-location" id="location">Hieroglyphic Trail</div>
+        <div class="zf-sublocation" id="sublocation">Gold Canyon, Arizona</div>
+        <div class="zf-rule"></div>
+        <div class="zf-rank-line">
+          <span class="zf-rank-label">rank</span>
+          <span class="zf-rank-name" id="rank-name">Desert fox</span>
+        </div>
+        <div class="zf-gems" id="gems-line">3 of 6 gems set</div>
+        <div class="zf-streak" id="streak-line">streak active · 4 of 6 weeks</div>
+      </div>
+    </div>
+
+    <div class="zf-brandmark">the zora files</div>
+  </div>
+
+  <!-- ═══ CONTROLS ═══ -->
+  <div class="zf-panel">
+    <div class="zf-panel-title">live state · title card preview</div>
+    <div class="zf-controls">
+
+      <div class="zf-field">
+        <label>player level</label>
+        <select id="c-level">
+          <option value="0">0 · Scout</option>
+          <option value="1">1 · Trailhead</option>
+          <option value="2" selected>2 · Desert Fox</option>
+          <option value="3">3 · Dawnchaser</option>
+          <option value="4">4 · First Light</option>
+          <option value="5">5 · Horizon Hunter</option>
+          <option value="6">6 · Zora Seeker</option>
+          <option value="7">7 · Dawn Keeper</option>
+          <option value="8">8 · Eos Adept</option>
+          <option value="9">9 · Zora Master</option>
+          <option value="10">10 · Finding Zora</option>
+        </select>
+      </div>
+
+      <div class="zf-field">
+        <label>gems set (0–6)</label>
+        <div class="zf-row">
+          <input type="range" id="c-gems" min="0" max="6" step="1" value="3">
+          <span class="zf-readout" id="c-gems-val">3</span>
+        </div>
+      </div>
+
+      <div class="zf-field">
+        <label>streak</label>
+        <label class="zf-toggle">
+          <input type="checkbox" id="c-streak"> streak active
+        </label>
+      </div>
+
+      <div class="zf-field">
+        <label>weeks into streak (of 6)</label>
+        <div class="zf-row">
+          <input type="range" id="c-weeks" min="1" max="6" step="1" value="4">
+          <span class="zf-readout" id="c-weeks-val">4</span>
+        </div>
+      </div>
+
+      <div class="zf-field">
+        <label>episode number</label>
+        <input type="text" id="c-ep" value="03">
+      </div>
+
+      <div class="zf-field">
+        <label>location (headline)</label>
+        <input type="text" id="c-loc" value="Hieroglyphic Trail">
+      </div>
+
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label>location (sub)</label>
+        <input type="text" id="c-subloc" value="Gold Canyon, Arizona">
+      </div>
+
+    </div>
+
+    <div class="zf-note">
+      Unit B · holds 5 to 8 seconds at the end of the cold open. Scout (Level 0) and Desert Fox (Level 2) use finalized emblem art. Levels 1 and 3 through 10 use a placeholder horizon-and-sun emblem at the level&rsquo;s metal and gem palette; swap in finalized per-level emblems in a later pass.
+    </div>
+  </div>
+
+  <!-- ═══ EXPORT PANEL ═══ -->
+  <div class="zf-panel" style="margin-top: 1rem;">
+    <div class="zf-panel-title">export · png</div>
+    <div class="zf-export">
+      <span class="zf-export-label">resolution</span>
+      <div class="zf-export-row">
+        <div class="zf-radio-group">
+          <label class="zf-radio"><input type="radio" name="zf-res" value="1080" checked> 1080p</label>
+          <label class="zf-radio"><input type="radio" name="zf-res" value="2160"> 4K</label>
+        </div>
+      </div>
+
+      <span class="zf-export-label">export</span>
+      <div class="zf-export-row">
+        <button class="zf-btn" id="zf-export-full" type="button">export full card</button>
+        <button class="zf-btn" id="zf-export-medallion" type="button">export medallion only</button>
+      </div>
+
+      <div class="zf-export-meta">
+        <span>filename:</span>
+        <span class="zf-fname" id="zf-fname">&mdash;</span>
+        <span class="zf-status" id="zf-status"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ─────────────────────────────────────────────────────────
+  // LEVEL PALETTE — 5-stop metal, face stops, gem color, emblem mode
+  // Derived directly from ZORA_PROJECT.md medallion palette
+  // ─────────────────────────────────────────────────────────
+  const LEVELS = [
+    { // 0 Scout — brushed pewter
+      name: 'Scout',
+      motto: 'THE PATH AWAITS',
+      metal:  ['#C0C0C8','#9898A0','#686870','#3A3A42','#1A1A20'],
+      face:   ['#B8B8C0','#9898A4','#787880','#585860','#3A3A42','#222228'],
+      gem: null, gemLight: null,
+      bandDark: [70, 70, 78], bandLit: [130, 130, 145],
+      emblem: 'compass',
+      etchColor: 'rgba(180,180,195,0.72)',
+      textColor: 'rgba(180,180,195,0.58)'
+    },
+    { // 1 Trailhead — copper / rose quartz
+      name: 'Trailhead',
+      motto: 'EVERY SUMMIT STARTS HERE',
+      metal:  ['#E6B288','#C07838','#884820','#481E08','#190804'],
+      face:   ['#EDBB88','#BE8450','#92572C','#6A3A18','#44200A','#221008'],
+      gem: '#F2B8C2', gemLight: '#FFE4EC',
+      bandDark: [92, 48, 28], bandLit: [168, 98, 62],
+      emblem: 'cairn',
+      etchColor: 'rgba(208,140,100,0.72)',
+      textColor: 'rgba(208,140,100,0.55)'
+    },
+    { // 2 Desert Fox — warm bronze / amber topaz
+      name: 'Desert Fox',
+      motto: 'CUNNING FINDS THE WAY',
+      metal:  ['#DCA858','#B87C2E','#7C4618','#451806','#150703'],
+      face:   ['#F0CA75','#CFA04A','#A86C2C','#7E481A','#5E2E10','#361408'],
+      gem: '#F0A500', gemLight: '#FFE878',
+      bandDark: [82, 40, 8], bandLit: [134, 66, 13],
+      emblem: 'fox',
+      etchColor: 'rgba(190,138,48,0.72)',
+      textColor: 'rgba(190,138,48,0.58)'
+    },
+    { // 3 Dawnchaser — antique gold / citrine
+      name: 'Dawnchaser',
+      motto: 'OUTRUN THE DARKNESS',
+      metal:  ['#F0D480','#C8A030','#94701C','#523C0C','#1E1404'],
+      face:   ['#F8E0A0','#D8B050','#AA8028','#7C5A18','#5A3E10','#2A1C05'],
+      gem: '#E8C030', gemLight: '#FFEC88',
+      bandDark: [90, 68, 18], bandLit: [160, 120, 32],
+      emblem: 'chaser',
+      etchColor: 'rgba(200,160,48,0.72)',
+      textColor: 'rgba(200,160,48,0.58)'
+    },
+    { // 4 First Light — rose gold / fire opal
+      name: 'First Light',
+      motto: 'THE FIRST RAY BREAKS THROUGH',
+      metal:  ['#E8B4A0','#C08074','#8C4E44','#4E241E','#1E0C08'],
+      face:   ['#EEB8A4','#C28878','#96604E','#6E3C2E','#48221A','#221008'],
+      gem: '#E86020', gemLight: '#FF9550',
+      bandDark: [100, 52, 38], bandLit: [176, 108, 86],
+      emblem: 'sunrise',
+      etchColor: 'rgba(208,128,100,0.72)',
+      textColor: 'rgba(208,128,100,0.55)'
+    },
+    { // 5 Horizon Hunter — brushed silver / aquamarine
+      name: 'Horizon Hunter',
+      motto: 'SEEK WHAT LIES BEYOND',
+      metal:  ['#D8DCE0','#9AA0A8','#686E76','#3A3E46','#16181C'],
+      face:   ['#D2D6DC','#A0A6AE','#787E86','#585E66','#3A4048','#1E2228'],
+      gem: '#50C8C0', gemLight: '#A8ECE8',
+      bandDark: [80, 88, 98], bandLit: [148, 158, 172],
+      emblem: 'huntereye',
+      etchColor: 'rgba(180,192,204,0.72)',
+      textColor: 'rgba(180,192,204,0.55)'
+    },
+    { // 6 Zora Seeker — cool platinum / amethyst
+      name: 'Zora Seeker',
+      motto: 'ALL DIRECTIONS LEAD TO DAWN',
+      metal:  ['#E4E4EC','#B0B8C4','#7A8290','#464C58','#181C24'],
+      face:   ['#DEE0E8','#B4BAC4','#8A919C','#666C78','#424852','#20242C'],
+      gem: '#9060C8', gemLight: '#C89CE8',
+      bandDark: [90, 96, 108], bandLit: [168, 176, 190],
+      emblem: 'seekercompass',
+      etchColor: 'rgba(190,200,216,0.72)',
+      textColor: 'rgba(190,200,216,0.55)'
+    },
+    { // 7 Dawn Keeper — dark oxidized gold / deep ruby
+      name: 'Dawn Keeper',
+      motto: 'CARRY THE FLAME FORWARD',
+      metal:  ['#A88838','#786818','#4A3E0C','#281E04','#0E0A02'],
+      face:   ['#B89444','#8C6C1E','#6A4E12','#4A360A','#2C1E05','#120A02'],
+      gem: '#C01830', gemLight: '#F04860',
+      bandDark: [64, 50, 10], bandLit: [120, 96, 22],
+      emblem: 'lantern',
+      etchColor: 'rgba(180,148,68,0.72)',
+      textColor: 'rgba(180,148,68,0.55)'
+    },
+    { // 8 Eos Adept — verdigris bronze / teal tourmaline
+      name: 'Eos Adept',
+      motto: 'THE DAWN KNOWS YOUR NAME',
+      metal:  ['#7AA890','#388058','#205838','#10301C','#040F08'],
+      face:   ['#80AE98','#3E8A60','#266440','#154024','#0B2815','#040F08'],
+      gem: '#1D9E75', gemLight: '#6FDEB4',
+      bandDark: [28, 70, 50], bandLit: [70, 128, 94],
+      emblem: 'eossun',
+      etchColor: 'rgba(120,180,148,0.72)',
+      textColor: 'rgba(120,180,148,0.6)'
+    },
+    { // 9 Zora Master — blackened silver / moonstone
+      name: 'Zora Master',
+      motto: 'WORTHY OF THE CROWN',
+      metal:  ['#8A8E94','#505058','#2C2E34','#16181C','#050608'],
+      face:   ['#8E9298','#585C64','#36383E','#1E2024','#0E1014','#050608'],
+      gem: '#E4E8F2', gemLight: '#FFFFFF',
+      bandDark: [40, 42, 48], bandLit: [96, 100, 110],
+      emblem: 'crown',
+      etchColor: 'rgba(180,188,204,0.72)',
+      textColor: 'rgba(180,188,204,0.55)'
+    },
+    { // 10 Finding Zora — polished white gold / diamond refracted into full spectrum
+      name: 'Finding Zora',
+      motto: 'YOU WERE THE SUNRISE',
+      metal:  ['#FFFFFF','#E4E0D4','#B4B0A4','#6C6860','#28241E'],
+      face:   ['#FDFAF0','#E0DCD0','#B8B4A8','#888478','#5A5650','#28241E'],
+      gem: '#FAFCFF', gemLight: '#FFFFFF',
+      // rainbow flag: band shimmers through hues, gems are six spectral colors
+      rainbow: true,
+      // Canonical spectral palette from finding_zora_medallion.html — pure R-O-Y-G-B-V
+      // rainbow clockwise from 12. Each gem is a 3-stop gradient (hi / mid / dk).
+      rainbowGems: [
+        { hi: '#FFC8C0', mid: '#FF5040', dk: '#A02018', stroke: 'rgba(255,120,100,0.7)' }, // 12 · Red
+        { hi: '#FFE0C0', mid: '#FFA030', dk: '#A06010', stroke: 'rgba(255,180, 80,0.7)' }, //  2 · Orange
+        { hi: '#FFFFF0', mid: '#FFE840', dk: '#A09010', stroke: 'rgba(255,240,100,0.7)' }, //  4 · Yellow
+        { hi: '#D0FFE0', mid: '#40E878', dk: '#108838', stroke: 'rgba(100,240,150,0.7)' }, //  6 · Green
+        { hi: '#D0E0FF', mid: '#4080FF', dk: '#1030A0', stroke: 'rgba(100,150,255,0.7)' }, //  8 · Blue
+        { hi: '#E8D0FF', mid: '#B050FF', dk: '#601890', stroke: 'rgba(200,120,255,0.7)' }  // 10 · Violet
+      ],
+      bandDark: [120, 116, 104], bandLit: [220, 214, 198],  // fallback, unused when rainbow
+      emblem: 'zora',
+      etchColor: 'rgba(240,234,220,0.85)',
+      textColor: 'rgba(240,234,220,0.65)'
+    }
+  ];
+
+  // ─────────────────────────────────────────────────────────
+  // MEDALLION DRAWING
+  // ─────────────────────────────────────────────────────────
+  const cv = document.getElementById('medallion');
+  // ctx/c are `let` (not const) so the export pipeline can swap them to
+  // an offscreen target temporarily while the existing draw functions run.
+  let ctx = cv.getContext('2d');
+  const S = 520, CX = 260, CY = 260;
+  const CR = 210;        // outer coin radius (canonical)
+  const FR = 190;        // inner face radius (canonical)
+  const ORg = 174;       // outer inner-ring (canonical)
+  const BOr = 163, BIn = 148;   // decorative band (canonical)
+  const IRg = 144;       // inner inner-ring (canonical)
+  const GemR = 196;      // gem slot center radius (canonical)
+  const GL = 19, GW = 12;  // gem half-length / half-width (canonical)
+
+  function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
+  function rgba(c, a) { return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`; }
+
+  function drawShadow() {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(CX + 12, CY + 15, CR + 6, CR + 4, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawRim(lvl) {
+    ctx.beginPath();
+    ctx.arc(CX, CY, CR, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a0c10';
+    ctx.fill();
+    const g = ctx.createLinearGradient(CX - CR * 0.76, CY - CR * 0.76, CX + CR * 0.76, CY + CR * 0.76);
+    g.addColorStop(0.00, lvl.metal[0]);
+    g.addColorStop(0.22, lvl.metal[1]);
+    g.addColorStop(0.52, lvl.metal[2]);
+    g.addColorStop(0.78, lvl.metal[3]);
+    g.addColorStop(1.00, lvl.metal[4]);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX, CY, CR, 0, Math.PI * 2);
+    ctx.arc(CX, CY, FR, 0, Math.PI * 2, true);
+    ctx.clip();
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, S, S);
+    ctx.restore();
+  }
+
+  function drawFace(lvl) {
+    const g = ctx.createRadialGradient(CX - 70, CY - 70, 0, CX, CY, FR * 1.1);
+    g.addColorStop(0.00, lvl.face[0]);
+    g.addColorStop(0.17, lvl.face[1]);
+    g.addColorStop(0.40, lvl.face[2]);
+    g.addColorStop(0.68, lvl.face[3]);
+    g.addColorStop(0.90, lvl.face[4]);
+    g.addColorStop(1.00, lvl.face[5]);
+    ctx.beginPath();
+    ctx.arc(CX, CY, FR, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+
+  function drawRings(lvl) {
+    [ORg, IRg].forEach(r => {
+      ctx.beginPath();
+      ctx.arc(CX, CY, r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(8,6,4,0.85)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(CX, CY, r - 1, Math.PI * 0.87, Math.PI * 1.76);
+      ctx.strokeStyle = rgba(lvl.bandLit, 0.22);
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    });
+  }
+
+  function drawBand(lvl) {
+    const N = 64;
+    for (let i = 0; i < N; i++) {
+      const a1 = i / N * Math.PI * 2;
+      const a2 = (i + 0.5) / N * Math.PI * 2;
+      const a3 = (i + 1) / N * Math.PI * 2;
+      const diff = Math.abs((((a2 + Math.PI * 0.75) + Math.PI * 3) % (Math.PI * 2)) - Math.PI) / Math.PI;
+      const lit = 1 - diff;
+      let fillStyle;
+      if (lvl.rainbow) {
+        // prismatic shimmer: hue cycles through the ring, brightness still rotates with the light source
+        const hue = (i / N * 360 + 320) % 360;
+        const sat = 62 + lit * 22;
+        const lum = 38 + lit * 30;
+        fillStyle = `hsl(${hue.toFixed(1)}, ${sat.toFixed(1)}%, ${lum.toFixed(1)}%)`;
+      } else {
+        const c = mix(lvl.bandDark, lvl.bandLit, lit);
+        fillStyle = `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+      }
+      ctx.beginPath();
+      ctx.moveTo(CX + Math.cos(a1) * BOr, CY + Math.sin(a1) * BOr);
+      ctx.lineTo(CX + Math.cos(a2) * BIn, CY + Math.sin(a2) * BIn);
+      ctx.lineTo(CX + Math.cos(a3) * BOr, CY + Math.sin(a3) * BOr);
+      ctx.arc(CX, CY, BOr, a3, a1, true);
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+    }
+  }
+
+  function drawHorizon(lvl) {
+    const by = CY + 50;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX, CY, IRg - 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(CX - 100, by);
+    ctx.lineTo(CX + 100, by);
+    ctx.strokeStyle = rgba(lvl.bandDark, 0.35);
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSlots(lvl) {
+    if (lvl && lvl.gem === null) return;  // Scout has no gem slots — clean medallion face
+    for (let i = 0; i < 6; i++) {
+      const a = i / 6 * Math.PI * 2 - Math.PI / 2;
+      const gx = CX + Math.cos(a) * GemR;
+      const gy = CY + Math.sin(a) * GemR;
+      const co = Math.cos(a), si = Math.sin(a);
+      const px = -si, py = co;
+      const l = GL + 3, w = GW + 3;
+      ctx.beginPath();
+      ctx.moveTo(gx + co * l, gy + si * l);
+      ctx.lineTo(gx + px * w, gy + py * w);
+      ctx.lineTo(gx - co * l, gy - si * l);
+      ctx.lineTo(gx - px * w, gy - py * w);
+      ctx.closePath();
+      ctx.fillStyle = '#090603';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(48,24,8,0.55)';
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+  }
+
+  function drawGems(lvl, count) {
+    if (lvl.gem === null) return;   // Scout has no gems
+    for (let i = 0; i < 6; i++) {
+      if (i >= count) continue;
+      const a = i / 6 * Math.PI * 2 - Math.PI / 2;
+      const gx = CX + Math.cos(a) * GemR;
+      const gy = CY + Math.sin(a) * GemR;
+      const co = Math.cos(a), si = Math.sin(a);
+      const px = -si, py = co;
+
+      // Gem shape (brilliant-cut compass-pointer)
+      ctx.beginPath();
+      ctx.moveTo(gx + co * GL, gy + si * GL);
+      ctx.lineTo(gx + px * GW, gy + py * GW);
+      ctx.lineTo(gx - co * GL, gy - si * GL);
+      ctx.lineTo(gx - px * GW, gy - py * GW);
+      ctx.closePath();
+
+      // Highlight position offset from center toward light
+      const hx = gx - co * 5 - si * 3;
+      const hy = gy - si * 5 + co * 3;
+
+      let strokeStyle, strokeAlpha = 0.7, strokeWidth = 0.8;
+
+      if (lvl.rainbow) {
+        // Level 10 spectral gem — 5-stop gradient (canonical from finding_zora)
+        const pal = lvl.rainbowGems[i];
+        const gr = ctx.createRadialGradient(hx, hy, 0.5, gx, gy, GL * 1.4);
+        gr.addColorStop(0.00, '#FFFFFF');
+        gr.addColorStop(0.12, pal.hi);
+        gr.addColorStop(0.36, pal.mid);
+        gr.addColorStop(0.68, pal.dk);
+        gr.addColorStop(1.00, pal.mid);
+        ctx.fillStyle = gr;
+        ctx.fill();
+        ctx.strokeStyle = pal.stroke;
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+      } else {
+        // Single-color gem for Levels 1–9
+        const gemCore = lvl.gem;
+        const gemLightCol = lvl.gemLight;
+        const gr = ctx.createRadialGradient(hx, hy, 0.5, gx, gy, GL * 1.5);
+        gr.addColorStop(0.00, gemLightCol);
+        gr.addColorStop(0.18, gemLightCol);
+        gr.addColorStop(0.45, gemCore);
+        gr.addColorStop(0.78, shade(gemCore, -0.35));
+        gr.addColorStop(1.00, shade(gemCore, -0.7));
+        ctx.fillStyle = gr;
+        ctx.fill();
+        ctx.strokeStyle = rgba(hexToRgb(gemLightCol), strokeAlpha);
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+      }
+
+      // Facet line (diagonal bright highlight across the gem)
+      ctx.beginPath();
+      ctx.moveTo(gx + co * GL * 0.7, gy + si * GL * 0.7);
+      ctx.lineTo(gx + px * GW * 0.32, gy + py * GW * 0.32);
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Rainbow spectral flecks — small color-wheel dots around each Level-10 gem
+      if (lvl.rainbow) {
+        const fleckColors = ['#FF3030', '#FF8800', '#FFEE00', '#00DD55', '#0066FF', '#9933FF'];
+        fleckColors.forEach((fc, fi) => {
+          const fa = a + fi / 6 * Math.PI * 2;
+          const fd = GL * 0.35 + Math.sin(fi * 1.7) * GL * 0.15;
+          const fx = gx + Math.cos(fa) * fd;
+          const fy = gy + Math.sin(fa) * fd;
+          ctx.beginPath();
+          ctx.arc(fx, fy, 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = fc;
+          ctx.globalAlpha = 0.25;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+      }
+    }
+  }
+
+  function hexToRgb(h) {
+    const m = h.replace('#','').match(/.{2}/g).map(x => parseInt(x,16));
+    return [m[0], m[1], m[2]];
+  }
+  function shade(hex, amt) {
+    const c = hexToRgb(hex);
+    const r = c.map(v => Math.max(0, Math.min(255, v + 255 * amt)));
+    return `rgb(${r[0]|0},${r[1]|0},${r[2]|0})`;
+  }
+
+  function drawEtch(lvl, revealed) {
+    ctx.save();
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle = lvl.etchColor;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+
+    // ── Level name — TOP of the inner ring, reading upright ──
+    ctx.font = '500 10px "JetBrains Mono", monospace';
+    const nameLabel = '· ' + lvl.name.toUpperCase() + ' ·';
+    const nameChars = nameLabel.split('');
+    const nameAr = IRg - 12;
+    const nameCa = 0.104;
+    const nameTot = nameChars.length * nameCa;
+    const nameSa = -Math.PI / 2 - nameTot / 2;
+    nameChars.forEach((ch, i) => {
+      const a = nameSa + i * nameCa;
+      ctx.save();
+      ctx.translate(CX + Math.cos(a) * nameAr, CY + Math.sin(a) * nameAr);
+      ctx.rotate(a + Math.PI / 2);
+      ctx.fillText(ch, 0, 0);
+      ctx.restore();
+    });
+
+    // Decorative dots at top, left, and right of the inner ring
+    [Math.PI * 1.5, Math.PI, 0].forEach(a => {
+      ctx.beginPath();
+      ctx.arc(CX + Math.cos(a) * (IRg - 8), CY + Math.sin(a) * (IRg - 8), 2, 0, Math.PI * 2);
+      ctx.fillStyle = lvl.etchColor;
+      ctx.fill();
+    });
+
+    // 8-line decorative burst behind the emblem
+    for (let i = 0; i < 8; i++) {
+      const a = i / 8 * Math.PI * 2 + Math.PI / 8;
+      ctx.beginPath();
+      ctx.moveTo(CX + Math.cos(a) * 88, CY + Math.sin(a) * 88);
+      ctx.lineTo(CX + Math.cos(a) * (108 + (i % 2) * 20), CY + Math.sin(a) * (108 + (i % 2) * 20));
+      ctx.strokeStyle = rgba(hexToRgb('#000000'), 0.18);
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // ── Motto — BOTTOM of the inner ring, only when the medallion is earned ──
+    if (revealed && lvl.motto) {
+      ctx.font = '500 9px "JetBrains Mono", monospace';
+      ctx.fillStyle = lvl.etchColor;
+      const mChars = lvl.motto.split('');
+      const mAr = IRg - 12;
+      const mCa = 0.084;
+      const mTot = mChars.length * mCa;
+      const mSa = Math.PI / 2 + mTot / 2;
+      mChars.forEach((ch, i) => {
+        const a = mSa - i * mCa;
+        ctx.save();
+        ctx.translate(CX + Math.cos(a) * mAr, CY + Math.sin(a) * mAr);
+        ctx.rotate(a - Math.PI / 2);
+        ctx.fillText(ch, 0, 0);
+        ctx.restore();
+      });
+    }
+
+    ctx.restore();
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // EMBLEMS — canonical ports from project medallion files.
+  // `c` is aliased to ctx so ported code runs unchanged.
+  // `ln` is a canonical helper used by drawLantern.
+  // Each emblem takes fa (fox-alpha): 1.0 = fully revealed, 0.1 = ghost.
+  // ══════════════════════════════════════════════════════════
+  let c = ctx;
+  function ln(x1,y1,x2,y2){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();}
+
+  // Scout (Level 0) — compass rose on pewter
+  function drawScoutCompass(fa){
+    const os=1.3;
+    c.save();c.globalAlpha=fa;
+  
+    // Compass rose with 4 cardinal and 4 intermediate points
+    const cardLen=[58,50,50,50]; // N is tallest
+    const cardW=12;
+    const interLen=32;
+    const interW=7;
+  
+    // Draw intermediate points first (behind cardinals)
+    for(let i=0;i<4;i++){
+      const a=(i*Math.PI/2)+Math.PI/4; // NE, SE, SW, NW
+      const co=Math.cos(a),si=Math.sin(a);
+      const px=-si,py=co;
+      const len=interLen*os,w=interW*os;
+      const bx=CX,by=CY-4;
+  
+      // Dark half
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx+px*w,by+py*w);
+      c.lineTo(bx,by);
+      c.closePath();
+      const ig1=c.createLinearGradient(bx,by,bx+co*len,by+si*len);
+      ig1.addColorStop(0,'#606068');ig1.addColorStop(1,'#8A8A98');
+      c.fillStyle=ig1;c.fill();
+  
+      // Light half
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx-px*w,by-py*w);
+      c.lineTo(bx,by);
+      c.closePath();
+      const ig2=c.createLinearGradient(bx,by,bx+co*len,by+si*len);
+      ig2.addColorStop(0,'#505058');ig2.addColorStop(1,'#78788A');
+      c.fillStyle=ig2;c.fill();
+  
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx+px*w,by+py*w);
+      c.lineTo(bx,by);
+      c.lineTo(bx-px*w,by-py*w);
+      c.closePath();
+      c.strokeStyle='rgba(180,180,200,0.3)';c.lineWidth=0.5;c.stroke();
+    }
+  
+    // Cardinal points (N, E, S, W)
+    for(let i=0;i<4;i++){
+      const a=-Math.PI/2+i*Math.PI/2;
+      const co=Math.cos(a),si=Math.sin(a);
+      const px=-si,py=co;
+      const len=cardLen[i]*os,w=cardW*os;
+      const bx=CX,by=CY-4;
+  
+      // Light half
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx+px*w,by+py*w);
+      c.lineTo(bx,by);
+      c.closePath();
+      const cg1=c.createLinearGradient(bx,by,bx+co*len,by+si*len);
+      cg1.addColorStop(0,'#A0A0B0');cg1.addColorStop(1,i===0?'#D0D0E0':'#B8B8C8');
+      c.fillStyle=cg1;c.fill();
+  
+      // Dark half
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx-px*w,by-py*w);
+      c.lineTo(bx,by);
+      c.closePath();
+      const cg2=c.createLinearGradient(bx,by,bx+co*len,by+si*len);
+      cg2.addColorStop(0,'#787888');cg2.addColorStop(1,i===0?'#B0B0C0':'#9898A8');
+      c.fillStyle=cg2;c.fill();
+  
+      // Outline
+      c.beginPath();
+      c.moveTo(bx+co*len,by+si*len);
+      c.lineTo(bx+px*w,by+py*w);
+      c.lineTo(bx,by);
+      c.lineTo(bx-px*w,by-py*w);
+      c.closePath();
+      c.strokeStyle='rgba(200,200,220,0.35)';c.lineWidth=0.7;c.stroke();
+    }
+  
+    // Center circle layers
+    const bx=CX,by=CY-4;
+    const cg=c.createRadialGradient(bx-2,by-2,0,bx,by,12*os);
+    cg.addColorStop(0,'#D0D0E0');cg.addColorStop(0.5,'#A0A0B0');cg.addColorStop(1,'#686878');
+    c.beginPath();c.arc(bx,by,10*os,0,Math.PI*2);c.fillStyle=cg;c.fill();
+    c.strokeStyle='rgba(200,200,220,0.4)';c.lineWidth=0.8;c.stroke();
+  
+    c.beginPath();c.arc(bx,by,5*os,0,Math.PI*2);
+    c.fillStyle='#B8B8C8';c.fill();
+  
+    c.beginPath();c.arc(bx,by,2*os,0,Math.PI*2);
+    c.fillStyle='#E0E0E8';c.fill();
+  
+    // North indicator — small arrowhead
+    c.beginPath();
+    c.moveTo(bx,by-14*os);
+    c.lineTo(bx-3*os,by-10*os);
+    c.lineTo(bx+3*os,by-10*os);
+    c.closePath();
+    c.fillStyle='#D8D8E8';c.fill();
+  
+    // Subtle glow behind compass
+    const glow=c.createRadialGradient(bx,by,0,bx,by,75);
+    glow.addColorStop(0,'rgba(180,180,200,0.08)');
+    glow.addColorStop(1,'rgba(180,180,200,0)');
+    c.beginPath();c.arc(bx,by,75,0,Math.PI*2);c.fillStyle=glow;c.fill();
+  
+    c.restore();
+  }
+
+  // Trailhead (Level 1) — cairn
+  function drawCairn(fa){
+    c.save();
+    const baseY=CY+20;
+    // Three stacked stones: bottom (widest), middle, top (smallest)
+    const os=1.725;
+    const stones=[
+      {cx:CX, cy:baseY,        rx:25*os, ry:10*os},    // bottom stone
+      {cx:CX, cy:baseY-18*os,  rx:17.5*os, ry:9*os},   // middle stone
+      {cx:CX, cy:baseY-34*os,  rx:11*os, ry:7.5*os}    // top stone
+    ];
+  
+    if(fa>=0.95){
+      const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+      glow.addColorStop(0,'rgba(200,112,64,0.12)');
+      glow.addColorStop(1,'rgba(200,112,64,0)');
+      c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+    }
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+      // Fill stones with vibrant radial gradients
+      const stoneColors=[
+        {hi:'#E8A878',lo:'#7A3818'},  // bottom
+        {hi:'#DCA070',lo:'#6A3010'},  // middle
+        {hi:'#F0B888',lo:'#8A4820'}   // top (brightest)
+      ];
+      stones.forEach((s,i)=>{
+        const gc=stoneColors[i];
+        const gr=c.createRadialGradient(s.cx-s.rx*0.25,s.cy-s.ry*0.3,0,s.cx,s.cy,Math.max(s.rx,s.ry)*1.1);
+        gr.addColorStop(0,gc.hi);gr.addColorStop(1,gc.lo);
+        c.beginPath();c.ellipse(s.cx,s.cy,s.rx,s.ry,0,0,Math.PI*2);
+        c.fillStyle=gr;c.fill();
+      });
+      // Highlight on top half of each stone (brightened)
+      const hlColors=['#B87030','#A86828','#C88040'];
+      stones.forEach((s,i)=>{
+        c.beginPath();c.ellipse(s.cx-s.rx*0.15,s.cy-s.ry*0.2,s.rx*0.7,s.ry*0.55,0,Math.PI,Math.PI*2);
+        c.fillStyle=hlColors[i];c.fill();
+      });
+      // Small shadow under each stone (except bottom)
+      stones.slice(1).forEach((s,i)=>{
+        const below=stones[i];
+        c.beginPath();c.ellipse(s.cx,s.cy+s.ry+1,s.rx*0.85,2.5,0,0,Math.PI*2);
+        c.fillStyle='rgba(18,5,3,0.3)';c.fill();
+      });
+    }
+  
+    // Ghost / outline stroke (always visible, matches fox alpha logic)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+    stones.forEach(s=>{
+      c.beginPath();c.ellipse(s.cx,s.cy,s.rx,s.ry,0,0,Math.PI*2);
+      c.strokeStyle=ghostStroke?'rgba(175,120,42,0.35)':'rgba(195,138,50,0.55)';
+      c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+    });
+  
+    c.restore();
+  }
+
+  // Desert Fox (Level 2) — fox head
+  function drawFox(fa){
+    const os=1.23;
+    function fpx(x){return CX+x*os;}
+    function fpy(y){return CY-6+y*os;}
+    const hp=[[0,-34],[8,-31],[24,-72],[33,-33],[46,-14],[48,8],[38,30],[20,48],[0,52],[-20,48],[-38,30],[-48,8],[-46,-14],[-33,-33],[-24,-72],[-8,-31]];
+    const earL=[-24,-40,-25,-65,-15,-36],earR=[24,-40,25,-65,15,-36];
+    const muzzle=[[-17,2],[17,2],[13,34],[0,42],[-13,34]];
+    c.save();
+    if(fa>0.05){
+      c.globalAlpha=fa;
+      // Head/body with radial gradient (bright amber center to deep amber edges)
+      c.beginPath();hp.forEach(([x,y],i)=>i?c.lineTo(fpx(x),fpy(y)):c.moveTo(fpx(x),fpy(y)));c.closePath();
+      const headGr=c.createRadialGradient(fpx(0),fpy(-5),0,fpx(0),fpy(-5),55*os);
+      headGr.addColorStop(0,'#E8A030');headGr.addColorStop(1,'#8A4A10');
+      c.fillStyle=headGr;c.fill();
+      // Ears: warm golden orange
+      [[earL],[earR]].forEach(([[x1,y1,x2,y2,x3,y3]])=>{c.beginPath();c.moveTo(fpx(x1),fpy(y1));c.lineTo(fpx(x2),fpy(y2));c.lineTo(fpx(x3),fpy(y3));c.closePath();c.fillStyle='#D88030';c.fill();});
+      // Muzzle: bright copper-amber
+      c.beginPath();muzzle.forEach(([x,y],i)=>i?c.lineTo(fpx(x),fpy(y)):c.moveTo(fpx(x),fpy(y)));c.closePath();c.fillStyle='#C87828';c.fill();
+      // Eyes and glints
+      [[-18,-13],[18,-13]].forEach(([ex,ey])=>{
+        c.beginPath();c.moveTo(fpx(ex),fpy(ey-6));c.lineTo(fpx(ex+6),fpy(ey));c.lineTo(fpx(ex),fpy(ey+5));c.lineTo(fpx(ex-6),fpy(ey));c.closePath();c.fillStyle='#120503';c.fill();
+        c.beginPath();c.arc(fpx(ex-1.5),fpy(ey-1.5),1.6,0,Math.PI*2);c.fillStyle='rgba(255,220,100,0.7)';c.fill();
+      });
+      // Nose
+      c.beginPath();c.moveTo(fpx(-5),fpy(4));c.lineTo(fpx(5),fpy(4));c.lineTo(fpx(0),fpy(10));c.closePath();c.fillStyle='#120503';c.fill();
+      c.beginPath();c.moveTo(fpx(0),fpy(10));c.lineTo(fpx(0),fpy(18));c.strokeStyle='rgba(18,5,3,0.5)';c.lineWidth=1.2;c.lineCap='round';c.stroke();
+      // Warm glow behind fox when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+        glow.addColorStop(0,'rgba(240,165,0,0.12)');
+        glow.addColorStop(1,'rgba(240,165,0,0)');
+        c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+    }
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+    c.beginPath();hp.forEach(([x,y],i)=>i?c.lineTo(fpx(x),fpy(y)):c.moveTo(fpx(x),fpy(y)));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(175,120,42,0.35)':'rgba(195,138,50,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+    [[earL],[earR]].forEach(([[x1,y1,x2,y2,x3,y3]])=>{c.beginPath();c.moveTo(fpx(x1),fpy(y1));c.lineTo(fpx(x2),fpy(y2));c.lineTo(fpx(x3),fpy(y3));c.closePath();c.strokeStyle=ghostStroke?'rgba(158,105,36,0.25)':'rgba(185,125,44,0.44)';c.lineWidth=0.5;c.stroke();});
+    c.restore();
+  }
+
+  // Dawnchaser (Level 3) — running figure
+  function drawChaser(fa){
+    const os=1.45*1.15;
+    function fpx(x){return CX+x*os;}
+    function fpy(y){return CY-6+y*os;}
+  
+    // Running figure in profile: legs in mid-stride, arms pumping, flowing cloak trailing behind
+    c.save();
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+  
+      // Warm glow behind figure when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+        glow.addColorStop(0,'rgba(200,168,72,0.12)');
+        glow.addColorStop(1,'rgba(200,168,72,0)');
+        c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+  
+      // Head
+      c.beginPath();c.arc(fpx(12),fpy(-38),8*os,0,Math.PI*2);c.fillStyle='#C89830';c.fill();
+  
+      // Torso — leaning forward
+      c.beginPath();
+      c.moveTo(fpx(10),fpy(-30));
+      c.lineTo(fpx(4),fpy(-4));
+      c.lineTo(fpx(-2),fpy(-2));
+      c.lineTo(fpx(4),fpy(-30));
+      c.closePath();
+      c.fillStyle='#C89830';c.fill();
+  
+      // Front arm (reaching forward)
+      c.beginPath();
+      c.moveTo(fpx(8),fpy(-24));
+      c.lineTo(fpx(26),fpy(-30));
+      c.lineTo(fpx(28),fpy(-26));
+      c.lineTo(fpx(10),fpy(-20));
+      c.closePath();
+      c.fillStyle='#D8A838';c.fill();
+  
+      // Back arm (reaching behind)
+      c.beginPath();
+      c.moveTo(fpx(2),fpy(-22));
+      c.lineTo(fpx(-18),fpy(-14));
+      c.lineTo(fpx(-16),fpy(-10));
+      c.lineTo(fpx(4),fpy(-18));
+      c.closePath();
+      c.fillStyle='#C89830';c.fill();
+  
+      // Front leg (extended forward, mid-stride)
+      c.beginPath();
+      c.moveTo(fpx(6),fpy(-4));
+      c.lineTo(fpx(22),fpy(18));
+      c.lineTo(fpx(26),fpy(38));
+      c.lineTo(fpx(22),fpy(40));
+      c.lineTo(fpx(18),fpy(20));
+      c.lineTo(fpx(2),fpy(-2));
+      c.closePath();
+      c.fillStyle='#D8A838';c.fill();
+  
+      // Back leg (pushing off behind)
+      c.beginPath();
+      c.moveTo(fpx(0),fpy(-2));
+      c.lineTo(fpx(-14),fpy(22));
+      c.lineTo(fpx(-22),fpy(38));
+      c.lineTo(fpx(-18),fpy(40));
+      c.lineTo(fpx(-10),fpy(24));
+      c.lineTo(fpx(4),fpy(0));
+      c.closePath();
+      c.fillStyle='#C89830';c.fill();
+  
+      // Flowing cloak/scarf trailing behind — suggests speed and dawn wind
+      c.beginPath();
+      c.moveTo(fpx(6),fpy(-30));
+      c.lineTo(fpx(2),fpy(-28));
+      c.quadraticCurveTo(fpx(-14),fpy(-34),fpx(-28),fpy(-28));
+      c.quadraticCurveTo(fpx(-36),fpy(-24),fpx(-42),fpy(-18));
+      c.quadraticCurveTo(fpx(-38),fpy(-14),fpx(-30),fpy(-20));
+      c.quadraticCurveTo(fpx(-20),fpy(-26),fpx(-8),fpy(-26));
+      c.quadraticCurveTo(fpx(-2),fpy(-24),fpx(4),fpy(-26));
+      c.closePath();
+      c.fillStyle='#E88838';c.fill();
+  
+      // Streaming hair from head
+      c.beginPath();
+      c.moveTo(fpx(8),fpy(-42));
+      c.quadraticCurveTo(fpx(-4),fpy(-48),fpx(-16),fpy(-44));
+      c.quadraticCurveTo(fpx(-22),fpy(-42),fpx(-26),fpy(-38));
+      c.quadraticCurveTo(fpx(-18),fpy(-38),fpx(-10),fpy(-40));
+      c.quadraticCurveTo(fpx(-2),fpy(-42),fpx(6),fpy(-38));
+      c.closePath();
+      c.fillStyle='#D8A040';c.fill();
+    }
+  
+    // Ghost/outline stroke — same logic as fox
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+  
+    // Outline of full figure
+    // Head outline
+    c.beginPath();c.arc(fpx(12),fpy(-38),8*os,0,Math.PI*2);
+    c.strokeStyle=ghostStroke?'rgba(200,168,72,0.35)':'rgba(216,184,72,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Torso outline
+    c.beginPath();
+    c.moveTo(fpx(10),fpy(-30));c.lineTo(fpx(4),fpy(-4));c.lineTo(fpx(-2),fpy(-2));c.lineTo(fpx(4),fpy(-30));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(200,168,72,0.35)':'rgba(216,184,72,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Front arm outline
+    c.beginPath();
+    c.moveTo(fpx(8),fpy(-24));c.lineTo(fpx(26),fpy(-30));c.lineTo(fpx(28),fpy(-26));c.lineTo(fpx(10),fpy(-20));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Back arm outline
+    c.beginPath();
+    c.moveTo(fpx(2),fpy(-22));c.lineTo(fpx(-18),fpy(-14));c.lineTo(fpx(-16),fpy(-10));c.lineTo(fpx(4),fpy(-18));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Front leg outline
+    c.beginPath();
+    c.moveTo(fpx(6),fpy(-4));c.lineTo(fpx(22),fpy(18));c.lineTo(fpx(26),fpy(38));c.lineTo(fpx(22),fpy(40));c.lineTo(fpx(18),fpy(20));c.lineTo(fpx(2),fpy(-2));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Back leg outline
+    c.beginPath();
+    c.moveTo(fpx(0),fpy(-2));c.lineTo(fpx(-14),fpy(22));c.lineTo(fpx(-22),fpy(38));c.lineTo(fpx(-18),fpy(40));c.lineTo(fpx(-10),fpy(24));c.lineTo(fpx(4),fpy(0));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Cloak outline
+    c.beginPath();
+    c.moveTo(fpx(6),fpy(-30));c.lineTo(fpx(2),fpy(-28));
+    c.quadraticCurveTo(fpx(-14),fpy(-34),fpx(-28),fpy(-28));
+    c.quadraticCurveTo(fpx(-36),fpy(-24),fpx(-42),fpy(-18));
+    c.quadraticCurveTo(fpx(-38),fpy(-14),fpx(-30),fpy(-20));
+    c.quadraticCurveTo(fpx(-20),fpy(-26),fpx(-8),fpy(-26));
+    c.quadraticCurveTo(fpx(-2),fpy(-24),fpx(4),fpy(-26));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Hair outline
+    c.beginPath();
+    c.moveTo(fpx(8),fpy(-42));
+    c.quadraticCurveTo(fpx(-4),fpy(-48),fpx(-16),fpy(-44));
+    c.quadraticCurveTo(fpx(-22),fpy(-42),fpx(-26),fpy(-38));
+    c.quadraticCurveTo(fpx(-18),fpy(-38),fpx(-10),fpy(-40));
+    c.quadraticCurveTo(fpx(-2),fpy(-42),fpx(6),fpy(-38));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(180,148,52,0.25)':'rgba(200,168,72,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    c.restore();
+  }
+
+  // First Light (Level 4) — sunrise
+  function drawSunrise(fa){
+    c.save();
+    const sunR=28;
+    const hY=CY+8;
+    const os=1.45*1.15;
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+      // Warm glow when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,85);
+        glow.addColorStop(0,'rgba(255,180,60,0.15)');
+        glow.addColorStop(1,'rgba(255,140,40,0)');
+        c.beginPath();c.arc(CX,CY-6,85,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+      // Horizon line
+      c.beginPath();c.moveTo(CX-55*os,hY);c.lineTo(CX+55*os,hY);
+      c.strokeStyle='#C87040';c.lineWidth=2.2;c.stroke();
+      // Half-sun (semicircle above horizon) with radial gradient
+      const sunGrad=c.createRadialGradient(CX,hY,0,CX,hY,sunR*os);
+      sunGrad.addColorStop(0,'#FFD848');sunGrad.addColorStop(1,'#D85820');
+      c.beginPath();c.arc(CX,hY,sunR*os,Math.PI,0);c.closePath();
+      c.fillStyle=sunGrad;c.fill();
+      // Radiating beams with gradient
+      const beamCount=9;
+      for(let i=0;i<beamCount;i++){
+        const a=Math.PI+i/(beamCount-1)*Math.PI;
+        const innerR=sunR*os+2;
+        const outerR=sunR*os+28;
+        const spread=0.04;
+        const bx0=CX+Math.cos(a)*innerR,by0=hY+Math.sin(a)*innerR;
+        const bx1=CX+Math.cos(a)*outerR,by1=hY+Math.sin(a)*outerR;
+        const rayGrad=c.createLinearGradient(bx0,by0,bx1,by1);
+        rayGrad.addColorStop(0,'#FFCC30');rayGrad.addColorStop(1,'#E87830');
+        c.beginPath();
+        c.moveTo(CX+Math.cos(a-spread)*innerR,hY+Math.sin(a-spread)*innerR);
+        c.lineTo(CX+Math.cos(a)*outerR,hY+Math.sin(a)*outerR);
+        c.lineTo(CX+Math.cos(a+spread)*innerR,hY+Math.sin(a+spread)*innerR);
+        c.closePath();
+        c.fillStyle=rayGrad;c.fill();
+      }
+    }
+  
+    // Ghost/outline stroke (always visible)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+    const sCol=ghostStroke?'rgba(190,130,90,0.35)':'rgba(210,150,100,0.55)';
+    const sW=ghostStroke?0.8:1.0;
+  
+    // Horizon line outline
+    c.beginPath();c.moveTo(CX-55*os,hY);c.lineTo(CX+55*os,hY);
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+    // Half-sun outline
+    c.beginPath();c.arc(CX,hY,sunR*os,Math.PI,0);c.closePath();
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+    // Beam outlines
+    const beamCount=9;
+    for(let i=0;i<beamCount;i++){
+      const a=Math.PI+i/(beamCount-1)*Math.PI;
+      const innerR=sunR*os+2;
+      const outerR=sunR*os+28;
+      const spread=0.04;
+      c.beginPath();
+      c.moveTo(CX+Math.cos(a-spread)*innerR,hY+Math.sin(a-spread)*innerR);
+      c.lineTo(CX+Math.cos(a)*outerR,hY+Math.sin(a)*outerR);
+      c.lineTo(CX+Math.cos(a+spread)*innerR,hY+Math.sin(a+spread)*innerR);
+      c.closePath();
+      c.strokeStyle=ghostStroke?'rgba(170,115,78,0.25)':'rgba(200,140,90,0.44)';c.lineWidth=0.5;c.stroke();
+    }
+    c.restore();
+  }
+
+  // Horizon Hunter (Level 5) — eye
+  function drawHunterEye(fa){
+    const os=1.45*1.15;
+    function epx(x){return CX+x*os;}
+    function epy(y){return CY-6+y*os;}
+    c.save();
+  
+    // Cool glow when fully revealed
+    if(fa>=0.95){
+      const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+      glow.addColorStop(0,'rgba(128,224,240,0.12)');
+      glow.addColorStop(1,'rgba(128,224,240,0)');
+      c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+    }
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+  
+      // Almond-shaped eye outline (filled) — ice blue gradient
+      const almondGrad=c.createLinearGradient(epx(-48),epy(-30),epx(48),epy(30));
+      almondGrad.addColorStop(0,'#C8E0F0');almondGrad.addColorStop(1,'#4878A0');
+      c.beginPath();
+      c.moveTo(epx(-48),epy(0));
+      c.bezierCurveTo(epx(-28),epy(-30),epx(28),epy(-30),epx(48),epy(0));
+      c.bezierCurveTo(epx(28),epy(30),epx(-28),epy(30),epx(-48),epy(0));
+      c.closePath();
+      c.fillStyle=almondGrad;c.fill();
+  
+      // Iris circle — radial gradient aquamarine to deep blue
+      const irisGrad=c.createRadialGradient(epx(0),epy(0),0,epx(0),epy(0),22*os);
+      irisGrad.addColorStop(0,'#60E8F8');irisGrad.addColorStop(1,'#1868A0');
+      c.beginPath();c.arc(epx(0),epy(0),22*os,0,Math.PI*2);
+      c.fillStyle=irisGrad;c.fill();
+  
+      // Pupil circle — dark with bright catchlight
+      c.beginPath();c.arc(epx(0),epy(0),11*os,0,Math.PI*2);
+      c.fillStyle='#080818';c.fill();
+      // Catchlight dot
+      c.beginPath();c.arc(epx(-4),epy(-5),3*os,0,Math.PI*2);
+      c.fillStyle='#E0F8FF';c.fill();
+  
+      // Horizon line through the pupil — bright silver
+      c.beginPath();
+      c.moveTo(epx(-48),epy(0));
+      c.lineTo(epx(48),epy(0));
+      c.strokeStyle='#D0D8E0';c.lineWidth=1.8;c.stroke();
+  
+      // Small highlight on iris
+      c.beginPath();c.arc(epx(-6),epy(-8),5*os,0,Math.PI*2);
+      c.fillStyle='rgba(200,200,220,0.25)';c.fill();
+  
+      // Decorative points at corners (left) — brightened
+      c.beginPath();
+      c.moveTo(epx(-52),epy(0));
+      c.lineTo(epx(-44),epy(-5));
+      c.lineTo(epx(-44),epy(5));
+      c.closePath();
+      c.fillStyle='#B0C0D0';c.fill();
+  
+      // Decorative points at corners (right) — brightened
+      c.beginPath();
+      c.moveTo(epx(52),epy(0));
+      c.lineTo(epx(44),epy(-5));
+      c.lineTo(epx(44),epy(5));
+      c.closePath();
+      c.fillStyle='#B0C0D0';c.fill();
+  
+      // Upper lash accents — brightened
+      c.beginPath();
+      c.moveTo(epx(-30),epy(-22));c.lineTo(epx(-26),epy(-28));
+      c.strokeStyle='rgba(176,192,208,0.6)';c.lineWidth=1.4;c.lineCap='round';c.stroke();
+      c.beginPath();
+      c.moveTo(epx(0),epy(-26));c.lineTo(epx(0),epy(-33));
+      c.stroke();
+      c.beginPath();
+      c.moveTo(epx(30),epy(-22));c.lineTo(epx(26),epy(-28));
+      c.stroke();
+    }
+  
+    // Ghost/outline version (always drawn)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+  
+    // Eye outline stroke
+    c.beginPath();
+    c.moveTo(epx(-48),epy(0));
+    c.bezierCurveTo(epx(-28),epy(-30),epx(28),epy(-30),epx(48),epy(0));
+    c.bezierCurveTo(epx(28),epy(30),epx(-28),epy(30),epx(-48),epy(0));
+    c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(160,160,185,0.35)':'rgba(180,180,200,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Iris outline stroke
+    c.beginPath();c.arc(epx(0),epy(0),22*os,0,Math.PI*2);
+    c.strokeStyle=ghostStroke?'rgba(140,140,170,0.25)':'rgba(170,170,195,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    // Horizon line stroke (ghost)
+    c.beginPath();
+    c.moveTo(epx(-48),epy(0));
+    c.lineTo(epx(48),epy(0));
+    c.strokeStyle=ghostStroke?'rgba(150,150,180,0.25)':'rgba(170,170,195,0.44)';c.lineWidth=ghostStroke?0.6:0.8;c.stroke();
+  
+    c.restore();
+  }
+
+  // Zora Seeker (Level 6) — violet compass (renamed to avoid collision with Scout)
+  function drawSeekerCompass(fa){
+    const os=1.6675;
+    function cpx(x){return CX+x*os;}
+    function cpy(y){return CY-6+y*os;}
+    c.save();
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+  
+      // Violet glow when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+        glow.addColorStop(0,'rgba(200,128,240,0.12)');
+        glow.addColorStop(1,'rgba(200,128,240,0)');
+        c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+  
+      // 4 main cardinal points (N/S/E/W) as diamond shapes
+      // North — tallest, violet-tinted platinum
+      c.beginPath();
+      c.moveTo(cpx(0),cpy(-58));c.lineTo(cpx(8),cpy(-10));c.lineTo(cpx(0),cpy(-4));c.lineTo(cpx(-8),cpy(-10));c.closePath();
+      const nGrad=c.createLinearGradient(cpx(0),cpy(-58),cpx(0),cpy(-4));
+      nGrad.addColorStop(0,'#D0D0E8');nGrad.addColorStop(1,'#9888B8');
+      c.fillStyle=nGrad;c.fill();
+      // North highlight half
+      c.beginPath();
+      c.moveTo(cpx(0),cpy(-58));c.lineTo(cpx(8),cpy(-10));c.lineTo(cpx(0),cpy(-4));c.closePath();
+      c.fillStyle='#E0D8F0';c.fill();
+  
+      // South — lavender-platinum
+      c.beginPath();
+      c.moveTo(cpx(0),cpy(50));c.lineTo(cpx(8),cpy(10));c.lineTo(cpx(0),cpy(4));c.lineTo(cpx(-8),cpy(10));c.closePath();
+      c.fillStyle='#C0B8D8';c.fill();
+      c.beginPath();
+      c.moveTo(cpx(0),cpy(50));c.lineTo(cpx(8),cpy(10));c.lineTo(cpx(0),cpy(4));c.closePath();
+      c.fillStyle='#E0D8F0';c.fill();
+  
+      // East — lavender-platinum
+      c.beginPath();
+      c.moveTo(cpx(50),cpy(0));c.lineTo(cpx(10),cpy(-7));c.lineTo(cpx(4),cpy(0));c.lineTo(cpx(10),cpy(7));c.closePath();
+      c.fillStyle='#C0B8D8';c.fill();
+      c.beginPath();
+      c.moveTo(cpx(50),cpy(0));c.lineTo(cpx(10),cpy(-7));c.lineTo(cpx(4),cpy(0));c.closePath();
+      c.fillStyle='#E0D8F0';c.fill();
+  
+      // West — lavender-platinum
+      c.beginPath();
+      c.moveTo(cpx(-50),cpy(0));c.lineTo(cpx(-10),cpy(-7));c.lineTo(cpx(-4),cpy(0));c.lineTo(cpx(-10),cpy(7));c.closePath();
+      c.fillStyle='#C0B8D8';c.fill();
+      c.beginPath();
+      c.moveTo(cpx(-50),cpy(0));c.lineTo(cpx(-10),cpy(-7));c.lineTo(cpx(-4),cpy(0));c.closePath();
+      c.fillStyle='#E0D8F0';c.fill();
+  
+      // 4 intermediate points (NE/SE/SW/NW) — deeper violet-silver
+      const diag=0.7071;
+      const iLen=32,iBase=10,iW=5;
+      [[diag,-diag],[diag,diag],[-diag,diag],[-diag,-diag]].forEach(([dx,dy])=>{
+        const tipX=dx*iLen,tipY=dy*iLen;
+        const bx=dx*iBase,by=dy*iBase;
+        const px=-dy,py=dx;
+        c.beginPath();
+        c.moveTo(cpx(tipX),cpy(tipY));c.lineTo(cpx(bx+px*iW),cpy(by+py*iW));c.lineTo(cpx(dx*4),cpy(dy*4));c.lineTo(cpx(bx-px*iW),cpy(by-py*iW));c.closePath();
+        c.fillStyle='#A098C0';c.fill();
+        // highlight half
+        c.beginPath();
+        c.moveTo(cpx(tipX),cpy(tipY));c.lineTo(cpx(bx+px*iW),cpy(by+py*iW));c.lineTo(cpx(dx*4),cpy(dy*4));c.closePath();
+        c.fillStyle='#E0D8F0';c.fill();
+      });
+  
+      // Center circle — radial gradient from bright to deep violet
+      const ccGrad=c.createRadialGradient(cpx(0),cpy(0),0,cpx(0),cpy(0),5*os);
+      ccGrad.addColorStop(0,'#E8E0F8');ccGrad.addColorStop(1,'#8878B0');
+      c.beginPath();c.arc(cpx(0),cpy(0),5*os,0,Math.PI*2);
+      c.fillStyle=ccGrad;c.fill();
+      c.beginPath();c.arc(cpx(0),cpy(0),3*os,0,Math.PI*2);
+      c.fillStyle='#D8D0F0';c.fill();
+      c.beginPath();c.arc(cpx(0),cpy(0),1.5*os,0,Math.PI*2);
+      c.fillStyle='#E8E0F8';c.fill();
+    }
+  
+    // Ghost/outline stroke — always visible
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+    const sCol=ghostStroke?'rgba(160,160,190,0.35)':'rgba(180,180,210,0.55)';
+    const sW=ghostStroke?0.8:1.0;
+  
+    // Outline main points
+    // North
+    c.beginPath();c.moveTo(cpx(0),cpy(-58));c.lineTo(cpx(8),cpy(-10));c.lineTo(cpx(0),cpy(-4));c.lineTo(cpx(-8),cpy(-10));c.closePath();
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+    // South
+    c.beginPath();c.moveTo(cpx(0),cpy(50));c.lineTo(cpx(8),cpy(10));c.lineTo(cpx(0),cpy(4));c.lineTo(cpx(-8),cpy(10));c.closePath();
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+    // East
+    c.beginPath();c.moveTo(cpx(50),cpy(0));c.lineTo(cpx(10),cpy(-7));c.lineTo(cpx(4),cpy(0));c.lineTo(cpx(10),cpy(7));c.closePath();
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+    // West
+    c.beginPath();c.moveTo(cpx(-50),cpy(0));c.lineTo(cpx(-10),cpy(-7));c.lineTo(cpx(-4),cpy(0));c.lineTo(cpx(-10),cpy(7));c.closePath();
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+  
+    // Outline intermediate points
+    const diag2=0.7071;
+    [[diag2,-diag2],[diag2,diag2],[-diag2,diag2],[-diag2,-diag2]].forEach(([dx,dy])=>{
+      const tipX=dx*32,tipY=dy*32,bx=dx*10,by=dy*10,px=-dy,py=dx,iW=5;
+      c.beginPath();c.moveTo(cpx(tipX),cpy(tipY));c.lineTo(cpx(bx+px*iW),cpy(by+py*iW));c.lineTo(cpx(dx*4),cpy(dy*4));c.lineTo(cpx(bx-px*iW),cpy(by-py*iW));c.closePath();
+      c.strokeStyle=ghostStroke?'rgba(140,140,170,0.25)':'rgba(160,160,190,0.44)';c.lineWidth=0.5;c.stroke();
+    });
+  
+    // Center circle outline
+    c.beginPath();c.arc(cpx(0),cpy(0),5*os,0,Math.PI*2);
+    c.strokeStyle=sCol;c.lineWidth=sW;c.stroke();
+  
+    c.restore();
+  }
+
+  // Dawn Keeper (Level 7) — lantern
+  function drawLantern(fa){
+    const os=1.6675;
+    function lpx(x){return CX+x*os;}
+    function lpy(y){return CY-6+y*os;}
+    c.save();
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+  
+      // Warm glow emanating from flame when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,85);
+        glow.addColorStop(0,'rgba(255,200,60,0.18)');
+        glow.addColorStop(0.5,'rgba(255,140,20,0.08)');
+        glow.addColorStop(1,'rgba(255,100,10,0)');
+        c.beginPath();c.arc(CX,CY-6,85,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+  
+      // Handle/ring at top
+      c.beginPath();
+      c.arc(lpx(0),lpy(-52),8*os,0,Math.PI*2);
+      c.strokeStyle='#B89040';c.lineWidth=3;c.stroke();
+  
+      // Pointed top cap (triangle)
+      c.beginPath();
+      c.moveTo(lpx(-14),lpy(-34));
+      c.lineTo(lpx(0),lpy(-44));
+      c.lineTo(lpx(14),lpy(-34));
+      c.closePath();
+      c.fillStyle='#887028';c.fill();
+  
+      // Lantern body (rectangular with slight taper)
+      c.beginPath();
+      c.moveTo(lpx(-14),lpy(-34));
+      c.lineTo(lpx(-16),lpy(24));
+      c.lineTo(lpx(16),lpy(24));
+      c.lineTo(lpx(14),lpy(-34));
+      c.closePath();
+      c.fillStyle='#A08030';c.fill();
+  
+      // Glass panels (lighter inset)
+      c.beginPath();
+      c.moveTo(lpx(-11),lpy(-30));
+      c.lineTo(lpx(-13),lpy(20));
+      c.lineTo(lpx(13),lpy(20));
+      c.lineTo(lpx(11),lpy(-30));
+      c.closePath();
+      c.fillStyle='rgba(120,80,30,0.35)';c.fill();
+  
+      // Horizontal bars across body
+      c.strokeStyle='#887028';c.lineWidth=1.5;
+      ln(lpx(-14),lpy(-5),lpx(14),lpy(-5));
+  
+      // Base (wider rectangle)
+      c.beginPath();
+      c.moveTo(lpx(-18),lpy(24));
+      c.lineTo(lpx(-18),lpy(32));
+      c.lineTo(lpx(18),lpy(32));
+      c.lineTo(lpx(18),lpy(24));
+      c.closePath();
+      c.fillStyle='#907028';c.fill();
+  
+      // Flame inside body
+      c.beginPath();
+      c.moveTo(lpx(0),lpy(-18));
+      c.bezierCurveTo(lpx(-8),lpy(-6),lpx(-7),lpy(8),lpx(0),lpy(14));
+      c.bezierCurveTo(lpx(7),lpy(8),lpx(8),lpy(-6),lpx(0),lpy(-18));
+      c.closePath();
+      const flameGr=c.createRadialGradient(lpx(0),lpy(0),0,lpx(0),lpy(0),16*os);
+      flameGr.addColorStop(0,'#FFE848');
+      flameGr.addColorStop(0.4,'#FF8820');
+      flameGr.addColorStop(1,'#C83010');
+      c.fillStyle=flameGr;c.fill();
+  
+      // Flame core (bright center)
+      c.beginPath();
+      c.moveTo(lpx(0),lpy(-10));
+      c.bezierCurveTo(lpx(-3),lpy(-2),lpx(-3),lpy(4),lpx(0),lpy(8));
+      c.bezierCurveTo(lpx(3),lpy(4),lpx(3),lpy(-2),lpx(0),lpy(-10));
+      c.closePath();
+      c.fillStyle='rgba(255,240,180,0.85)';c.fill();
+    }
+  
+    // Ghost/outline strokes (always visible)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+  
+    // Handle ring outline
+    c.beginPath();
+    c.arc(lpx(0),lpy(-52),8*os,0,Math.PI*2);
+    c.strokeStyle=ghostStroke?'rgba(140,100,38,0.35)':'rgba(160,120,48,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Top cap outline
+    c.beginPath();
+    c.moveTo(lpx(-14),lpy(-34));c.lineTo(lpx(0),lpy(-44));c.lineTo(lpx(14),lpy(-34));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(130,90,34,0.25)':'rgba(150,110,44,0.44)';c.lineWidth=0.8;c.stroke();
+  
+    // Body outline
+    c.beginPath();
+    c.moveTo(lpx(-14),lpy(-34));c.lineTo(lpx(-16),lpy(24));c.lineTo(lpx(16),lpy(24));c.lineTo(lpx(14),lpy(-34));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(140,100,38,0.35)':'rgba(160,120,48,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Base outline
+    c.beginPath();
+    c.moveTo(lpx(-18),lpy(24));c.lineTo(lpx(-18),lpy(32));c.lineTo(lpx(18),lpy(32));c.lineTo(lpx(18),lpy(24));c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(130,90,34,0.25)':'rgba(150,110,44,0.44)';c.lineWidth=0.8;c.stroke();
+  
+    c.restore();
+  }
+
+  // Eos Adept (Level 8) — sun disc with eye
+  function drawEosSun(fa){
+    c.save();
+    const os=1.45*1.15;
+    const cx=CX, cy=CY-6;
+    const discR=38*os;
+    const rayInnerR=discR+4*os;
+    const rayOuterR=discR+16*os;
+    const numRays=24;
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+  
+      // Teal glow when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+        glow.addColorStop(0,'rgba(29,158,117,0.14)');
+        glow.addColorStop(1,'rgba(29,158,117,0)');
+        c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+  
+      // Sun disc
+      const dg=c.createRadialGradient(cx,cy,0,cx,cy,discR);
+      dg.addColorStop(0,'#88C8A0');dg.addColorStop(1,'#2A6838');
+      c.beginPath();c.arc(cx,cy,discR,0,Math.PI*2);
+      c.fillStyle=dg;c.fill();
+  
+      // Triangular rays around the disc
+      for(let i=0;i<numRays;i++){
+        const a=i/numRays*Math.PI*2;
+        const halfW=Math.PI/numRays*0.4;
+        c.beginPath();
+        c.moveTo(cx+Math.cos(a-halfW)*rayInnerR,cy+Math.sin(a-halfW)*rayInnerR);
+        c.lineTo(cx+Math.cos(a)*rayOuterR,cy+Math.sin(a)*rayOuterR);
+        c.lineTo(cx+Math.cos(a+halfW)*rayInnerR,cy+Math.sin(a+halfW)*rayInnerR);
+        c.closePath();
+        c.fillStyle=i%2===0?'#60A878':'#4A9068';c.fill();
+      }
+  
+      // Eye shape (almond) inside the disc
+      const eyeW=discR*0.72, eyeH=discR*0.32;
+      c.beginPath();
+      c.moveTo(cx-eyeW,cy);
+      c.quadraticCurveTo(cx,cy-eyeH,cx+eyeW,cy);
+      c.quadraticCurveTo(cx,cy+eyeH,cx-eyeW,cy);
+      c.closePath();
+      const eg=c.createLinearGradient(cx-eyeW,cy,cx+eyeW,cy);
+      eg.addColorStop(0,'#48E8C8');eg.addColorStop(1,'#0A6850');
+      c.fillStyle=eg;c.fill();
+      c.strokeStyle='rgba(144,168,120,0.5)';c.lineWidth=1.0;c.stroke();
+  
+      // Iris circle
+      const irisR=eyeH*0.72;
+      const irg=c.createRadialGradient(cx,cy,0,cx,cy,irisR);
+      irg.addColorStop(0,'#40F0D0');irg.addColorStop(1,'#1D9E75');
+      c.beginPath();c.arc(cx,cy,irisR,0,Math.PI*2);
+      c.fillStyle=irg;c.fill();
+      c.strokeStyle='rgba(136,168,128,0.4)';c.lineWidth=0.8;c.stroke();
+  
+      // Pupil dot
+      const pupilR=irisR*0.4;
+      c.beginPath();c.arc(cx,cy,pupilR,0,Math.PI*2);
+      c.fillStyle='#041810';c.fill();
+  
+      // Pupil highlight (catchlight)
+      c.beginPath();c.arc(cx-pupilR*0.5,cy-pupilR*0.5,pupilR*0.35,0,Math.PI*2);
+      c.fillStyle='#C0FFF0';c.fill();
+    }
+  
+    // Outline / ghost impression (always visible)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+  
+    // Disc outline
+    c.beginPath();c.arc(cx,cy,discR,0,Math.PI*2);
+    c.strokeStyle=ghostStroke?'rgba(112,160,96,0.35)':'rgba(136,168,128,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+  
+    // Ray outlines
+    for(let i=0;i<numRays;i++){
+      const a=i/numRays*Math.PI*2;
+      const halfW=Math.PI/numRays*0.4;
+      c.beginPath();
+      c.moveTo(cx+Math.cos(a-halfW)*rayInnerR,cy+Math.sin(a-halfW)*rayInnerR);
+      c.lineTo(cx+Math.cos(a)*rayOuterR,cy+Math.sin(a)*rayOuterR);
+      c.lineTo(cx+Math.cos(a+halfW)*rayInnerR,cy+Math.sin(a+halfW)*rayInnerR);
+      c.closePath();
+      c.strokeStyle=ghostStroke?'rgba(96,136,80,0.25)':'rgba(120,156,100,0.44)';c.lineWidth=0.5;c.stroke();
+    }
+  
+    // Eye outline
+    c.beginPath();
+    c.moveTo(cx-discR*0.72,cy);
+    c.quadraticCurveTo(cx,cy-discR*0.32,cx+discR*0.72,cy);
+    c.quadraticCurveTo(cx,cy+discR*0.32,cx-discR*0.72,cy);
+    c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(96,136,80,0.25)':'rgba(120,156,100,0.44)';c.lineWidth=0.5;c.stroke();
+  
+    c.restore();
+  }
+
+  // Zora Master (Level 9) — royal crown
+  function drawCrown(fa){
+    const os=1.45*1.15;
+    function cpx(x){return CX+x*os;}
+    function cpy(y){return CY-6+y*os;}
+    // Crown geometry: band base + 5 pointed peaks
+    const bandY=20, bandH=18, bandW=44;
+    const peakH=52, peakW=bandW*2/5;
+    c.save();
+    if(fa>0.05){
+      c.globalAlpha=fa;
+      // Crown band (base) — polished metal gradient
+      c.beginPath();
+      c.moveTo(cpx(-bandW),cpy(bandY));
+      c.lineTo(cpx(bandW),cpy(bandY));
+      c.lineTo(cpx(bandW),cpy(bandY-bandH));
+      // 5 pointed peaks
+      const baseY=bandY-bandH;
+      const pts=5;
+      const segW=bandW*2/pts;
+      for(let i=pts-1;i>=0;i--){
+        const cx2=(-bandW)+(i+0.5)*segW;
+        const lx=(-bandW)+(i+1)*segW;
+        c.lineTo(cpx(lx),cpy(baseY));
+        c.lineTo(cpx(cx2),cpy(-peakH));
+      }
+      c.lineTo(cpx(-bandW),cpy(baseY));
+      c.closePath();
+      const bandGrad=c.createLinearGradient(cpx(-bandW),cpy(bandY),cpx(bandW),cpy(-peakH));
+      bandGrad.addColorStop(0,'#808090');bandGrad.addColorStop(0.5,'#C0C0D0');bandGrad.addColorStop(1,'#808090');
+      c.fillStyle=bandGrad;c.fill();
+      // Crown points overlay — brighter silver with lavender tint
+      for(let i=0;i<pts;i++){
+        const cx2=(-bandW)+(i+0.5)*segW;
+        const lx1=(-bandW)+i*segW;
+        const lx2=(-bandW)+(i+1)*segW;
+        c.beginPath();
+        c.moveTo(cpx(lx2),cpy(baseY));
+        c.lineTo(cpx(cx2),cpy(-peakH));
+        c.lineTo(cpx(lx1),cpy(baseY));
+        c.closePath();
+        c.fillStyle='#D0D0E0';c.fill();
+      }
+      // Inner band detail
+      c.beginPath();
+      c.moveTo(cpx(-bandW+4),cpy(bandY-4));
+      c.lineTo(cpx(bandW-4),cpy(bandY-4));
+      c.lineTo(cpx(bandW-4),cpy(bandY-bandH+4));
+      c.lineTo(cpx(-bandW+4),cpy(bandY-bandH+4));
+      c.closePath();
+      const innerBandGrad=c.createLinearGradient(cpx(-bandW+4),cpy(bandY-4),cpx(bandW-4),cpy(bandY-bandH+4));
+      innerBandGrad.addColorStop(0,'#C0C0D0');innerBandGrad.addColorStop(1,'#808090');
+      c.fillStyle=innerBandGrad;c.fill();
+      // Dots at each peak tip — moonstone iridescent jewels
+      const baseYP=bandY-bandH;
+      for(let i=0;i<pts;i++){
+        const cx2=(-bandW)+(i+0.5)*(bandW*2/pts);
+        c.beginPath();c.arc(cpx(cx2),cpy(-peakH),3.2,0,Math.PI*2);
+        c.fillStyle='#E8E0F8';c.fill();
+        c.beginPath();c.arc(cpx(cx2),cpy(-peakH),1.6,0,Math.PI*2);
+        c.fillStyle='#F0E8FF';c.fill();
+      }
+      // Band jewel accents — moonstone gradient
+      for(let i=0;i<5;i++){
+        const jx=(-bandW+8)+(i*(bandW*2-16)/4);
+        const jewelGrad=c.createRadialGradient(cpx(jx),cpy(bandY-bandH/2),0,cpx(jx),cpy(bandY-bandH/2),3);
+        jewelGrad.addColorStop(0,'#F0E8FF');jewelGrad.addColorStop(1,'#A898C0');
+        c.beginPath();c.arc(cpx(jx),cpy(bandY-bandH/2),2.4,0,Math.PI*2);
+        c.fillStyle=jewelGrad;c.fill();
+        c.beginPath();c.arc(cpx(jx),cpy(bandY-bandH/2),1.4,0,Math.PI*2);
+        c.fillStyle='#F0E8FF';c.fill();
+      }
+      // Cool iridescent glow when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(CX,CY-6,0,CX,CY-6,80);
+        glow.addColorStop(0,'rgba(232,224,248,0.14)');
+        glow.addColorStop(1,'rgba(232,224,248,0)');
+        c.beginPath();c.arc(CX,CY-6,80,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+    }
+    // Outline (ghost/stroke)
+    const ghostStroke=fa<0.2;
+    c.globalAlpha=fa<=0.07?fa*1.4:Math.min(fa*1.15,1);
+    // Crown outline
+    c.beginPath();
+    c.moveTo(cpx(-bandW),cpy(bandY));
+    c.lineTo(cpx(bandW),cpy(bandY));
+    c.lineTo(cpx(bandW),cpy(bandY-bandH));
+    const baseY=bandY-bandH;
+    const pts=5;
+    const segW=bandW*2/pts;
+    for(let i=pts-1;i>=0;i--){
+      const cx2=(-bandW)+(i+0.5)*segW;
+      const lx=(-bandW)+(i+1)*segW;
+      c.lineTo(cpx(lx),cpy(baseY));
+      c.lineTo(cpx(cx2),cpy(-peakH));
+    }
+    c.lineTo(cpx(-bandW),cpy(baseY));
+    c.closePath();
+    c.strokeStyle=ghostStroke?'rgba(140,140,148,0.35)':'rgba(160,160,168,0.55)';c.lineWidth=ghostStroke?0.8:1.0;c.stroke();
+    c.restore();
+  }
+
+  // Finding Zora (Level 10) — radiant Z
+  function drawZora(fa){
+    c.save();
+    c.beginPath();c.arc(CX,CY,IRg-2,0,Math.PI*2);c.clip();
+  
+    const zw=55,zh=58;
+    const cx=CX,cy=CY-2;
+    const strokeW=9;
+  
+    // Dark backing for contrast — darkens the face behind the Z area
+    if(fa>0.05){
+      c.globalAlpha=fa*0.55;
+      const bg=c.createRadialGradient(cx,cy,10,cx,cy,95);
+      bg.addColorStop(0,'rgba(30,20,5,0.6)');
+      bg.addColorStop(0.7,'rgba(30,20,5,0.3)');
+      bg.addColorStop(1,'rgba(30,20,5,0)');
+      c.beginPath();c.arc(cx,cy,95,0,Math.PI*2);c.fillStyle=bg;c.fill();
+    }
+  
+    if(fa>0.05){
+      c.globalAlpha=fa;
+      c.lineCap='round';c.lineJoin='round';
+  
+      // Shadow pass — dark outline behind Z for depth
+      c.lineWidth=strokeW+4;
+      c.strokeStyle='rgba(40,25,5,0.6)';
+      c.beginPath();c.moveTo(cx-zw,cy-zh);c.lineTo(cx+zw,cy-zh);c.stroke();
+      c.beginPath();c.moveTo(cx+zw,cy-zh);c.lineTo(cx-zw,cy+zh);c.stroke();
+      c.beginPath();c.moveTo(cx-zw,cy+zh);c.lineTo(cx+zw,cy+zh);c.stroke();
+  
+      // Main Z strokes — bright white-gold with warm gradient
+      const zGrad=c.createLinearGradient(cx-zw,cy-zh,cx+zw,cy+zh);
+      zGrad.addColorStop(0,'#FFF8E0');zGrad.addColorStop(0.3,'#F0D878');zGrad.addColorStop(0.5,'#FFFFFF');zGrad.addColorStop(0.7,'#F0D878');zGrad.addColorStop(1,'#FFF8E0');
+      c.lineWidth=strokeW;
+      c.strokeStyle=zGrad;
+      c.beginPath();c.moveTo(cx-zw,cy-zh);c.lineTo(cx+zw,cy-zh);c.stroke();
+      c.beginPath();c.moveTo(cx+zw,cy-zh);c.lineTo(cx-zw,cy+zh);c.stroke();
+      c.beginPath();c.moveTo(cx-zw,cy+zh);c.lineTo(cx+zw,cy+zh);c.stroke();
+  
+      // Inner highlight — thinner bright white core
+      c.lineWidth=strokeW*0.35;
+      c.strokeStyle='rgba(255,255,255,0.7)';
+      c.beginPath();c.moveTo(cx-zw+2,cy-zh);c.lineTo(cx+zw-2,cy-zh);c.stroke();
+      c.beginPath();c.moveTo(cx+zw-2,cy-zh);c.lineTo(cx-zw+2,cy+zh);c.stroke();
+      c.beginPath();c.moveTo(cx-zw+2,cy+zh);c.lineTo(cx+zw-2,cy+zh);c.stroke();
+  
+      // Bold serif caps at Z corners
+      const capR=5;
+      [[cx-zw,cy-zh],[cx+zw,cy-zh],[cx-zw,cy+zh],[cx+zw,cy+zh]].forEach(([px,py])=>{
+        c.beginPath();c.arc(px,py,capR,0,Math.PI*2);
+        c.fillStyle='#F0D878';c.fill();
+        c.strokeStyle='rgba(40,25,5,0.4)';c.lineWidth=1.5;c.stroke();
+      });
+  
+      // Rays emanating from Z — thicker and more visible
+      const rays=[
+        // From top bar
+        {ox:cx-zw*0.75,oy:cy-zh,angle:-Math.PI/2-0.35,len:38},
+        {ox:cx-zw*0.25,oy:cy-zh,angle:-Math.PI/2-0.1,len:45},
+        {ox:cx+zw*0.25,oy:cy-zh,angle:-Math.PI/2+0.1,len:42},
+        {ox:cx+zw*0.75,oy:cy-zh,angle:-Math.PI/2+0.35,len:35},
+        // From diagonal — all 4 rays fan outward to the right/upper-right
+        {ox:cx+zw*0.45,oy:cy-zh*0.45,angle:-0.15,len:40},
+        {ox:cx+zw*0.05,oy:cy-zh*0.1,angle:0.15,len:35},
+        {ox:cx-zw*0.2,oy:cy+zh*0.2,angle:0.45,len:36},
+        {ox:cx-zw*0.45,oy:cy+zh*0.5,angle:0.7,len:32},
+        // From bottom bar
+        {ox:cx-zw*0.75,oy:cy+zh,angle:Math.PI/2+0.35,len:34},
+        {ox:cx-zw*0.25,oy:cy+zh,angle:Math.PI/2+0.1,len:40},
+        {ox:cx+zw*0.25,oy:cy+zh,angle:Math.PI/2-0.1,len:38},
+        {ox:cx+zw*0.75,oy:cy+zh,angle:Math.PI/2-0.35,len:30},
+      ];
+      rays.forEach((r,i)=>{
+        const rayProgress=Math.min(1,fa*1.2);
+        const thisRayT=Math.max(0,Math.min(1,(rayProgress-i/rays.length*0.3)/0.7));
+        if(thisRayT<=0)return;
+        const ex=r.ox+Math.cos(r.angle)*r.len*thisRayT;
+        const ey=r.oy+Math.sin(r.angle)*r.len*thisRayT;
+        // Shadow ray
+        c.beginPath();c.moveTo(r.ox+0.8,r.oy+0.8);c.lineTo(ex+0.8,ey+0.8);
+        c.strokeStyle='rgba(30,15,0,0.3)';c.lineWidth=4;c.lineCap='round';c.stroke();
+        // Main ray — gradient from bright gold to transparent
+        const gr=c.createLinearGradient(r.ox,r.oy,ex,ey);
+        gr.addColorStop(0,'rgba(255,240,180,0.9)');
+        gr.addColorStop(0.6,'rgba(240,210,120,0.5)');
+        gr.addColorStop(1,'rgba(240,200,100,0)');
+        c.beginPath();c.moveTo(r.ox,r.oy);c.lineTo(ex,ey);
+        c.strokeStyle=gr;c.lineWidth=3;c.lineCap='round';c.stroke();
+        // Bright core
+        const gr2=c.createLinearGradient(r.ox,r.oy,ex,ey);
+        gr2.addColorStop(0,'rgba(255,255,240,0.8)');
+        gr2.addColorStop(0.4,'rgba(255,255,220,0.3)');
+        gr2.addColorStop(1,'rgba(255,255,200,0)');
+        c.beginPath();c.moveTo(r.ox,r.oy);c.lineTo(ex,ey);
+        c.strokeStyle=gr2;c.lineWidth=1.2;c.stroke();
+      });
+  
+      // Warm glow behind Z when fully revealed
+      if(fa>=0.95){
+        const glow=c.createRadialGradient(cx,cy,0,cx,cy,90);
+        glow.addColorStop(0,'rgba(255,230,150,0.2)');
+        glow.addColorStop(0.5,'rgba(240,200,100,0.08)');
+        glow.addColorStop(1,'rgba(240,200,100,0)');
+        c.beginPath();c.arc(cx,cy,90,0,Math.PI*2);c.fillStyle=glow;c.fill();
+      }
+    }
+  
+    // Ghost outline of Z — visible when faint
+    const ghostAlpha=fa<=0.07?fa*1.8:Math.min(fa*0.25,0.18);
+    c.globalAlpha=ghostAlpha;
+    c.lineWidth=3;c.lineCap='round';
+    c.strokeStyle='rgba(80,60,20,0.5)';
+    c.beginPath();c.moveTo(cx-zw,cy-zh);c.lineTo(cx+zw,cy-zh);c.lineTo(cx-zw,cy+zh);c.lineTo(cx+zw,cy+zh);c.stroke();
+    c.restore();
+  }
+
+  // Dispatcher — maps revealed boolean to fa (fox-alpha) and routes by emblem key
+  function drawEmblem(lvl, revealed) {
+    const fa = revealed ? 1.0 : 0.1;
+    switch (lvl.emblem) {
+      case 'compass':       drawScoutCompass(fa); break;
+      case 'cairn':         drawCairn(fa); break;
+      case 'fox':           drawFox(fa); break;
+      case 'chaser':        drawChaser(fa); break;
+      case 'sunrise':       drawSunrise(fa); break;
+      case 'huntereye':     drawHunterEye(fa); break;
+      case 'seekercompass': drawSeekerCompass(fa); break;
+      case 'lantern':       drawLantern(fa); break;
+      case 'eossun':        drawEosSun(fa); break;
+      case 'crown':         drawCrown(fa); break;
+      case 'zora':          drawZora(fa); break;
+    }
+  }
+  // ── STREAK CROWN — 36-ray diamond-tipped sunburst outside the coin ──
+  function drawStreakCrown() {
+    const innerR = CR + 6;
+    const outerLong = CR + 40;
+    const outerShort = CR + 22;
+    const N = 36;
+    ctx.save();
+    // inner connecting ring
+    ctx.beginPath();
+    ctx.arc(CX, CY, innerR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(232, 192, 52, 0.75)';
+    ctx.lineWidth = 2.4;
+    ctx.stroke();
+
+    // rays
+    for (let i = 0; i < N; i++) {
+      const a = i / N * Math.PI * 2;
+      const big = i % 3 === 0;
+      const tip = big ? outerLong : outerShort;
+      ctx.beginPath();
+      ctx.moveTo(CX + Math.cos(a) * innerR, CY + Math.sin(a) * innerR);
+      ctx.lineTo(CX + Math.cos(a) * tip, CY + Math.sin(a) * tip);
+      ctx.strokeStyle = big ? 'rgba(250, 212, 70, 0.95)' : 'rgba(228, 180, 40, 0.62)';
+      ctx.lineWidth = big ? 2 : 1;
+      ctx.stroke();
+    }
+
+    // diamond tips on the big rays
+    for (let i = 0; i < N; i += 3) {
+      const a = i / N * Math.PI * 2;
+      const tx = CX + Math.cos(a) * outerLong;
+      const ty = CY + Math.sin(a) * outerLong;
+      const pa = -Math.sin(a), pb = Math.cos(a);
+      ctx.beginPath();
+      ctx.moveTo(tx + Math.cos(a) * 6, ty + Math.sin(a) * 6);
+      ctx.lineTo(tx + pa * 3, ty + pb * 3);
+      ctx.lineTo(tx - Math.cos(a) * 3, ty - Math.sin(a) * 3);
+      ctx.lineTo(tx - pa * 3, ty - pb * 3);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(252, 220, 80, 0.95)';
+      ctx.fill();
+    }
+
+    // outer connecting arc
+    ctx.beginPath();
+    ctx.arc(CX, CY, outerLong + 4, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(210, 172, 44, 0.38)';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+
+    // ambient glow wash
+    const gg = ctx.createRadialGradient(CX, CY, CR, CX, CY, CR + 60);
+    gg.addColorStop(0, 'rgba(232, 182, 36, 0.28)');
+    gg.addColorStop(1, 'rgba(232, 182, 36, 0)');
+    ctx.beginPath();
+    ctx.arc(CX, CY, CR + 60, 0, Math.PI * 2);
+    ctx.fillStyle = gg;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawEdge() {
+    ctx.beginPath();
+    ctx.arc(CX, CY, CR, Math.PI * 0.94, Math.PI * 1.73);
+    ctx.strokeStyle = 'rgba(232, 195, 92, 0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(CX, CY, CR, -0.08, Math.PI * 0.88);
+    ctx.strokeStyle = 'rgba(5, 2, 0, 0.65)';
+    ctx.lineWidth = 1.7;
+    ctx.stroke();
+  }
+
+  function render(state) {
+    ctx.clearRect(0, 0, S, S);
+    const lvl = LEVELS[state.level];
+    // Scout has no gems to set, so its emblem is always fully revealed.
+    // All other medallions reveal their emblem only when the 6th gem is set.
+    const revealed = lvl.gem === null || state.gems >= 6;
+    // The streak crown appears on the EARNED medallion (6/6 + streak).
+    // The streak BAR on the card (above) appears whenever a streak is alive.
+    const showCrown = state.streak && revealed && lvl.gem !== null;
+    if (showCrown) drawStreakCrown();
+    drawShadow();
+    drawRim(lvl);
+    drawFace(lvl);
+    drawRings(lvl);
+    drawBand(lvl);
+    drawHorizon(lvl);
+    drawSlots(lvl);
+    drawEmblem(lvl, revealed);
+    drawEtch(lvl, revealed);
+    drawGems(lvl, state.gems);
+    drawEdge();
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // STATE + CONTROLS
+  // ─────────────────────────────────────────────────────────
+  const state = {
+    level: 2,
+    gems: 3,
+    streak: false,
+    weeks: 4,
+    ep: '03',
+    loc: 'Hieroglyphic Trail',
+    subloc: 'Gold Canyon, Arizona'
+  };
+
+  const $ = id => document.getElementById(id);
+  const $$ = {
+    level: $('c-level'),
+    gems: $('c-gems'),
+    gemsVal: $('c-gems-val'),
+    streak: $('c-streak'),
+    weeks: $('c-weeks'),
+    weeksVal: $('c-weeks-val'),
+    ep: $('c-ep'),
+    loc: $('c-loc'),
+    subloc: $('c-subloc'),
+    // card
+    eyebrow: $('eyebrow'),
+    location: $('location'),
+    sublocation: $('sublocation'),
+    rank: $('rank-name'),
+    gemsLine: $('gems-line'),
+    streakLine: $('streak-line'),
+    streakBar: $('streak-bar')
+  };
+
+  function lowerFirst(s) { return s ? s[0].toLowerCase() + s.slice(1) : ''; }
+
+  function update() {
+    const lvl = LEVELS[state.level];
+    const earned = lvl.gem === null || state.gems >= 6;
+
+    // card text
+    $$.eyebrow.textContent = `episode ${state.ep} · finding zora`;
+    $$.location.textContent = state.loc;
+    $$.sublocation.textContent = state.subloc;
+    $$.rank.textContent = lvl.name;
+
+    // Gem count line — communicates progress, completion, or starting state
+    if (lvl.gem === null) {
+      $$.gemsLine.textContent = 'starting rank · no gems';
+    } else if (state.gems >= 6) {
+      $$.gemsLine.textContent = state.level === 10
+        ? 'all gems set · the final medallion'
+        : 'medallion earned · 6 of 6 gems set';
+    } else {
+      $$.gemsLine.textContent = `${state.gems} of 6 gems set`;
+    }
+
+    // Streak — bar above always shows when alive; line below distinguishes alive from earned
+    $$.streakLine.classList.toggle('is-on', state.streak);
+    $$.streakBar.classList.toggle('is-on', state.streak);
+    if (state.streak) {
+      if (earned && state.weeks >= 6) {
+        $$.streakLine.textContent = 'streak earned · 6 of 6 weeks';
+      } else {
+        $$.streakLine.textContent = `streak alive · ${state.weeks} of 6 weeks`;
+      }
+    }
+
+    render(state);
+    refreshFname();
+  }
+
+  // bindings
+  $$.level.addEventListener('change', () => { state.level = +$$.level.value; update(); });
+  $$.gems.addEventListener('input', () => { state.gems = +$$.gems.value; $$.gemsVal.textContent = state.gems; update(); });
+  $$.streak.addEventListener('change', () => { state.streak = $$.streak.checked; update(); });
+  $$.weeks.addEventListener('input', () => { state.weeks = +$$.weeks.value; $$.weeksVal.textContent = state.weeks; update(); });
+  $$.ep.addEventListener('input', () => { state.ep = $$.ep.value; update(); });
+  $$.loc.addEventListener('input', () => { state.loc = $$.loc.value; update(); });
+  $$.subloc.addEventListener('input', () => { state.subloc = $$.subloc.value; update(); });
+
+  // ─────────────────────────────────────────────────────────
+  // EXPORT
+  // ─────────────────────────────────────────────────────────
+  const xEls = {
+    full: document.getElementById('zf-export-full'),
+    medallion: document.getElementById('zf-export-medallion'),
+    fname: document.getElementById('zf-fname'),
+    status: document.getElementById('zf-status'),
+    resRadios: () => document.getElementsByName('zf-res')
+  };
+
+  function getResolution() {
+    for (const r of xEls.resRadios()) if (r.checked) return +r.value;
+    return 1080;
+  }
+
+  function sanitize(s) {
+    if (!s) return '';
+    // Remove diacritics, then keep only [A-Za-z0-9]; capitalize each word boundary.
+    const cleaned = s.normalize('NFKD').replace(/[̀-ͯ]/g, '');
+    const parts = cleaned.split(/[^A-Za-z0-9]+/).filter(Boolean);
+    return parts.map(p => p[0].toUpperCase() + p.slice(1)).join('');
+  }
+
+  function rankToken(name) {
+    return name.replace(/[^A-Za-z0-9]/g, '');
+  }
+
+  function buildFilename(mode) {
+    const lvl = LEVELS[state.level];
+    const rank = rankToken(lvl.name);
+    const gems = `${state.gems}of6`;
+    const streak = state.streak ? '_streak' : '';
+    if (mode === 'medallion') {
+      return `zora_medallion_${rank}_${gems}${streak}.png`;
+    }
+    const ep = sanitize(state.ep) || 'untitled';
+    const title = sanitize(state.loc) || 'untitled';
+    return `zora_title_${ep}_${title}_${rank}_${gems}${streak}.png`;
+  }
+
+  function refreshFname() {
+    if (!xEls.fname) return;
+    xEls.fname.textContent = buildFilename('full');
+  }
+
+  let statusTimer = null;
+  function showStatus(msg) {
+    if (!xEls.status) return;
+    xEls.status.textContent = msg;
+    xEls.status.classList.add('is-on');
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(() => xEls.status.classList.remove('is-on'), 3000);
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
+  // Run the existing medallion pipeline against an arbitrary 2D context,
+  // optionally with the canvas pre-cleared. Used by both export modes.
+  function renderMedallionToCtx(targetCtx, opts) {
+    const clear = opts && opts.clear !== false;
+    const savedCtx = ctx, savedC = c;
+    ctx = targetCtx; c = targetCtx;
+    if (clear) targetCtx.clearRect(0, 0, S, S);
+    const lvl = LEVELS[state.level];
+    const revealed = lvl.gem === null || state.gems >= 6;
+    const showCrown = state.streak && revealed && lvl.gem !== null;
+    if (showCrown) drawStreakCrown();
+    drawShadow();
+    drawRim(lvl);
+    drawFace(lvl);
+    drawRings(lvl);
+    drawBand(lvl);
+    drawHorizon(lvl);
+    drawSlots(lvl);
+    drawEmblem(lvl, revealed);
+    drawEtch(lvl, revealed);
+    drawGems(lvl, state.gems);
+    drawEdge();
+    ctx = savedCtx; c = savedC;
+  }
+
+  // Mode B — medallion only on transparent background.
+  function renderMedallionOnly(size) {
+    const off = document.createElement('canvas');
+    off.width = size;
+    off.height = size;
+    const oc = off.getContext('2d');
+    oc.save();
+    oc.scale(size / S, size / S);
+    renderMedallionToCtx(oc, { clear: false });
+    oc.restore();
+    return off;
+  }
+
+  // Helper: fill an elliptical radial gradient — emulates CSS
+  // radial-gradient(ellipse Wpct Hpct at Xpct Ypct, ...)
+  function fillEllipticalRadial(target, W, H, cxPct, cyPct, radWPct, radHPct, stops) {
+    target.save();
+    const cx = W * cxPct, cy = H * cyPct;
+    const rx = W * radWPct * 0.5;
+    const ry = H * radHPct * 0.5;
+    target.translate(cx, cy);
+    target.scale(1, ry / rx);
+    const g = target.createRadialGradient(0, 0, 0, 0, 0, rx);
+    for (const [pos, color] of stops) g.addColorStop(pos, color);
+    target.fillStyle = g;
+    target.fillRect(-W * 2, -H * 2, W * 4, H * 4);
+    target.restore();
+  }
+
+  // Draw text with letter-spacing — uses ctx.letterSpacing where supported,
+  // falls back to per-glyph drawing.
+  function drawSpacedText(target, text, x, y, letterSpacingPx) {
+    if ('letterSpacing' in target) {
+      target.letterSpacing = `${letterSpacingPx}px`;
+      target.fillText(text, x, y);
+      target.letterSpacing = '0px';
+      return;
+    }
+    let cursor = x;
+    for (const ch of text) {
+      target.fillText(ch, cursor, y);
+      cursor += target.measureText(ch).width + letterSpacingPx;
+    }
+  }
+
+  function measureSpacedWidth(target, text, letterSpacingPx) {
+    if (!text) return 0;
+    return target.measureText(text).width + letterSpacingPx * Math.max(0, text.length - 1);
+  }
+
+  // Mode A — full title card.
+  function renderFullCard(W, H) {
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const oc = off.getContext('2d');
+
+    // ── background ──
+    // Base linear gradient (180deg, top-to-bottom)
+    const lin = oc.createLinearGradient(0, 0, 0, H);
+    lin.addColorStop(0.00, '#060910');
+    lin.addColorStop(0.55, '#0a0d14');
+    lin.addColorStop(1.00, '#130c0a');
+    oc.fillStyle = lin;
+    oc.fillRect(0, 0, W, H);
+
+    // Sunrise burn — orange near horizon
+    fillEllipticalRadial(oc, W, H, 0.5, 1.0, 0.8, 0.5, [
+      [0.00, 'rgba(232,82,10,0.22)'],
+      [0.55, 'rgba(232,82,10,0)']
+    ]);
+    // Amber wash — broader, beneath the orange
+    fillEllipticalRadial(oc, W, H, 0.5, 1.2, 1.0, 0.8, [
+      [0.00, 'rgba(240,165,0,0.12)'],
+      [0.50, 'rgba(240,165,0,0)']
+    ]);
+
+    // Vignette
+    fillEllipticalRadial(oc, W, H, 0.5, 0.5, 0.8, 0.7, [
+      [0.60, 'rgba(0,0,0,0)'],
+      [1.00, 'rgba(0,0,0,0.45)']
+    ]);
+
+    // ── streak bar (top, if active) ──
+    if (state.streak) {
+      const barH = Math.max(2, H * 0.0083);
+      const sg = oc.createLinearGradient(0, 0, W, 0);
+      sg.addColorStop(0.00, '#D89000');
+      sg.addColorStop(0.25, '#F0A500');
+      sg.addColorStop(0.50, '#FAC75A');
+      sg.addColorStop(0.75, '#F0A500');
+      sg.addColorStop(1.00, '#D89000');
+      oc.save();
+      oc.shadowColor = 'rgba(240, 165, 0, 0.4)';
+      oc.shadowBlur = H * 0.012;
+      oc.fillStyle = sg;
+      oc.fillRect(0, 0, W, barH);
+      oc.restore();
+    }
+
+    // ── layout ──
+    // Padding 6% of card width on all four sides (matches CSS percent padding semantics).
+    const pad = W * 0.06;
+    const gap = W * 0.04;
+    const contentW = W - 2 * pad;
+    const contentH = H - 2 * pad;
+    const col1 = (contentW - gap) * (0.85 / 1.85);
+    const col2 = (contentW - gap) * (1.00 / 1.85);
+    const col1X = pad;
+    const col2X = pad + col1 + gap;
+    const centerY = pad + contentH / 2;
+
+    // Medallion sized to fit col1 (matches the live preview where the canvas
+    // is width:100% capped at max-width 340px — at export scale we let it fill).
+    const medSize = Math.min(col1, contentH);
+    const medX = col1X + (col1 - medSize) / 2;
+    const medY = centerY - medSize / 2;
+
+    // Render medallion to its own buffer so the CSS drop-shadow filter can
+    // be applied during the composite drawImage.
+    const medBuf = renderMedallionOnly(medSize);
+    oc.save();
+    oc.filter = `drop-shadow(0px ${(H * 0.0207).toFixed(2)}px ${(H * 0.0578).toFixed(2)}px rgba(0,0,0,0.65))`;
+    oc.drawImage(medBuf, medX, medY, medSize, medSize);
+    oc.restore();
+
+    // ── text ──
+    // Em scale: the live card inherits 16px from <body>, with text sized in em.
+    // Match the proportional look by scaling em against card height.
+    const em = H * (16 / 484);  // ≈ 0.033H — matches a 16px base on a 484px-tall preview card.
+
+    const lvl = LEVELS[state.level];
+    const earned = lvl.gem === null || state.gems >= 6;
+
+    // Compose text content (mirrors update())
+    const eyebrow = `episode ${state.ep || ''} · finding zora`;
+    const location = state.loc || '';
+    const sublocation = state.subloc || '';
+    const rankLabel = 'rank';
+    const rankName = lvl.name;
+    let gemsLine;
+    if (lvl.gem === null) gemsLine = 'starting rank · no gems';
+    else if (state.gems >= 6) gemsLine = state.level === 10 ? 'all gems set · the final medallion' : 'medallion earned · 6 of 6 gems set';
+    else gemsLine = `${state.gems} of 6 gems set`;
+    let streakLine = '';
+    if (state.streak) {
+      streakLine = (earned && state.weeks >= 6)
+        ? 'streak earned · 6 of 6 weeks'
+        : `streak alive · ${state.weeks} of 6 weeks`;
+    }
+
+    // Font specs (px, weight, family, italic, color, letterSpacing in em, transform)
+    const FRAUNCES = '"Fraunces", Georgia, serif';
+    const MONO = '"JetBrains Mono", ui-monospace, "Courier New", monospace';
+    const AMBER = '#F0A500';
+    const MIST = '#C8D4E0';
+    const MIST_DIM = 'rgba(200, 212, 224, 0.45)';
+    const MIST_FAINT = 'rgba(200, 212, 224, 0.18)';
+    const TEAL = '#1D9E75';
+
+    const wrapText = (target, text, maxW) => {
+      const words = text.split(/\s+/).filter(Boolean);
+      const lines = [];
+      let line = '';
+      for (const w of words) {
+        const test = line ? line + ' ' + w : w;
+        if (target.measureText(test).width > maxW && line) {
+          lines.push(line);
+          line = w;
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      return lines.length ? lines : [''];
+    };
+
+    // Pre-measure for vertical centering.
+    oc.textBaseline = 'alphabetic';
+    oc.textAlign = 'left';
+
+    // eyebrow
+    const eyebrowSize = 0.68 * em;
+    oc.font = `500 ${eyebrowSize}px ${MONO}`;
+    const eyebrowText = eyebrow.toLowerCase();
+    const eyebrowSpacing = 0.42 * eyebrowSize;
+
+    // location
+    const locSize = 2.4 * em;
+    oc.font = `800 ${locSize}px ${FRAUNCES}`;
+    const locLines = wrapText(oc, location, col2);
+    const locLineH = locSize * 0.98;
+
+    // sublocation
+    const sublocSize = 1.05 * em;
+    oc.font = `italic 400 ${sublocSize}px ${FRAUNCES}`;
+    const sublocLines = wrapText(oc, sublocation, col2);
+    const sublocLineH = sublocSize * 1.2;
+
+    // rank
+    const rankLabelSize = 0.52 * em;
+    const rankNameSize = 0.88 * em;
+    const rankLineH = rankNameSize * 1.15;
+
+    // gems
+    const gemsSize = 0.6 * em;
+    const gemsLineH = gemsSize * 1.45;
+
+    // streak (only if active)
+    const streakSize = 0.58 * em;
+    const streakLineH = streakSize * 1.6;
+
+    // Vertical rhythm (px gaps approximate the CSS gap: 0.5rem and explicit margins)
+    const gapBetweenEyebrowAndLoc = em * 0.15;
+    const gapBetweenLocAndSubloc = em * 0.25;
+    const gapBeforeRule = em * 0.9;
+    const gapAfterRule = em * 0.5;
+    const gapBetweenRankAndGems = em * 0.1;
+    const gapBeforeStreak = em * 0.35;
+
+    // Total block height for vertical centering — sum of element heights and gaps.
+    let totalH = eyebrowSize
+      + gapBetweenEyebrowAndLoc
+      + locLines.length * locLineH
+      + gapBetweenLocAndSubloc
+      + sublocLines.length * sublocLineH
+      + gapBeforeRule
+      + 1 // rule
+      + gapAfterRule
+      + rankLineH
+      + gapBetweenRankAndGems
+      + gemsSize;
+    if (streakLine) totalH += gapBeforeStreak + streakSize;
+
+    let y = centerY - totalH / 2;
+    const tx = col2X;
+
+    // eyebrow
+    oc.textBaseline = 'top';
+    oc.font = `500 ${eyebrowSize}px ${MONO}`;
+    oc.fillStyle = AMBER;
+    drawSpacedText(oc, eyebrowText, tx, y, eyebrowSpacing);
+    y += eyebrowSize + gapBetweenEyebrowAndLoc;
+
+    // location (multi-line, top-baseline; advance by locLineH per line)
+    oc.font = `800 ${locSize}px ${FRAUNCES}`;
+    oc.fillStyle = MIST;
+    for (const line of locLines) {
+      oc.fillText(line, tx, y);
+      y += locLineH;
+    }
+    y += gapBetweenLocAndSubloc;
+
+    // sublocation
+    oc.font = `italic 400 ${sublocSize}px ${FRAUNCES}`;
+    oc.fillStyle = MIST_DIM;
+    for (const line of sublocLines) {
+      oc.fillText(line, tx, y);
+      y += sublocLineH;
+    }
+    y += gapBeforeRule;
+
+    // rule
+    const ruleW = col2 * 0.46;
+    const ruleH = Math.max(1, H * 0.001);
+    const ruleG = oc.createLinearGradient(tx, y, tx + ruleW, y);
+    ruleG.addColorStop(0, 'rgba(240, 165, 0, 0.55)');
+    ruleG.addColorStop(1, 'rgba(240, 165, 0, 0)');
+    oc.fillStyle = ruleG;
+    oc.fillRect(tx, y, ruleW, ruleH);
+    y += 1 + gapAfterRule;
+
+    // rank label + name on a shared baseline
+    oc.textBaseline = 'alphabetic';
+    const rankBaseline = y + rankNameSize;
+    oc.font = `500 ${rankLabelSize}px ${MONO}`;
+    oc.fillStyle = MIST_FAINT;
+    const rankLabelSpacing = 0.30 * rankLabelSize;
+    drawSpacedText(oc, rankLabel, tx, rankBaseline, rankLabelSpacing);
+    const rankLabelW = measureSpacedWidth(oc, rankLabel, rankLabelSpacing);
+    oc.font = `500 ${rankNameSize}px ${MONO}`;
+    oc.fillStyle = AMBER;
+    const rankNameSpacing = 0.02 * rankNameSize;
+    drawSpacedText(oc, rankName, tx + rankLabelW + 0.6 * em, rankBaseline, rankNameSpacing);
+    y += rankLineH + gapBetweenRankAndGems;
+
+    // gems line
+    oc.textBaseline = 'top';
+    oc.font = `400 ${gemsSize}px ${MONO}`;
+    oc.fillStyle = MIST_DIM;
+    drawSpacedText(oc, gemsLine, tx, y, 0.12 * gemsSize);
+    y += gemsSize;
+
+    // streak line (with teal dot) — only if active
+    if (streakLine) {
+      y += gapBeforeStreak;
+      const dotR = streakSize * 0.27;
+      const dotCx = tx + dotR + 1;
+      const dotCy = y + streakSize / 2;
+      oc.save();
+      oc.shadowColor = TEAL;
+      oc.shadowBlur = streakSize * 0.5;
+      oc.fillStyle = TEAL;
+      oc.beginPath();
+      oc.arc(dotCx, dotCy, dotR, 0, Math.PI * 2);
+      oc.fill();
+      oc.restore();
+      oc.font = `400 ${streakSize}px ${MONO}`;
+      oc.fillStyle = TEAL;
+      drawSpacedText(oc, streakLine.toLowerCase(), dotCx + dotR + 0.5 * em, y, 0.20 * streakSize);
+    }
+
+    // ── brand mark (bottom-right) ──
+    const brandSize = 0.5 * em;
+    const brandSpacing = 0.32 * brandSize;
+    const brandText = 'the zora files';
+    oc.font = `400 ${brandSize}px ${MONO}`;
+    oc.fillStyle = 'rgba(200, 212, 224, 0.32)';
+    oc.textBaseline = 'alphabetic';
+    oc.textAlign = 'left'; // letter-spacing + right-align needs manual offset
+    const brandW = measureSpacedWidth(oc, brandText, brandSpacing);
+    drawSpacedText(oc, brandText, W - W * 0.05 - brandW, H - H * 0.04, brandSpacing);
+
+    return off;
+  }
+
+  async function exportPNG(mode) {
+    const res = getResolution();
+    const filename = buildFilename(mode);
+    const btn = mode === 'medallion' ? xEls.medallion : xEls.full;
+
+    btn.disabled = true;
+    try {
+      // Make sure custom fonts are ready before measuring/drawing text.
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      let canvas;
+      if (mode === 'medallion') {
+        canvas = renderMedallionOnly(res); // res = 1080 or 2160
+      } else {
+        // Full card: 16:9 from the height target.
+        const H = res;
+        const W = Math.round(H * 16 / 9);
+        canvas = renderFullCard(W, H);
+      }
+
+      await new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (!blob) return reject(new Error('toBlob returned null'));
+          triggerDownload(blob, filename);
+          resolve();
+        }, 'image/png');
+      });
+
+      showStatus(`exported · ${filename}`);
+    } catch (err) {
+      console.error('[zora-export]', err);
+      showStatus('export failed · see console');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  xEls.full.addEventListener('click', () => exportPNG('full'));
+  xEls.medallion.addEventListener('click', () => exportPNG('medallion'));
+  for (const r of xEls.resRadios()) r.addEventListener('change', refreshFname);
+
+  update();
+})();
+</script>

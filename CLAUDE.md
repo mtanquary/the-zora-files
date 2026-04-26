@@ -36,7 +36,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Episode folders** follow `S01E01-short-title` naming
 - **Episode titles** follow `S01E01 — "The Benchmark" — Lost Dutchman SP` format
 - **All UI copy** uses sentence case — never ALL CAPS or Title Case
-- **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; never use pure black or pure white
+- **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; twilight violet (`#7A5FB8`) is reserved for Discovery elements only; never use pure black or pure white
 - **Geographic scope**: Arizona is home base but the show is global. **Never hardcode Arizona or "desert" as assumptions** in website architecture, data models, or UI copy. All fields must work for any location worldwide.
 
 ## Scoring system
@@ -50,6 +50,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Level-up system
 
 D&D-style progression, 11 levels (0–10). Purely participation-gated — 6 expeditions per level, 60 total to reach Finding Zora. Score has no effect on leveling (it drives leaderboard position instead). Each level earns a unique medallion. Level 10 "Finding Zora" is the narrative endpoint. Full level table and medallion palette in ZORA_PROJECT.md.
+
+Each episode's title card shows the player's **opening state** (rank + gem count at the start of the expedition); the episode closes with one of three ceremony types — medallion transition (gem 1 of a new arc), single gem placement (gems 2–5), or medallion awakening (gem 6). Pattern across each 6-episode arc: transition → small × 4 → awakening. Full rule and worked examples in ZORA_PROJECT.md.
 
 ## Website — thezorafiles.com
 

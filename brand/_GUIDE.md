@@ -13,6 +13,7 @@ Store color palette reference files here — exported swatches (.ase, .clr), soc
 | Zora amber | `#F0A500` | Primary accent |
 | Sunrise orange | `#E8520A` | Secondary accent, conditions bar |
 | Eos teal | `#1D9E75` | Eos Index only |
+| Twilight violet | `#7A5FB8` | Discovery only |
 | Dawn mist | `#C8D4E0` | Body text on dark |
 
 ### typography/
@@ -36,5 +37,6 @@ Reusable design templates:
 ## Rules
 - Amber is the primary accent everywhere
 - Teal is reserved exclusively for Eos Index elements
+- Twilight violet is reserved exclusively for Discovery elements
 - Never use pure black (#000000) or pure white (#ffffff)
 - All copy in sentence case — never ALL CAPS or Title Case in UI

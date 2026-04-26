@@ -86,6 +86,82 @@ export default function RulesPage() {
         ))}
       </div>
 
+      {/* Discovery points */}
+      <Ornament label="Discovery points" />
+
+      <p>
+        Every expedition is a chance to unlock a new species, plant, geographic
+        feature, or historical site. Points scale non-linearly by rarity — a
+        single exceptional find can rival a full effort rating.
+      </p>
+
+      <p className="mt-4">
+        A discovery&apos;s <strong>first unlock</strong> across the series earns
+        the full tier value. Common and uncommon finds score zero on repeat.
+        Rare and above earn a single token point on later outings — presence is
+        still worth noting, even when it isn&apos;t new.
+      </p>
+
+      <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden my-4">
+        <table className="w-full font-mono text-xs">
+          <thead>
+            <tr className="bg-zora-amber/[0.12] border-b border-zora-amber">
+              <th className="px-4 py-2.5 text-left text-[0.65rem] tracking-wider text-zora-amber uppercase">
+                Rarity
+              </th>
+              <th className="px-4 py-2.5 text-left text-[0.65rem] tracking-wider text-zora-amber uppercase">
+                First unlock
+              </th>
+              <th className="px-4 py-2.5 text-right text-[0.65rem] tracking-wider text-zora-amber uppercase">
+                Subsequent
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { tier: "Common", first: "5–10 pts", repeat: "0" },
+              { tier: "Uncommon", first: "15–20 pts", repeat: "0" },
+              { tier: "Rare", first: "25–35 pts", repeat: "1 pt" },
+              { tier: "Very rare", first: "40–50 pts", repeat: "1 pt" },
+              { tier: "Exceptional", first: "60–75 pts", repeat: "1 pt" },
+            ].map((r) => (
+              <tr
+                key={r.tier}
+                className="border-b border-dawn-mist/[0.05] even:bg-white/[0.02] last:border-b-0"
+              >
+                <td className="px-4 py-2 text-dawn-mist">{r.tier}</td>
+                <td className="px-4 py-2 text-amber-light font-bold">
+                  {r.first}
+                </td>
+                <td className="px-4 py-2 text-right text-mist-dim">
+                  {r.repeat}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ScoreSection title="What counts as a discovery" color="teal">
+        <ScoreRow label="Wildlife — birds, mammals, reptiles, insects" value="tiered" color="teal" />
+        <ScoreRow label="Plant — notable or rare species" value="tiered" color="teal" />
+        <ScoreRow label="Geographic — formations, water bodies, elevation records" value="tiered" color="teal" />
+        <ScoreRow label="Cultural / historical — petroglyphs, ruins, landmarks" value="see below" color="teal" />
+      </ScoreSection>
+
+      <ScoreSection title="Human history subcategory" color="orange">
+        <ScoreRow label="Minor historical marker" value="5 pts" color="orange" />
+        <ScoreRow label="Notable site (ruins, mining camp)" value="10 pts" color="orange" />
+        <ScoreRow label="Significant site (petroglyphs, ceremonial)" value="15–20 pts" color="orange" />
+      </ScoreSection>
+
+      <Lore>
+        Discovery points roll into the Zora Score, never the Eos Index. A
+        modest sky at a discovery-rich location still earns a respectable
+        Zora Score. The sunrise is one story. What you found on the way up is
+        another.
+      </Lore>
+
       {/* Zora Score */}
       <Ornament label="The Zora Score" />
 
@@ -108,8 +184,15 @@ export default function RulesPage() {
       <Ornament label="Leveling up" />
 
       <p>
-        Six expeditions per level. Score has no effect on leveling. It drives
-        leaderboard position instead. Show up, do the work, level up.
+        Every player begins as <strong>Scout</strong>. Each completed expedition
+        places one gem on the next medallion in your sequence. After 6 gems,
+        that medallion awakens and the next one begins. Your first expedition
+        advances you from Scout to Trailhead with 1 gem set.
+      </p>
+
+      <p className="mt-4">
+        Score has no effect on leveling. It drives leaderboard position
+        instead. Show up, do the work, level up.
       </p>
 
       <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden my-4">

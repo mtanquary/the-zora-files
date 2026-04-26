@@ -28,3 +28,11 @@ node_modules/
 
 # LUT files can be large
 *.cube
+
+# Tooling export intermediates (PNG frames + node_modules)
+tooling/*/frames/
+tooling/*/node_modules/
+tooling/*/package-lock.json
+videos/.gallery/*
+videos/CacheClip
+videos/Resolve Project Backups

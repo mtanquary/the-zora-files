@@ -42,6 +42,6 @@ Every episode gets two scores:
 | Conditions | 20 | Effort to reach (10) + Weather/environmental challenge (10) |
 
 ### Zora Score (no fixed ceiling)
-Eos Index (0-100) + Effort Rating (0-20) + Discovery Points (variable)
+Eos Index (0-100) + Effort Rating (0-40, non-linear) + Discovery Points (variable)
 
 See [ZORA_PROJECT.md](../ZORA_PROJECT.md) for full point tables.

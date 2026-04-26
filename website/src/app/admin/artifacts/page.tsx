@@ -100,6 +100,14 @@ const ARTIFACTS = [
     gem: null,
     description: "The shareable visual artifact generated per episode. Photo, scores, effort sundogs, medallion emblem, brand footer.",
   },
+  {
+    file: "intro_title_card.html",
+    title: "Intro title card builder",
+    level: null,
+    metal: null,
+    gem: null,
+    description: "Unit B of the episode intro — 16:9 title card with medallion, opening-state rank and gem count, optional streak. Live controls plus PNG export at 1080p or 4K (full card or medallion only on transparent).",
+  },
 ];
 
 const LEVEL_COLORS: Record<number, string> = {

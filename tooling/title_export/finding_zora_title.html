@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Finding Zora — title</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500&family=Crimson+Text:ital,wght@1,400&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pre-dawn:        #0D0F14;
+    --pre-dawn-mid:    #141820;
+    --zora-amber:      #F0A500;
+    --amber-light:     #FFD166;
+    --sunrise-orange:  #E8520A;
+    --dawn-mist:       #C8D4E0;
+    --mist-dim:        #8A9AAE;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 1920px;
+    height: 1080px;
+    background: transparent;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+  canvas#bg {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+  }
+  /* Composition stack — flex column centered horizontally, anchored toward
+     top-center so the wordmark sits above the mountain horizon. */
+  .stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 96px;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  /* "the zora files presents" — eyebrow */
+  .eyebrow {
+    margin: 0;
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--zora-amber);
+    opacity: 0;
+  }
+
+  /* SVG compass — geometric dawn symbol */
+  .sun-icon {
+    margin-top: 38px;
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+
+  /* "Finding / Zora" stacked wordmark */
+  .wordmark {
+    margin: 28px 0 0 0;
+    font-family: 'Cinzel Decorative', Georgia, serif;
+    font-weight: 700;
+    font-size: 138px;
+    line-height: 0.96;
+    color: var(--zora-amber);
+    text-shadow: 0 0 70px rgba(240, 165, 0, 0.35);
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: 50% 50%;
+  }
+
+  /* "the pursuit of the perfect sunrise" */
+  .subhead {
+    margin: 18px 0 0 0;
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dawn-mist);
+    opacity: 0;
+  }
+
+  /* Amber gradient ornament rule */
+  .rule {
+    margin-top: 22px;
+    width: 220px;
+    height: 1.5px;
+    background: linear-gradient(90deg,
+      rgba(240, 165, 0, 0) 0%,
+      rgba(240, 165, 0, 0.85) 50%,
+      rgba(240, 165, 0, 0) 100%);
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    opacity: 0;
+  }
+
+  /* Italic body — three lines. Use dawn-mist (brighter than the
+     website's mist-dim) since our backdrop has more amber bleed than
+     the site's opaque pre-dawn hero. */
+  .body-block {
+    margin-top: 24px;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--dawn-mist);
+    text-shadow: 0 1px 6px rgba(13,15,20,0.55);
+    opacity: 0;
+  }
+  .body-block p { margin: 0; }
+
+  /* Pill button */
+  .pill {
+    margin-top: 32px;
+    display: inline-block;
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--zora-amber);
+    border: 1px solid rgba(240, 165, 0, 0.32);
+    border-radius: 3px;
+    padding: 8px 22px;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+  <canvas id="bg" width="1920" height="1080"></canvas>
+
+  <div class="stage">
+    <p class="eyebrow" id="eyebrow">the zora files presents</p>
+
+    <div class="sun-icon" id="sunIcon">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+        <circle cx="32" cy="32" r="29" fill="none" stroke="rgba(240,165,0,0.25)" stroke-width="0.5"/>
+        <circle cx="32" cy="32" r="22" fill="none" stroke="rgba(240,165,0,0.15)" stroke-width="0.5"/>
+        <g stroke="rgba(240,165,0,0.55)" stroke-width="1" stroke-linecap="round">
+          <line x1="32" y1="3"   x2="32" y2="10"/>
+          <line x1="32" y1="54"  x2="32" y2="61"/>
+          <line x1="3"  y1="32"  x2="10" y2="32"/>
+          <line x1="54" y1="32"  x2="61" y2="32"/>
+          <line x1="10.2" y1="10.2" x2="15.3" y2="15.3"/>
+          <line x1="48.7" y1="48.7" x2="53.8" y2="53.8"/>
+          <line x1="53.8" y1="10.2" x2="48.7" y2="15.3"/>
+          <line x1="15.3" y1="48.7" x2="10.2" y2="53.8"/>
+        </g>
+        <circle cx="32" cy="32" r="9" fill="rgba(240,165,0,0.12)" stroke="rgba(240,165,0,0.75)" stroke-width="1"/>
+        <circle cx="32" cy="32" r="5" fill="rgba(240,165,0,0.35)"/>
+      </svg>
+    </div>
+
+    <h1 class="wordmark" id="wordmark">Finding<br>Zora</h1>
+
+    <p class="subhead" id="subhead">the pursuit of the perfect sunrise</p>
+
+    <div class="rule" id="rule"></div>
+
+    <div class="body-block" id="body">
+      <p>A game played before most people wake up.</p>
+      <p>Scored by sky quality, discovery, and the audacity</p>
+      <p>to show up somewhere difficult in the dark.</p>
+    </div>
+
+    <span class="pill" id="pill">Season one · Finding Zora</span>
+  </div>
+
+<script>
+// ───────────────────────────────────────────────────────────────────────
+//  Animated sunrise backdrop — adapted from website/src/components/
+//  living-cover.tsx. Frame-based & deterministic. The pre-dawn dark
+//  sky stays TRANSPARENT (alpha 0) so Fusion's backdrop shows through;
+//  warmth, stars, sun, glow, rays, and mountains are drawn as content
+//  with proper alpha.
+// ───────────────────────────────────────────────────────────────────────
+
+const cv = document.getElementById('bg');
+const c  = cv.getContext('2d');
+const W  = 1920;
+const H  = 1080;
+
+// Deterministic PRNG so star positions are stable across runs.
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function() {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const stars = (() => {
+  const r = mulberry32(20260424);
+  const arr = [];
+  for (let i = 0; i < 110; i++) {
+    arr.push({
+      x: r() * W,
+      y: r() * H * 0.62,           // sit in upper sky
+      rad: r() * 1.6 + 0.6,
+      base: r() * 0.4 + 0.3,
+      speed: r() * 2 + 1,
+      phase: r() * Math.PI * 2,
+      amber: r() < 0.15,
+    });
+  }
+  return arr;
+})();
+
+// Mountain ridge points (780-wide source → scaled to 1920).
+// mtZone = bottom ~30% of frame. These map a 160-tall ridge into mtHeight px.
+const ridgePoints = [
+  [0,160],[70,105],[130,125],[200,80],[280,100],[360,58],
+  [440,82],[520,50],[600,72],[680,42],[740,65],[780,55],
+];
+const midRidge = [
+  [0,148],[60,155],[130,140],[200,152],[280,135],[360,148],
+  [440,130],[520,145],[600,136],[680,148],[780,138],
+];
+const fgRidge = [
+  [0,158],[90,162],[200,155],[320,160],
+  [440,153],[560,159],[680,154],[780,158],
+];
+const mtHeight = H * 0.30;          // mountain zone vertical span
+const mtBase   = H;                 // bottom edge
+const scX      = W / 780;
+const ridgeY   = (y) => mtBase - (160 - y) * (mtHeight / 160);
+
+function clipAboveRidge() {
+  c.beginPath();
+  c.moveTo(0, 0);
+  c.lineTo(W, 0);
+  for (let i = ridgePoints.length - 1; i >= 0; i--) {
+    c.lineTo(ridgePoints[i][0] * scX, ridgeY(ridgePoints[i][1]));
+  }
+  c.closePath();
+}
+
+function drawSaguaro(centerX, baseY, height, arms) {
+  const trunkW = 5;
+  const armW   = 4;
+  const r      = trunkW / 2;
+  c.beginPath();
+  c.roundRect(centerX - trunkW / 2, baseY - height, trunkW, height, [r, r, 0, 0]);
+  c.fill();
+  for (const a of arms) {
+    const armBase = baseY - height * a.heightPct;
+    const reach   = a.reach * a.side;
+    const elbowX  = centerX + reach;
+    const elbowR  = armW / 2;
+    c.beginPath();
+    c.roundRect(
+      Math.min(centerX, elbowX),
+      armBase - armW / 2,
+      Math.abs(reach) + armW / 2,
+      armW,
+      elbowR
+    );
+    c.fill();
+    c.beginPath();
+    c.roundRect(elbowX - armW / 2, armBase - a.rise, armW, a.rise, [elbowR, elbowR, 0, 0]);
+    c.fill();
+  }
+}
+
+function renderBackdrop(n) {
+  // sunProgress: 0 → 0.55 across the 96 frames. 0.55 lands us in the
+  // "amber peaks before crest" sweet spot (the most cinematic moment).
+  const sunProgress = Math.min((n / 95) * 0.55, 1);
+  const elapsed     = n / 24;            // for twinkle/ray-wobble phase
+
+  c.clearRect(0, 0, W, H);
+
+  // Atmospheric warmth is supplied entirely by the sun glow + rays
+  // below. Painting a broad sky tint produces too much warm bleed for
+  // a transparent overlay (the website gets away with it because it
+  // paints an opaque pre-dawn base; we can't).
+  const preCrest  = Math.exp(-Math.pow((sunProgress - 0.55) / 0.2, 2));
+  const warmth    = sunProgress * 0.3;
+  const intensity = warmth + preCrest * 0.7;
+
+  // ─── Stars ───
+  const starAlpha = Math.max(0, 1 - sunProgress * 1.5);
+  if (starAlpha > 0) {
+    for (const s of stars) {
+      const twinkle = Math.sin(elapsed * s.speed + s.phase) * 0.3 + s.base;
+      const a = twinkle * starAlpha;
+      if (a < 0.05) continue;
+      c.beginPath();
+      c.arc(s.x, s.y, s.rad, 0, Math.PI * 2);
+      c.fillStyle = s.amber
+        ? `rgba(240,165,0,${a.toFixed(3)})`
+        : `rgba(200,212,224,${a.toFixed(3)})`;
+      c.fill();
+    }
+  }
+
+  // ─── Sun position (above the foreground ridge as it crests) ───
+  const horizonY = H * 0.82;
+  const sunY     = horizonY + 40 - sunProgress * 80;
+  const sunX     = W * 0.5;
+  const sunR     = 30;
+
+  // ─── Sun glow (clipped above ridge) ─── Bumped vs the website's
+  // smaller hero so it reads at 1920px width.
+  if (sunProgress > 0.05) {
+    c.save();
+    clipAboveRidge();
+    c.clip();
+    const glowR = 240 + sunProgress * 540;
+    const glow = c.createRadialGradient(sunX, sunY, 0, sunX, sunY, glowR);
+    const gI = Math.min(sunProgress * 0.7, 0.35) + preCrest * 0.45;
+    glow.addColorStop(0,    `rgba(240,165,0,${gI.toFixed(3)})`);
+    glow.addColorStop(0.30, `rgba(232,82,10,${(gI * 0.55).toFixed(3)})`);
+    glow.addColorStop(0.65, `rgba(232,82,10,${(gI * 0.18).toFixed(3)})`);
+    glow.addColorStop(1,    'rgba(232,82,10,0)');
+    c.fillStyle = glow;
+    c.fillRect(0, 0, W, H);
+    c.restore();
+  }
+
+  // ─── Crepuscular rays (clipped above ridge) ───
+  if (sunProgress > 0.08) {
+    c.save();
+    clipAboveRidge();
+    c.clip();
+    const rayCount = 14;
+    const raySpread = Math.PI * 0.7;
+    const rayAlpha  = Math.min(sunProgress * 0.45, 0.18);
+    const maxRayLen = 220 + sunProgress * 520;
+
+    for (let i = 0; i < rayCount; i++) {
+      const baseAngle = -Math.PI / 2;
+      const spread    = (i / (rayCount - 1) - 0.5) * raySpread;
+      const wobble    = Math.sin(elapsed * 0.3 + i * 1.7) * 0.015;
+      const a         = baseAngle + spread + wobble;
+      const lenVar    = 0.6 + Math.sin(i * 2.3) * 0.4;
+      const rayLen    = maxRayLen * lenVar;
+      const halfW     = (3 + sunProgress * 5 + Math.sin(i * 3.1) * 2);
+      const perpX     = Math.cos(a + Math.PI / 2);
+      const perpY     = Math.sin(a + Math.PI / 2);
+      const endX      = sunX + Math.cos(a) * rayLen;
+      const endY      = sunY + Math.sin(a) * rayLen;
+
+      const rg = c.createLinearGradient(sunX, sunY, endX, endY);
+      const aA = rayAlpha * (0.55 + Math.sin(elapsed * 0.5 + i * 0.9) * 0.3);
+      rg.addColorStop(0,   `rgba(255,200,80,${aA.toFixed(3)})`);
+      rg.addColorStop(0.3, `rgba(240,165,0,${(aA*0.6).toFixed(3)})`);
+      rg.addColorStop(1,   'rgba(232,82,10,0)');
+
+      c.beginPath();
+      c.moveTo(sunX + perpX * halfW * 0.3, sunY + perpY * halfW * 0.3);
+      c.lineTo(endX + perpX * halfW, endY + perpY * halfW);
+      c.lineTo(endX - perpX * halfW, endY - perpY * halfW);
+      c.lineTo(sunX - perpX * halfW * 0.3, sunY - perpY * halfW * 0.3);
+      c.closePath();
+      c.fillStyle = rg;
+      c.fill();
+    }
+    c.restore();
+  }
+
+  // ─── Sun disk ───
+  if (sunY < horizonY + sunR) {
+    c.save();
+    clipAboveRidge();
+    c.clip();
+    const outer = c.createRadialGradient(sunX, sunY, sunR * 0.7, sunX, sunY, sunR * 3);
+    outer.addColorStop(0,   'rgba(255,220,120,0.35)');
+    outer.addColorStop(0.4, 'rgba(240,165,0,0.12)');
+    outer.addColorStop(1,   'rgba(232,82,10,0)');
+    c.beginPath(); c.arc(sunX, sunY, sunR * 3, 0, Math.PI * 2);
+    c.fillStyle = outer; c.fill();
+
+    c.beginPath(); c.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+    const disk = c.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunR);
+    disk.addColorStop(0,   'rgba(255,252,230,0.95)');
+    disk.addColorStop(0.4, 'rgba(255,230,150,0.90)');
+    disk.addColorStop(0.8, 'rgba(240,180,60,0.85)');
+    disk.addColorStop(1,   'rgba(232,120,20,0.70)');
+    c.fillStyle = disk; c.fill();
+    c.restore();
+  }
+
+  // ─── Mountain ridges (3 layers) ───
+  const tracePolygon = (pts, fill) => {
+    c.beginPath();
+    for (let i = 0; i < pts.length; i++) {
+      const [px, py] = pts[i];
+      if (i === 0) c.moveTo(px * scX, ridgeY(py));
+      else c.lineTo(px * scX, ridgeY(py));
+    }
+    c.lineTo(W, H);
+    c.lineTo(0, H);
+    c.closePath();
+    c.fillStyle = fill;
+    c.fill();
+  };
+  tracePolygon(ridgePoints, 'rgba(20,24,32,0.55)');
+  tracePolygon(midRidge,    'rgba(20,24,32,0.85)');
+  tracePolygon(fgRidge,     '#0D0F14');
+
+  // ─── Saguaro silhouettes ───
+  c.fillStyle = '#0D0F14';
+  drawSaguaro(W * 0.34, ridgeY(152), 90, [
+    { side: -1, heightPct: 0.55, reach: 24, rise: 38 },
+    { side:  1, heightPct: 0.40, reach: 20, rise: 32 },
+  ]);
+  drawSaguaro(W * 0.66, ridgeY(154), 70, [
+    { side:  1, heightPct: 0.50, reach: 22, rise: 34 },
+  ]);
+}
+
+// ───────────────────────────────────────────────────────────────────────
+//  Text reveal — phased opacities + transforms driven by frame number.
+// ───────────────────────────────────────────────────────────────────────
+
+const eyebrow = document.getElementById('eyebrow');
+const sunIcon = document.getElementById('sunIcon');
+const wordmark = document.getElementById('wordmark');
+const subhead = document.getElementById('subhead');
+const rule    = document.getElementById('rule');
+const body    = document.getElementById('body');
+const pill    = document.getElementById('pill');
+
+const outExpo = t => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
+function phase(n, start, end) {
+  if (n <= start) return 0;
+  if (n >= end)   return 1;
+  return outExpo((n - start) / (end - start));
+}
+
+// Frame budget — 96 frames @ 24fps = 4.0s
+//   throughout : sunrise backdrop animates continuously
+//    6– 24     : eyebrow + SunIcon fade in
+//   18– 42     : wordmark fades + scales 0.96 → 1.00
+//   30– 48     : subhead fades
+//   36– 54     : ornament rule scales from center
+//   42– 66     : italic body lines fade
+//   54– 78     : pill fades
+//   78– 96     : hold + slow shimmer on amber elements
+window.renderFrameAt = function(n) {
+  renderBackdrop(n);
+
+  const eyebrowP = phase(n,  6, 24);
+  const iconP    = phase(n,  6, 24);
+  const wmP      = phase(n, 18, 42);
+  const subP     = phase(n, 30, 48);
+  const ruleP    = phase(n, 36, 54);
+  const bodyP    = phase(n, 42, 66);
+  const pillP    = phase(n, 54, 78);
+
+  let shimmer = 1.0;
+  if (n >= 78) {
+    const t = (n - 78) / 18;
+    shimmer = 0.96 + Math.sin(t * Math.PI * 2) * 0.04;
+  }
+
+  eyebrow.style.opacity   = (eyebrowP * 0.85 * shimmer).toFixed(4);
+  sunIcon.style.opacity   = (iconP * 0.85 * shimmer).toFixed(4);
+  wordmark.style.opacity  = wmP.toFixed(4);
+  wordmark.style.transform = `scale(${(0.96 + 0.04 * wmP).toFixed(4)})`;
+  subhead.style.opacity   = (subP * 0.95).toFixed(4);
+  rule.style.opacity      = (ruleP * shimmer).toFixed(4);
+  rule.style.transform    = `scaleX(${ruleP.toFixed(4)})`;
+  body.style.opacity      = (bodyP * 0.85).toFixed(4);
+  pill.style.opacity      = (pillP * 0.85 * shimmer).toFixed(4);
+};
+
+// Initial paint
+renderFrameAt(0);
+
+// Wait for fonts before signaling readiness
+document.fonts.ready.then(() => {
+  window.__titleReady = true;
+});
+</script>
+</body>
+</html>

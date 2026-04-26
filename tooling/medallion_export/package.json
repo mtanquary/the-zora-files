@@ -1,0 +1,13 @@
+{
+  "name": "medallion-export",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Renders the Desert Fox medallion canvas animation to transparent PNG frames for video compositing.",
+  "scripts": {
+    "render": "node render.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0",
+    "sharp": "^0.34.5"
+  }
+}

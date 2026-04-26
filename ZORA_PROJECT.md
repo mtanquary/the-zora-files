@@ -44,11 +44,13 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 | Zora amber | `#F0A500` | Primary accent — titles, highlights, UI |
 | Sunrise orange | `#E8520A` | Secondary accent — conditions score bar |
 | Eos teal | `#1D9E75` | Eos Index branding only — setting score bar |
+| Twilight violet | `#7A5FB8` | Discovery accent — Discovery Log UI, share card discovery stats strip, Discovery row in the Zora Score intro motion graphic |
 | Dawn mist | `#C8D4E0` | Body text on dark backgrounds |
 
 **Rules:**
 - Amber is the primary accent across all platforms
 - Teal is reserved exclusively for Eos Index elements
+- Twilight violet is reserved exclusively for Discovery elements — it pairs chromatically with amber, teal, and sunrise orange without overlap
 - Never use pure black (#000000) or pure white (#ffffff)
 - Pre-dawn dark background is the signature look
 
@@ -187,7 +189,7 @@ The medallion is not decoration — it is the progression spine of the entire si
 ZORA SCORE = Eos Index + Effort Rating + Discovery Points
 ```
 - **Eos Index** is the pure sunrise quality score (0–100). Photography-focused viewers follow this.
-- **Effort Rating** is a single post-expedition assessment of journey difficulty (0–20 pts, 5 levels).
+- **Effort Rating** is a single post-expedition assessment of journey difficulty (0–40 pts, 5 levels, non-linear).
 - **Discovery Points** are earned from wildlife, flora, geographic, and cultural encounters logged during the expedition.
 - **Zora Score** is the full episode score. Adventure-focused viewers follow this.
 - Both the Eos Index and Zora Score are displayed every episode. The Eos Index is the largest single contributor.
@@ -386,6 +388,31 @@ Each level has a distinct metallic hue and a matched gemstone color:
 - Virtual display case on website shows all earned medallions
 - Physical medallion merch is a future consideration for superfans
 - Level names are never displayed on the expedition share card — the medallion icon communicates level identity visually
+
+### Episode display rule — opening state + closing ceremony
+
+Each episode's dynamic title card displays the player's **opening state**: their current rank and gem count *at the start* of that expedition. The episode then ends with a ceremony that places the next gem or, on the 6th gem, awakens the current medallion's emblem. The next episode's title card shows what was earned in the previous episode's closing ceremony.
+
+Worked examples:
+
+- **Episode 1** opens as Scout with 0 gems and closes with a Scout → Trailhead transition ceremony placing the first Trailhead gem.
+- **Episode 2** opens as Trailhead with 1 of 6 gems set.
+- **Episode 6** opens as Trailhead with 5 of 6 gems set, and closes with the Trailhead awakening (emblem reveals on the 6th gem).
+- **Episode 7** opens as Trailhead complete and Desert Fox 0 of 6, and closes with the Trailhead → Desert Fox transition ceremony placing the first Desert Fox gem.
+
+Implication: **Scout is no longer purely implicit lore** — it is the actual displayed starting state of Episode 1. The viewer sees the Scout token on screen, then watches the player earn their way out of it.
+
+### The three ceremony types
+
+Each episode ends with one of three ceremony types depending on which gem is being placed in the 6-episode arc. This creates a small-small-small-small-small-big rhythmic pattern across each arc.
+
+| # | Ceremony | When it fires | What happens | Production scope |
+|---|----------|--------------|--------------|------------------|
+| 1 | **Medallion transition ceremony** | End of every "gem 1" episode in a new arc — episodes 1, 7, 13, 19, 25, 31, 37, 43, 49, 55 | The new medallion appears and the first gem places | Larger scope than a single gem placement |
+| 2 | **Single gem placement ceremony** | End of episodes 2–5 within each 6-episode arc (gems 2, 3, 4, 5) | The existing medallion gains a single new gem with a soft chime | Smaller scope |
+| 3 | **Medallion awakening ceremony** | End of every "gem 6" episode — episodes 6, 12, 18, 24, 30, 36, 42, 48, 54, 60 | The 6th gem places and the medallion's emblem fully reveals (the ghost becomes the engraved emblem) | Largest scope of the three |
+
+The pattern across each 6-episode arc is therefore: **transition → small → small → small → small → awakening**. Production planning should budget the heavier ceremony work against episodes 1 and 6 of each arc.
 
 ---
 
@@ -608,7 +635,7 @@ New record categories may be added as the pursuit evolves (e.g., highest elevati
   }
 
   effort_rating: number              // 1–5 (Roadside/Trail/Summit/Remote/Expedition)
-  effort_points: number              // 0, 5, 10, 15, or 20
+  effort_points: number              // 0, 5, 15, 25, or 40 (non-linear)
 
   zora_score: {
     eos_index: number                // from above
@@ -777,3 +804,8 @@ Key decision points and their rationale. Details are documented in the relevant 
 - **2026-03-21** — Zora Score simplified: all granular bonus categories replaced with a single Effort Rating (5 levels, 0–20 pts). Streak became visual honor only — no points
 - **2026-03-21** — Level progression confirmed as purely participation-gated: 6 expeditions per level, score irrelevant
 - **2026-03-21** — Share card scoring resolved: Eos Index as primary display, effort via sundog indicators, Zora Score not shown as separate number
+- **2026-04-20** — Effort Rating scale changed from linear 0–20 (0/5/10/15/20) to non-linear 0–40 (0/5/15/25/40). Rationale: linear scale undervalued Expedition-tier commitment relative to Roadside. Non-linear spacing makes each level a meaningfully harder step, so a true Expedition-level outing can rival the Eos Index itself as a scoring input. Migration file: `docs/sql/update-effort-points.sql`
+- **2026-04-26** — Twilight violet (`#7A5FB8`) added to the brand palette as the dedicated Discovery accent. Used on Discovery Log UI, share card discovery stats strip, and the Discovery row in the Zora Score intro motion graphic. Pairs chromatically with amber, teal, and sunrise without overlap.
+- **2026-04-26** — Episode display rule formalized: each episode's title card shows the player's *opening state* (rank + gem count at the start of the expedition); the closing ceremony places the next gem or awakens the medallion. Scout is therefore an explicit on-screen starting state for Episode 1, not implicit lore.
+- **2026-04-26** — Three ceremony types defined: medallion transition (gem 1, episodes 1/7/13/…), single gem placement (gems 2–5), and medallion awakening (gem 6, episodes 6/12/18/…). Pattern: transition → small × 4 → awakening across each 6-episode arc. Production planning budgets heavier ceremony work against episodes 1 and 6 of each arc.
+- **2026-04-26** — Records Board confirmed to start fresh with all-TBD values. The pre-series Eos Index 85 (ocean cliff calibration photo) is *calibration context only* and not an active record entry — Season 1 is the first show data on the board.

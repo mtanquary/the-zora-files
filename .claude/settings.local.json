@@ -36,7 +36,30 @@
       "Bash(cp -r rules finding-zora/rules)",
       "Bash(node scripts/score-archives.mjs)",
       "Bash(npm ls:*)",
-      "Bash(node scripts/export-social-images.mjs)"
+      "Bash(node scripts/export-social-images.mjs)",
+      "Bash(awk -F. '{print tolower\\($NF\\)}')",
+      "Bash(node scripts/organize-photos.mjs \"C:/Users/mattt/OneDrive/Pictures/zora-files\")",
+      "Bash(node scripts/organize-photos.mjs \"C:/Users/mattt/OneDrive/Pictures/zora-files\" --apply)",
+      "Bash(npm run *)",
+      "Bash(ffmpeg -version)",
+      "Bash(mkdir -p /c/Users/mattt/Documents/the-zora-files/tooling/medallion_export/frames)",
+      "Bash(mkdir -p /c/Users/mattt/Documents/the-zora-files/brand/video/intros)",
+      "Bash(node render.js)",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,pix_fmt /c/Users/mattt/Documents/the-zora-files/tooling/medallion_export/frames/frame_0030.png)",
+      "Bash(ffmpeg -v error -i /c/Users/mattt/Documents/the-zora-files/tooling/medallion_export/frames/frame_0030.png -vf \"crop=1:1:10:10,format=rgba\" -f rawvideo -)",
+      "Bash(ffmpeg -v error -i /c/Users/mattt/Documents/the-zora-files/tooling/medallion_export/frames/frame_0030.png -vf \"crop=1:1:540:540,format=rgba\" -f rawvideo -)",
+      "Bash(ffmpeg -y -framerate 24 -i /c/Users/mattt/Documents/the-zora-files/tooling/medallion_export/frames/frame_%04d.png -c:v prores_ks -profile:v 4 -pix_fmt yuva444p10le -vendor apl0 /c/Users/mattt/Documents/the-zora-files/brand/video/intros/desert_fox_medallion_animation.mov)",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,profile,width,height,pix_fmt,r_frame_rate,duration,nb_frames /c/Users/mattt/Documents/the-zora-files/brand/video/intros/desert_fox_medallion_animation.mov)",
+      "Bash(node render_ring.js)",
+      "Bash(python -c ' *)",
+      "Bash(node --check /tmp/_title_card_check.js)",
+      "Bash(node --check \"C:/Users/mattt/AppData/Local/Temp/_title_card_check.js\")",
+      "Read(//c/tmp/**)",
+      "Read(//c/Users/mattt/AppData/Local/Temp/**)",
+      "Bash(node --check tooling/_title_card_check.js)",
+      "Bash(rm tooling/_title_card_check.js)",
+      "Bash(node --check tooling/_check.js)",
+      "Bash(rm tooling/_check.js)"
     ]
   }
 }
