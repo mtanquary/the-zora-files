@@ -135,6 +135,30 @@ export default function ArtifactsPage() {
         These are the design source files that defined the visual system.
       </p>
 
+      <Ornament label="Components" />
+
+      <div className="space-y-3">
+        {ARTIFACTS.filter((a) => a.level === null).map((a) => (
+          <a
+            key={a.file}
+            href={`/artifacts/${a.file}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-pre-dawn-mid border border-rule rounded-md p-5 hover:border-zora-amber/40 transition-colors"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-display text-sm text-dawn-mist">
+                {a.title}
+              </span>
+              <span className="font-mono text-[0.6rem] text-mist-dim/40 uppercase tracking-wider">
+                open demo
+              </span>
+            </div>
+            <p className="text-xs text-mist-dim">{a.description}</p>
+          </a>
+        ))}
+      </div>
+
       <Ornament label="Medallions · levels 0 to 10" />
 
       <div className="space-y-3">
@@ -172,28 +196,6 @@ export default function ArtifactsPage() {
           </a>
         ))}
       </div>
-
-      <Ornament label="Components" />
-
-      {ARTIFACTS.filter((a) => a.level === null).map((a) => (
-        <a
-          key={a.file}
-          href={`/artifacts/${a.file}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block bg-pre-dawn-mid border border-rule rounded-md p-5 hover:border-zora-amber/40 transition-colors"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-display text-sm text-dawn-mist">
-              {a.title}
-            </span>
-            <span className="font-mono text-[0.6rem] text-mist-dim/40 uppercase tracking-wider">
-              open demo
-            </span>
-          </div>
-          <p className="text-xs text-mist-dim">{a.description}</p>
-        </a>
-      ))}
     </div>
   );
 }
