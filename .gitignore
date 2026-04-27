@@ -36,3 +36,49 @@ tooling/*/package-lock.json
 videos/.gallery/*
 videos/CacheClip
 videos/Resolve Project Backups
+
+# Photo source archives — back up to cloud, NOT git
+# (website/public/archives/ stays tracked because the live site serves it directly)
+photos/
+episodes/**/photos/
+episodes/**/footage/
+
+# Stale snapshot of the previous site — kept in cloud archive instead
+_website_backup/
+
+# Raw camera formats — never commit these
+*.heic
+*.HEIC
+*.tiff
+*.tif
+*.cr2
+*.CR2
+*.nef
+*.NEF
+*.arw
+*.ARW
+*.dng
+*.DNG
+*.raw
+*.RAW
+*.r3d
+*.R3D
+*.braw
+*.BRAW
+
+# DaVinci Resolve project + cache files
+*.drp
+*.drb
+*.drt
+*.dra
+*.drx
+*.pfl
+
+# Build / transient outputs that shouldn't accidentally land in git
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+coverage/
+*.log
