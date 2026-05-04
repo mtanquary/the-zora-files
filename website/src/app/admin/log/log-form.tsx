@@ -4,8 +4,10 @@ import { useState, useCallback } from "react";
 import { EosScorePanel } from "./eos-score-panel";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { GemCeremony } from "@/components/gem-ceremony";
+import { FirstExpeditionCeremony } from "@/components/first-expedition-ceremony";
 import { DiscoveryEntry, emptyDiscovery, type DiscoveryDraft } from "@/components/discovery-entry";
 import { DiscoveryUnlockCeremony, type UnlockItem } from "@/components/discovery-unlock";
+import { MediaUploader, type PendingMedia, type ExistingMedia } from "@/components/media-uploader";
 import type { EosResponseData } from "@/lib/eos-prompt";
 
 export interface EditData {
@@ -23,6 +25,7 @@ export interface EditData {
   thumbnailUrl: string;
   scores: EosScores;
   rationales: { [key: string]: string | undefined };
+  media?: ExistingMedia[];
 }
 
 interface LogFormProps {
@@ -120,6 +123,12 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
   // Photo
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+  // Additional media (photos + videos beyond the hero photo)
+  const [pendingMedia, setPendingMedia] = useState<PendingMedia[]>([]);
+  const [existingMedia, setExistingMedia] = useState<ExistingMedia[]>(
+    editData?.media ?? []
+  );
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -285,6 +294,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
       },
       thumbnail_url: thumbnailUrl || existingThumbnail || null,
       notes: notes || null,
+      streak_active: checkStreak(),
     };
 
     try {
@@ -337,6 +347,72 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
           }
         }
 
+        // Persist additional media (uploads + caption updates + deletions)
+        if (episodeId) {
+          // 1. Upload pending media files and create rows
+          for (let i = 0; i < pendingMedia.length; i++) {
+            const m = pendingMedia[i];
+            if (m.status === "uploaded") continue; // skip already-uploaded
+            try {
+              const fd = new FormData();
+              fd.append("file", m.file);
+              fd.append(
+                "folder",
+                `episodes/s${String(season).padStart(2, "0")}e${String(episodeNumber).padStart(2, "0")}/media`
+              );
+              const upRes = await fetch("/api/upload", { method: "POST", body: fd });
+              const upData = await upRes.json();
+              if (!upRes.ok) {
+                console.error("Media upload failed:", upData.error);
+                continue;
+              }
+              await fetch("/api/episode-media", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  episode_id: episodeId,
+                  kind: m.kind,
+                  url: upData.url,
+                  storage_path: upData.path,
+                  caption: m.caption || null,
+                  mime_type: upData.mime_type || null,
+                  size_bytes: upData.size_bytes || null,
+                  sort_order: existingMedia.length + i,
+                }),
+              });
+            } catch (e) {
+              console.error("Media save failed:", e);
+            }
+          }
+
+          // 2. Update captions on existing media (only those not marked for deletion)
+          for (const m of existingMedia) {
+            if (m.marked_for_deletion) continue;
+            const original = editData?.media?.find((x) => x.id === m.id);
+            if (original && original.caption !== m.caption) {
+              try {
+                await fetch(`/api/episode-media/${m.id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ caption: m.caption }),
+                });
+              } catch (e) {
+                console.error("Media caption update failed:", e);
+              }
+            }
+          }
+
+          // 3. Delete media marked for removal
+          for (const m of existingMedia) {
+            if (!m.marked_for_deletion) continue;
+            try {
+              await fetch(`/api/episode-media/${m.id}`, { method: "DELETE" });
+            } catch (e) {
+              console.error("Media delete failed:", e);
+            }
+          }
+        }
+
         // Check for first unlocks to show ceremony (both new and edit)
         const firstUnlocks = discoveries.filter((d) => d.is_first_unlock && d.name);
         if (firstUnlocks.length > 0) {
@@ -376,6 +452,21 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
           } else {
             setShowCeremony(true);
           }
+        }}
+      />
+    );
+  }
+
+  // First-expedition (Scout → Trailhead training graduation) — overrides the
+  // standard gem ceremony for the very first save in the system.
+  if (showCeremony && totalExpeditions === 0) {
+    return (
+      <FirstExpeditionCeremony
+        episodeTitle={title}
+        eosTotal={eosTotal}
+        onClose={() => {
+          setShowCeremony(false);
+          setSaved(true);
         }}
       />
     );
@@ -441,6 +532,11 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
             setNotes("");
             setPhoto(null);
             setPhotoPreview(null);
+            // Release object URLs from any leftover preview blobs before clearing
+            pendingMedia.forEach((p) => URL.revokeObjectURL(p.previewUrl));
+            setPendingMedia([]);
+            setExistingMedia([]);
+            setDiscoveries([]);
             setEpisodeNumber((n) => n + 1);
             setEffortLevel(1);
           }}
@@ -471,7 +567,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="The Benchmark"
+                  placeholder="The ___"
                   className="flex-1 rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
                 />
                 {hasApiKey && (
@@ -535,7 +631,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Lost Dutchman State Park"
+                placeholder="Horton Creek"
                 className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
               />
             </div>
@@ -619,6 +715,22 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
               className="hidden"
             />
           </label>
+        </section>
+
+        {/* Additional media (photos + videos for the official record) */}
+        <section>
+          <h2 className="font-display text-lg font-semibold text-dawn-mist mb-2">
+            additional media
+          </h2>
+          <p className="text-xs text-dawn-mist/40 mb-4">
+            Photos and videos that become part of the official expedition record. Linked from the episode page so the main view stays clean.
+          </p>
+          <MediaUploader
+            pending={pendingMedia}
+            existing={existingMedia}
+            onPendingChange={setPendingMedia}
+            onExistingChange={setExistingMedia}
+          />
         </section>
 
         {/* Eos Index scoring */}

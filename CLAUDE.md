@@ -33,8 +33,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Conventions
 
-- **Episode folders** follow `S01E01-short-title` naming
-- **Episode titles** follow `S01E01 — "The Benchmark" — Lost Dutchman SP` format
+- **Episode folders** follow `S01E01-short-title` naming (e.g. `S01E01-horton-creek`)
+- **Episode titles** follow `S01E01 — "<Title>" — <Location>` format
 - **All UI copy** uses sentence case — never ALL CAPS or Title Case
 - **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; twilight violet (`#7A5FB8`) is reserved for Discovery elements only; never use pure black or pure white
 - **Geographic scope**: Arizona is home base but the show is global. **Never hardcode Arizona or "desert" as assumptions** in website architecture, data models, or UI copy. All fields must work for any location worldwide.

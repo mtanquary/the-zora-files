@@ -39,16 +39,6 @@ function formatTime(iso: string): string {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Known state — locations already planned                            */
-/* ------------------------------------------------------------------ */
-
-const PLANNED_LOCATIONS = [
-  "Lost Dutchman State Park, Apache Junction, AZ",
-  "Butcher Jones Recreation Site / Saguaro Lake, Fort McDowell, AZ",
-  "Hieroglyphic Trailhead, Gold Canyon, AZ",
-];
-
-/* ------------------------------------------------------------------ */
 /*  POST handler — dispatches by action                                */
 /* ------------------------------------------------------------------ */
 
@@ -84,9 +74,6 @@ async function suggestLocations(body: Record<string, unknown>) {
 The show's Discovery Log tracks wildlife, plants, geographic features, and cultural/historical sites. Rarity tiers: common (5-10 pts), uncommon (15-25), rare (35-50), very rare (65-85), exceptional (100-150).
 
 Home base: Queen Creek, Arizona, US.
-
-Locations ALREADY planned (do NOT suggest these):
-${PLANNED_LOCATIONS.map((l) => `- ${l}`).join("\n")}
 
 ${prompt ? `The host says: "${prompt}"` : "Suggest a diverse set of great sunrise locations."}
 ${region ? `Preferred region: ${region}` : ""}
@@ -176,9 +163,6 @@ ${distance_from_base ? `Distance from home base: ${distance_from_base}` : ""}
 ${notable_discoveries ? `Notable discovery targets: ${notable_discoveries}` : ""}
 ${purpose_notes ? `Host's notes/goals: ${purpose_notes}` : ""}
 ${sunriseInfo}
-
-Locations already filmed:
-${PLANNED_LOCATIONS.map((l) => `- ${l}`).join("\n")}
 
 IMPORTANT: Follow this EXACT markdown template structure. Fill in ALL sections with realistic, specific details. Generate a creative but descriptive episode title (2-4 words, starts with "The").
 
@@ -324,17 +308,17 @@ ${plan}
 ${date ? `Shoot date: ${date}` : ""}
 ${timezone ? `Timezone: ${timezone}` : ""}
 
-Generate a production sheet in this EXACT style and structure. This is a real example to follow:
+Generate a production sheet in this EXACT style and structure. Use this template (replace the bracketed placeholders with values from the plan):
 
 \`\`\`example
-# S01E01 — "The Benchmark" — Production sheet
+# <EPISODE_CODE> — "<Title>" — Production sheet
 
-**Date:** March 22, 2026
-**Location:** Lost Dutchman State Park, Apache Junction, AZ
-**Trail:** Prospector's View (0.7 mi, moderate, ~200 ft gain)
-**Fee:** $10/vehicle (cash or card)
-**Sunrise:** 6:28 AM — arrive by 5:43 AM
-**Drive time:** ~35 mi from home base — leave by 5:00 AM
+**Date:** [date]
+**Location:** [full location, city, state/region]
+**Trail:** [trail name, distance, difficulty, elevation gain]
+**Fee:** [fee or 'free']
+**Sunrise:** [time] — arrive by [time]
+**Drive time:** [distance] from home base — leave by [time]
 
 ---
 

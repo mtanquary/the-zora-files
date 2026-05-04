@@ -86,7 +86,7 @@ export function ScoutForm() {
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Lost Dutchman State Park"
+              placeholder="Horton Creek"
               className="w-full rounded-md border border-rule bg-pre-dawn-light px-3 py-2 text-sm text-dawn-mist placeholder:text-mist-dim/30 focus:border-zora-amber/50 focus:outline-none font-body"
             />
           </div>

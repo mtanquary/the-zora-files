@@ -9,17 +9,15 @@ episodes/
 ├── _templates/
 │   └── episode-template.md    ← Copy this to start planning a new episode
 └── season-01/
-    ├── S01E01-the-benchmark/
-    │   ├── plan.md            ← Location, logistics, targets, shot list, full scoring
-    │   ├── discoveries.md     ← Species/features found this episode
-    │   └── notes.md           ← Field notes, things that happened, lessons
-    ├── S01E02-the-habitat-flip/
-    └── S01E03-the-time-capsule/
+    └── S01E01-<short-title>/
+        ├── plan.md            ← Location, logistics, targets, shot list, full scoring
+        ├── discoveries.md     ← Species/features found this episode
+        └── notes.md           ← Field notes, things that happened, lessons
 ```
 
 ## How to use
 
-1. **Copy** `_templates/episode-template.md` into the season folder
+1. **Copy** `_templates/episode-template.md` into the season folder (or generate via the website's `/admin/planner` tool)
 2. **Rename** the folder using the convention: `S01E01-short-title`
 3. **Fill in** the plan before the shoot
 4. **Score** the episode after filming — both Eos Index and full Zora Score
@@ -27,8 +25,8 @@ episodes/
 
 ## Naming convention
 
-Folder: `S01E01-the-benchmark`
-Title format: `S01E01 — "The Benchmark" — Lost Dutchman SP`
+Folder: `S01E01-short-title` (e.g. `S01E01-horton-creek`)
+Title format: `S01E01 — "<Title>" — <Location>`
 
 ## Dual scoring system
 

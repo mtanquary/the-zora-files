@@ -351,6 +351,15 @@ export const MedallionCanvas = forwardRef<MedallionHandle, Props>(
 
       await pause(200);
       await singGems();
+
+      // Sixth gem completes the medallion: etch the title and motto into it
+      if (st.g === 6 && !st.done) {
+        st.done = true;
+        await pause(150);
+        await anim(1.1, t => { st.etch = t; });
+        st.etch = 1;
+        render();
+      }
     }, [anim, sfxClick, sfxWhoosh, singGems, render]);
 
     // Streak crown sound: ascending 7-note arpeggio

@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
   const location = formData.get("location") as string | null;
   const trail = formData.get("trail") as string | null;
   const effort_label = formData.get("effort_label") as string | null;
+  const notes = formData.get("notes") as string | null;
 
   if (!photo) {
     return NextResponse.json({ error: "No photo provided" }, { status: 400 });
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
     location: location || undefined,
     trail: trail || undefined,
     effort_label: effort_label || undefined,
+    notes: notes || undefined,
   });
 
   try {

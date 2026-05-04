@@ -89,6 +89,39 @@ export async function getDiscoveriesByEpisode(episodeId: string): Promise<Discov
   return result.rows;
 }
 
+export interface EpisodeMediaRow {
+  id: string;
+  episode_id: string;
+  kind: "photo" | "video";
+  url: string;
+  storage_path: string | null;
+  caption: string | null;
+  mime_type: string | null;
+  size_bytes: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
+export async function getEpisodeMedia(episodeId: string): Promise<EpisodeMediaRow[]> {
+  const result = await pool.query(
+    "SELECT * FROM episode_media WHERE episode_id = $1 ORDER BY sort_order, created_at",
+    [episodeId]
+  );
+  return result.rows;
+}
+
+export async function getEpisodeMediaCounts(episodeId: string): Promise<{ photos: number; videos: number }> {
+  const result = await pool.query(
+    `SELECT
+       COUNT(*) FILTER (WHERE kind = 'photo')::int AS photos,
+       COUNT(*) FILTER (WHERE kind = 'video')::int AS videos
+     FROM episode_media WHERE episode_id = $1`,
+    [episodeId]
+  );
+  const row = result.rows[0] || { photos: 0, videos: 0 };
+  return { photos: row.photos || 0, videos: row.videos || 0 };
+}
+
 export async function getAllDiscoveries(): Promise<(DiscoveryRow & { episode_title?: string })[]> {
   const result = await pool.query(`
     SELECT d.*, e.title as episode_title

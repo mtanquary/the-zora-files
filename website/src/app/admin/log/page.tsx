@@ -39,11 +39,18 @@ export default async function AdminLogPage() {
       />
 
       {/* Existing episodes */}
-      {episodes.length > 0 && (
-        <section className="mt-16">
-          <h2 className="font-display text-xl font-semibold text-dawn-mist mb-4">
-            logged expeditions
-          </h2>
+      <section className="mt-16">
+        <h2 className="font-display text-xl font-semibold text-dawn-mist mb-4">
+          logged expeditions
+        </h2>
+        {episodes.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-dawn-mist/15 bg-dawn-mist/[0.02] p-8 text-center">
+            <p className="text-sm text-dawn-mist/50">No expeditions logged yet.</p>
+            <p className="text-xs text-dawn-mist/30 mt-1">
+              Save your first expedition above to begin the record.
+            </p>
+          </div>
+        ) : (
           <div className="space-y-2">
             {episodes.map((ep) => {
               const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
@@ -80,8 +87,8 @@ export default async function AdminLogPage() {
               );
             })}
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   );
 }

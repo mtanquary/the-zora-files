@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode } from "@/lib/queries";
+import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode, getEpisodeMediaCounts } from "@/lib/queries";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { ZoraExpandable } from "@/components/zora-expandable";
 import { MedallionEmblem } from "@/components/medallion-emblem";
@@ -25,6 +25,9 @@ export default async function EpisodeDetailPage({
   const ep = await getEpisodeByNumber(season, episodeNumber);
 
   if (!ep) return notFound();
+
+  const mediaCounts = await getEpisodeMediaCounts(ep.id);
+  const slugLower = slug.toLowerCase();
 
   const effort = EFFORT_LEVELS.find((e) => e.level === ep.effort_rating);
   const eos = ep.eos_index as {
@@ -148,11 +151,33 @@ export default async function EpisodeDetailPage({
 
       {/* Field notes */}
       {ep.notes && (
-        <section>
+        <section className="mb-10">
           <h2 className="font-display text-lg font-semibold text-dawn-mist mb-4">
             field notes
           </h2>
           <p className="text-dawn-mist/60 whitespace-pre-wrap">{ep.notes}</p>
+        </section>
+      )}
+
+      {/* Additional media — link-follow only, keeps the main record uncluttered */}
+      {(mediaCounts.photos + mediaCounts.videos) > 0 && (
+        <section>
+          <Link
+            href={`/finding-zora/episodes/${slugLower}/media`}
+            className="group flex items-center justify-between rounded-xl border border-dawn-mist/10 bg-dawn-mist/5 p-5 hover:border-zora-amber/40 hover:bg-zora-amber/5 transition-colors"
+          >
+            <div>
+              <p className="font-display text-sm text-dawn-mist group-hover:text-zora-amber transition-colors">
+                official record media
+              </p>
+              <p className="text-xs text-dawn-mist/50 mt-1">
+                {mediaCounts.photos > 0 && `${mediaCounts.photos} photo${mediaCounts.photos !== 1 ? "s" : ""}`}
+                {mediaCounts.photos > 0 && mediaCounts.videos > 0 && " · "}
+                {mediaCounts.videos > 0 && `${mediaCounts.videos} video${mediaCounts.videos !== 1 ? "s" : ""}`}
+              </p>
+            </div>
+            <span className="text-zora-amber/60 group-hover:text-zora-amber transition-colors">→</span>
+          </Link>
         </section>
       )}
     </div>

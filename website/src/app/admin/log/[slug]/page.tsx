@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LogForm } from "../log-form";
-import { getEpisodeById, getEpisodes } from "@/lib/queries";
+import { getEpisodeById, getEpisodes, getEpisodeMedia } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = { title: "edit expedition" };
@@ -19,6 +19,8 @@ export default async function EditEpisodePage({
 
   const ep = await getEpisodeById(id);
   if (!ep) return notFound();
+
+  const mediaRows = await getEpisodeMedia(ep.id);
 
   const eos = ep.eos_index as {
     sky: { color_intensity: { score: number; rationale?: string }; cloud_engagement: { score: number; rationale?: string }; horizon_definition: { score: number; rationale?: string } };
@@ -59,6 +61,13 @@ export default async function EditEpisodePage({
       access_difficulty: eos.conditions.access_difficulty.rationale,
       weather_challenge: eos.conditions.weather_challenge.rationale,
     },
+    media: mediaRows.map((m) => ({
+      id: m.id,
+      kind: m.kind,
+      url: m.url,
+      caption: m.caption || "",
+      sort_order: m.sort_order,
+    })),
   };
 
   return (

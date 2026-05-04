@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import exifr from "exifr";
 
+// Larger payload limit for video uploads (handler runs as Node runtime).
+export const maxDuration = 300;
+
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
@@ -11,10 +14,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
+  const mime = file.type || "";
+  const isVideo = mime.startsWith("video/");
+  const isImage = mime.startsWith("image/");
+  const kind: "photo" | "video" = isVideo ? "video" : "photo";
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // Extract EXIF metadata
+  // EXIF only on images — exifr does not parse video containers
   let exif: {
     latitude?: number;
     longitude?: number;
@@ -23,23 +31,24 @@ export async function POST(request: NextRequest) {
     Model?: string;
   } | null = null;
 
-  try {
-    exif = await exifr.parse(buffer, {
-      gps: true,
-      pick: ["latitude", "longitude", "DateTimeOriginal", "Make", "Model"],
-    });
-  } catch {
-    // EXIF extraction is best-effort - continue without it
+  if (isImage) {
+    try {
+      exif = await exifr.parse(buffer, {
+        gps: true,
+        pick: ["latitude", "longitude", "DateTimeOriginal", "Make", "Model"],
+      });
+    } catch {
+      // EXIF extraction is best-effort - continue without it
+    }
   }
 
-  // Generate a unique filename
-  const ext = file.name.split(".").pop() || "jpg";
+  const ext = (file.name.split(".").pop() || (isVideo ? "mp4" : "jpg")).toLowerCase();
   const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const { data, error } = await supabase.storage
     .from("photos")
     .upload(filename, buffer, {
-      contentType: file.type || "image/jpeg",
+      contentType: mime || (isVideo ? "video/mp4" : "image/jpeg"),
       upsert: false,
     });
 
@@ -51,7 +60,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Get the public URL
   const { data: urlData } = supabase.storage
     .from("photos")
     .getPublicUrl(data.path);
@@ -59,6 +67,9 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     path: data.path,
     url: urlData.publicUrl,
+    kind,
+    mime_type: mime,
+    size_bytes: file.size,
     exif: exif
       ? {
           coordinates:

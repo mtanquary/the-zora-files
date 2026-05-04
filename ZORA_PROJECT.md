@@ -519,47 +519,18 @@ New record categories may be added as the pursuit evolves (e.g., highest elevati
 5. **The verdict** — Eos Index breakdown, effort rating, discoveries, Zora Score total, leaderboard update, 60–90 sec max
 
 ### Naming convention
-- `S01E01 — "The Benchmark" — Lost Dutchman SP`
-- `S01E02 — "The Habitat Flip" — Butcher Jones / Saguaro Lake`
-- `S01E03 — "The Time Capsule" — Hieroglyphic Trail, Gold Canyon`
+Format: `S01E01 — "<Title>" — <Location>`
+Folder: `S01E01-short-title` (e.g. `S01E01-horton-creek`)
 
 ---
 
 ## First Three Episodes
 
-### E01 — "The Benchmark"
-- **Location:** Lost Dutchman State Park, Apache Junction, AZ
-- **Coordinates:** 33.4638, -111.4812
-- **Drive from Queen Creek:** ~35 min
-- **Recommended trail:** Prospector's View (0.7 mi, moderate)
-- **Arrive:** 45 min before sunrise
-- **Fee:** $10/vehicle
-- **Purpose:** Establish the format, introduce the scoring system on-camera, familiar terrain
-- **Discovery targets:** Gambel's Quail, Cactus Wren, Gila Woodpecker, Coyote, Javelina
-- **Sunrise note:** Sun rises behind the mountains — glow builds above ridgeline, not disk emergence
+### E01 — Horton Creek
+Episode 1 is being planned now. Working materials live in `planning/horton-creek/` (field brief PDF, sunrise plan recording). The episode folder under `episodes/season-01/` will be created from the website planner once details are confirmed.
 
-### E02 — "The Habitat Flip"
-- **Location:** Butcher Jones Recreation Site / Saguaro Lake, Fort McDowell, AZ
-- **Coordinates:** 33.5767, -111.5147
-- **Drive from Queen Creek:** ~50 min
-- **Recommended position:** Northwest parking lot near the wash
-- **Arrive:** Just before 7AM (gate opens at 7AM — verify early access)
-- **Fee:** Tonto Pass required ($8/day or annual)
-- **Purpose:** Habitat contrast — riparian/water vs. desert. Sunrise over open water.
-- **Discovery targets:** Great Blue Heron, Great Egret, Osprey, Vermilion Flycatcher, Bald Eagle (winter), Mule Deer
-- **Sunrise note:** Open water horizon — highest scoring ceiling in Phoenix region
-
-### E03 — "The Time Capsule"
-- **Location:** Hieroglyphic Trailhead, Gold Canyon, AZ
-- **Coordinates:** 33.3901, -111.4233
-- **Drive from Queen Creek:** ~25 min
-- **Trail:** 2.8 mi out-and-back to Hohokam petroglyph panel
-- **Opens:** 5AM — best pre-dawn access of the three
-- **Fee:** Free (limited parking — arrive very early or weekday)
-- **Purpose:** Deep edutainment — 1,500-year-old Hohokam petroglyphs, canyon framing
-- **Discovery targets:** Rock Wren, Roadrunner, Desert Tortoise, Chuckwalla, Canyon Towhee, Cooper's Hawk
-- **Sunrise note:** Canyon position delays disk emergence but canyon wall light show is exceptional
-- **Key content moment:** Explain Hohokam history, tinajas (natural water basins), why these carvings exist
+### E02 and E03
+Locations TBD. Use the `/admin/planner` tool to scout and generate plans when ready.
 
 ---
 
@@ -677,7 +648,7 @@ New record categories may be added as the pursuit evolves (e.g., highest elevati
 {
   id: string
   category: string                   // "Highest elevation", "Best water view", etc.
-  value: string                      // "4,287 ft" or "Saguaro Lake"
+  value: string                      // "4,287 ft" or "Tonto National Forest"
   episode_id: string
   set_date: Date
   previous_holder?: string           // episode that held it before

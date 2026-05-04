@@ -114,6 +114,23 @@ export interface Episode {
   discoveries: Discovery[];
 }
 
+// ── Episode media (photos + videos beyond the hero thumbnail) ──
+
+export type MediaKind = "photo" | "video";
+
+export interface EpisodeMedia {
+  id: string;
+  episode_id: string;
+  kind: MediaKind;
+  url: string;
+  storage_path?: string;
+  caption?: string;
+  mime_type?: string;
+  size_bytes?: number;
+  sort_order: number;
+  created_at?: string;
+}
+
 // ── Records ──
 
 export interface Record {

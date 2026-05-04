@@ -6,11 +6,20 @@ export function buildEosPrompt(context?: {
   location?: string;
   trail?: string;
   effort_label?: string;
+  notes?: string;
 }) {
-  const contextBlock = context?.location
+  const hasFacts = context?.location || context?.trail || context?.effort_label;
+  const factsBlock = hasFacts
+    ? `${context!.location ? `\n- Location: ${context!.location}` : ""}${context!.trail ? `\n- Trail/position: ${context!.trail}` : ""}${context!.effort_label ? `\n- Effort level: ${context!.effort_label}` : ""}`
+    : "";
+
+  const notesBlock = context?.notes?.trim()
+    ? `\n\nHost's scoring notes (use these to break ties or weight components the photo can't capture — wind, scramble difficulty, what came before/after the moment, why this place is unusual, etc.):\n"""\n${context.notes.trim()}\n"""`
+    : "";
+
+  const contextBlock = hasFacts || notesBlock
     ? `
-## Context for this photo
-- Location: ${context.location}${context.trail ? `\n- Trail/position: ${context.trail}` : ""}${context.effort_label ? `\n- Effort level: ${context.effort_label}` : ""}
+## Context for this photo${factsBlock}${notesBlock}
 `
     : "";
 

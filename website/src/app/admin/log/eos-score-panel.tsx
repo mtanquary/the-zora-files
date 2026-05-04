@@ -26,6 +26,7 @@ export function EosScorePanel({
     hasApiKey ? "direct" : "paste"
   );
   const [jsonInput, setJsonInput] = useState("");
+  const [scoringNotes, setScoringNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -36,8 +37,9 @@ export function EosScorePanel({
         location: location || undefined,
         trail: trail || undefined,
         effort_label: effortLabel,
+        notes: scoringNotes || undefined,
       }),
-    [location, trail, effortLabel]
+    [location, trail, effortLabel, scoringNotes]
   );
 
   // Direct mode: send photo to /api/eos-score
@@ -54,6 +56,7 @@ export function EosScorePanel({
     if (location) formData.append("location", location);
     if (trail) formData.append("trail", trail);
     formData.append("effort_label", effortLabel);
+    if (scoringNotes.trim()) formData.append("notes", scoringNotes.trim());
 
     try {
       const res = await fetch("/api/eos-score", {
@@ -148,6 +151,20 @@ export function EosScorePanel({
           </button>
         </div>
       )}
+
+      {/* Scoring context — free-form notes that the photo alone can't convey */}
+      <div>
+        <label className="block text-xs text-dawn-mist/60 mb-1">
+          scoring notes <span className="text-dawn-mist/30">(optional)</span>
+        </label>
+        <textarea
+          value={scoringNotes}
+          onChange={(e) => setScoringNotes(e.target.value)}
+          placeholder="Wind, scramble difficulty, what just happened, why this place is unusual — anything the photo doesn't show that should weigh on the score."
+          rows={3}
+          className="w-full rounded-lg border border-dawn-mist/10 bg-pre-dawn px-3 py-2 text-xs text-dawn-mist placeholder:text-dawn-mist/30 focus:border-eos-teal/50 focus:outline-none resize-none"
+        />
+      </div>
 
       {mode === "direct" ? (
         /* Direct mode */

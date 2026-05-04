@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       weather_notes,
       thumbnail_url,
       notes,
+      streak_active,
     } = body;
 
     const result = await pool.query(
@@ -33,13 +34,13 @@ export async function POST(request: NextRequest) {
         coordinates, shoot_date, eos_index, eos_total,
         effort_rating, effort_points, zora_score,
         distance_miles, elevation_gain_ft, minutes_before_sunrise,
-        weather_notes, thumbnail_url, notes
+        weather_notes, thumbnail_url, notes, streak_active
       ) VALUES (
         $1, $2, $3, $4, $5, $6,
         $7, $8, $9, $10,
         $11, $12, $13,
         $14, $15, $16,
-        $17, $18, $19
+        $17, $18, $19, $20
       ) RETURNING id`,
       [
         episode_number,
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
         weather_notes || null,
         thumbnail_url || null,
         notes || null,
+        streak_active === true,
       ]
     );
 

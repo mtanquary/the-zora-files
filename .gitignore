@@ -34,8 +34,12 @@ tooling/*/frames/
 tooling/*/node_modules/
 tooling/*/package-lock.json
 videos/.gallery/*
-videos/CacheClip
+videos/CacheClip*
 videos/Resolve Project Backups
+videos/Resolve Project Backups*
+
+# DaVinci Resolve cache fragment files (can appear anywhere)
+*.dvcc
 
 # Photo source archives — back up to cloud, NOT git
 # (website/public/archives/ stays tracked because the live site serves it directly)

@@ -1,6 +1,6 @@
 # The Zora Files — project plan
 
-> Last updated: 2026-03-21
+> Last updated: 2026-04-29
 
 This is the living task tracker for the project. Phases are roughly sequential but items within a phase can be tackled in any order.
 
@@ -72,38 +72,31 @@ Gear is organized by priority tier, not level-gated. The show starts with phone 
 - [ ] Build intro/outro sequence
 
 ### Episode prep
-- [ ] Scout Lost Dutchman SP — confirm trail, parking, sunrise angle
-- [ ] Scout Butcher Jones / Saguaro Lake — confirm gate times, early access
-- [ ] Scout Hieroglyphic Trail — confirm parking, trail conditions
-- [ ] Run eBird reports for all three locations
-- [ ] Check PhotoPills sunrise positions for all three GPS coordinates
+- [ ] Scout E01 location (Horton Creek) — confirm trail, parking, sunrise angle
+- [ ] Decide E02 and E03 locations
+- [ ] Run eBird reports for confirmed locations
+- [ ] Check PhotoPills sunrise positions for each GPS coordinate
 - [ ] Finalize discovery point values for target species
 
 ---
 
 ## Phase 4 — Filming
 
-- [ ] Shoot E01 — "The Benchmark" — Lost Dutchman SP
-- [ ] Shoot E02 — "The Habitat Flip" — Butcher Jones / Saguaro Lake
-- [ ] Shoot E03 — "The Time Capsule" — Hieroglyphic Trail
+- [ ] Shoot E01 — Horton Creek
+- [ ] Shoot E02 (location TBD)
+- [ ] Shoot E03 (location TBD)
 - [ ] Shoot channel trailer (60-90 sec — concept + scoring system)
 
 ---
 
 ## Phase 5 — Post-production
 
-- [ ] Edit E01 — full episode
-- [ ] Score E01 — Eos Index
-- [ ] Log E01 discoveries
-- [ ] Edit E02 — full episode
-- [ ] Score E02 — Eos Index
-- [ ] Log E02 discoveries
-- [ ] Edit E03 — full episode
-- [ ] Score E03 — Eos Index
-- [ ] Log E03 discoveries
+- [ ] Edit, score, and log discoveries for E01
+- [ ] Edit, score, and log discoveries for E02
+- [ ] Edit, score, and log discoveries for E03
 - [ ] Edit channel trailer
 - [ ] Create 2-3 short clips per episode (TikTok/Reels)
-- [ ] Design thumbnails for all three episodes
+- [ ] Design thumbnails for the first three episodes
 
 ---
 
@@ -125,7 +118,7 @@ Gear is organized by priority tier, not level-gated. The show starts with phone 
 - [ ] Build About page — concept, host, mission
 
 ### Data
-- [ ] Seed Discovery Log with E01-E03 data (after filming)
+- [ ] Seed Discovery Log with the first three episodes' data (after filming)
 - [ ] Set up Records board with initial data
 
 ---

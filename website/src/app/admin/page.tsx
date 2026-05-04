@@ -14,6 +14,10 @@ export default async function AdminPage() {
   const currentLevel = LEVELS.filter((l) => totalExpeditions >= l.expeditions).pop()!;
   const hasApiKey = !!process.env.ANTHROPIC_API_KEY;
 
+  const latestSlug = episodes[0]
+    ? `s${String(episodes[0].season).padStart(2, "0")}e${String(episodes[0].episode_number).padStart(2, "0")}`
+    : null;
+
   const tools = [
     {
       href: "/admin/log",
@@ -37,12 +41,12 @@ export default async function AdminPage() {
       always: false,
     },
     {
-      href: "/admin/card/s01e01",
+      href: latestSlug ? `/admin/card/${latestSlug}` : "#",
       title: "export share card",
       description: "Generate social cards for any episode",
       icon: "🃏",
       always: true,
-      note: episodes.length > 0 ? undefined : "log an expedition first",
+      note: latestSlug ? undefined : "log an expedition first",
     },
     {
       href: "/admin/artifacts",
@@ -93,54 +97,63 @@ export default async function AdminPage() {
       </div>
 
       {/* Quick episode access */}
-      {recentEpisodes.length > 0 && (
-        <>
-          <Ornament label="Logged expeditions" />
+      <Ornament label="Logged expeditions" />
 
-          <div className="bg-pre-dawn-mid border border-rule rounded-md">
-            {recentEpisodes.map((ep, i) => {
-              const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
-              return (
-                <div
-                  key={ep.id}
-                  className={`flex items-center justify-between px-5 py-3 ${
-                    i < recentEpisodes.length - 1 ? "border-b border-dawn-mist/[0.05]" : ""
-                  }`}
-                >
-                  <div>
-                    <span className="font-display text-sm text-dawn-mist">
-                      S{String(ep.season).padStart(2, "0")}E
-                      {String(ep.episode_number).padStart(2, "0")} · &ldquo;{ep.title}&rdquo;
-                    </span>
-                    <span className="ml-2 font-mono text-xs text-teal-light">
-                      {ep.eos_total}
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/admin/log/${ep.id}`}
-                      className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
-                    >
-                      edit
-                    </Link>
-                    <Link
-                      href={`/admin/card/${slug}`}
-                      className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
-                    >
-                      card
-                    </Link>
-                    <Link
-                      href={`/finding-zora/episodes/${slug}`}
-                      className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
-                    >
-                      view
-                    </Link>
-                  </div>
+      {recentEpisodes.length === 0 ? (
+        <div className="bg-pre-dawn-mid border border-dashed border-rule rounded-md px-5 py-6 text-center">
+          <p className="text-sm text-dawn-mist/50">No expeditions logged yet.</p>
+          <p className="text-xs text-dawn-mist/30 mt-1">
+            Use{" "}
+            <Link href="/admin/log" className="text-zora-amber/70 hover:text-zora-amber underline-offset-2 hover:underline">
+              log expedition
+            </Link>
+            {" "}to record your first sunrise.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-pre-dawn-mid border border-rule rounded-md">
+          {recentEpisodes.map((ep, i) => {
+            const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
+            return (
+              <div
+                key={ep.id}
+                className={`flex items-center justify-between px-5 py-3 ${
+                  i < recentEpisodes.length - 1 ? "border-b border-dawn-mist/[0.05]" : ""
+                }`}
+              >
+                <div>
+                  <span className="font-display text-sm text-dawn-mist">
+                    S{String(ep.season).padStart(2, "0")}E
+                    {String(ep.episode_number).padStart(2, "0")} · &ldquo;{ep.title}&rdquo;
+                  </span>
+                  <span className="ml-2 font-mono text-xs text-teal-light">
+                    {ep.eos_total}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/admin/log/${ep.id}`}
+                    className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
+                  >
+                    edit
+                  </Link>
+                  <Link
+                    href={`/admin/card/${slug}`}
+                    className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
+                  >
+                    card
+                  </Link>
+                  <Link
+                    href={`/finding-zora/episodes/${slug}`}
+                    className="font-mono text-[0.6rem] text-mist-dim hover:text-zora-amber transition-colors"
+                  >
+                    view
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
 
       {/* Season recap generator */}

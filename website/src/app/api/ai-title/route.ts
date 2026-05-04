@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       ? `Discoveries: ${discoveries.map((d: { name: string }) => d.name).join(", ")}`
       : "No notable discoveries";
 
-    const text = await callClaude(`You are naming episodes for a sunrise expedition show called The Zora Files. Episode titles are short, evocative, and often reference a specific moment, discovery, or theme from the expedition. They follow the style: "The Benchmark", "The Habitat Flip", "The Time Capsule".
+    const text = await callClaude(`You are naming episodes for a sunrise expedition show called The Zora Files. Episode titles are short (2-4 words), start with "The", and reference a specific moment, discovery, or theme from the expedition. They are evocative and understated — never hype, never generic.
 
 Expedition details:
 - Location: ${location}

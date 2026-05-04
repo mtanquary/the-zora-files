@@ -4,7 +4,7 @@ _After every shoot, work through this pipeline._
 
 ## Ingest
 - [ ] Import all clips via Hedge to organized folder
-- [ ] Folder naming: `S01E01-the-benchmark/raw/[device-name]/`
+- [ ] Folder naming: `S01E01-<short-title>/raw/[device-name]/`
 - [ ] Verify all files transferred — check clip counts against shot log
 - [ ] Back up raw footage to secondary drive
 
