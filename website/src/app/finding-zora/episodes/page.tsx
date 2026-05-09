@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getEpisodes } from "@/lib/queries";
+import { getEpisodes, getMapData } from "@/lib/queries";
 import { extractEosSub } from "@/lib/eos-helpers";
 import { EFFORT_LEVELS } from "@/lib/types";
 import { EosExpandable } from "@/components/eos-expandable";
 import { ZoraExpandable } from "@/components/zora-expandable";
 import { Ornament } from "@/components/atmosphere";
+import { MapPreviewLink } from "@/components/expedition-map";
 
 export const metadata: Metadata = { title: "episodes" };
 export const dynamic = "force-dynamic";
 
 export default async function EpisodesPage() {
-  const episodes = await getEpisodes();
+  const [episodes, mapData] = await Promise.all([
+    getEpisodes(),
+    getMapData(),
+  ]);
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? null;
 
   return (
     <div className="max-w-[780px] mx-auto px-8 py-16">
@@ -21,6 +26,13 @@ export default async function EpisodesPage() {
       <p className="text-mist-dim mb-2">
         Every expedition, scored and archived.
       </p>
+
+      {mapData.length > 0 && (
+        <>
+          <Ornament label="Where we've been" />
+          <MapPreviewLink expeditions={mapData} token={mapboxToken} />
+        </>
+      )}
 
       <Ornament label="Archive" />
 

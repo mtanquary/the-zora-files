@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getEpisodeByNumber, getEpisodeMedia } from "@/lib/queries";
+import { MediaGallery } from "@/components/media-gallery";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -32,8 +33,8 @@ export default async function EpisodeMediaPage({
   if (!ep) return notFound();
 
   const media = await getEpisodeMedia(ep.id);
-  const photos = media.filter((m) => m.kind === "photo");
-  const videos = media.filter((m) => m.kind === "video");
+  const photos = media.filter((m) => m.kind === "photo").length;
+  const videos = media.filter((m) => m.kind === "video").length;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
@@ -50,54 +51,22 @@ export default async function EpisodeMediaPage({
         &ldquo;{ep.title}&rdquo; · media
       </h1>
       <p className="text-dawn-mist/50 mb-10">
-        {ep.location_name} · {photos.length} photo{photos.length !== 1 ? "s" : ""} · {videos.length} video{videos.length !== 1 ? "s" : ""}
+        {ep.location_name} · {photos} photo{photos !== 1 ? "s" : ""} · {videos} video{videos !== 1 ? "s" : ""}
       </p>
 
-      {media.length === 0 && (
-        <p className="text-dawn-mist/40 text-sm">No additional media has been attached to this expedition yet.</p>
-      )}
-
-      {videos.length > 0 && (
-        <section className="mb-12">
-          <h2 className="font-display text-lg font-semibold text-dawn-mist mb-4">videos</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {videos.map((m) => (
-              <figure key={m.id} className="space-y-2">
-                <video
-                  src={m.url}
-                  controls
-                  preload="metadata"
-                  className="w-full rounded-xl bg-pre-dawn-mid"
-                />
-                {m.caption && (
-                  <figcaption className="text-xs text-dawn-mist/50">{m.caption}</figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {photos.length > 0 && (
-        <section>
-          <h2 className="font-display text-lg font-semibold text-dawn-mist mb-4">photos</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {photos.map((m) => (
-              <figure key={m.id} className="space-y-2">
-                <a href={m.url} target="_blank" rel="noopener noreferrer">
-                  <img
-                    src={m.url}
-                    alt={m.caption || ""}
-                    className="w-full rounded-xl object-cover hover:opacity-90 transition-opacity"
-                  />
-                </a>
-                {m.caption && (
-                  <figcaption className="text-xs text-dawn-mist/50">{m.caption}</figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
-        </section>
+      {media.length === 0 ? (
+        <p className="text-dawn-mist/40 text-sm">
+          No additional media has been attached to this expedition yet.
+        </p>
+      ) : (
+        <MediaGallery
+          media={media.map((m) => ({
+            id: m.id,
+            kind: m.kind,
+            url: m.url,
+            caption: m.caption,
+          }))}
+        />
       )}
     </div>
   );

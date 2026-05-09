@@ -37,6 +37,12 @@ CREATE TABLE IF NOT EXISTS episodes (
   thumbnail_url TEXT,
   notes         TEXT,
 
+  -- GPX track (from AllTrails / Garmin / etc.)
+  -- track_geojson stores a GeoJSON LineString geometry for fast map rendering;
+  -- gpx_storage_path is the Supabase storage key of the original GPX file.
+  track_geojson    JSONB,
+  gpx_storage_path TEXT,
+
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );

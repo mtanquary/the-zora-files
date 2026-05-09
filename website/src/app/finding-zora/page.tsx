@@ -305,6 +305,7 @@ export default async function FindingZoraHub() {
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             { href: "/finding-zora/episodes", label: "all episodes", desc: "Full expedition archive with scores" },
+            { href: "/finding-zora/map", label: "the map", desc: "Every expedition pinned, filterable by discovery" },
             { href: "/finding-zora/eos-index", label: "eos index", desc: "Leaderboard sorted by sunrise score" },
             { href: "/finding-zora/discovery-log", label: "discovery log", desc: "Every species and feature found" },
             { href: "/finding-zora/records", label: "records", desc: "All-time bests" },

@@ -36,6 +36,7 @@ export default async function AdminLogPage() {
         shootDates={shootDates}
         nextEpisodeNumber={nextEpisodeNumber}
         nextSeason={currentSeason}
+        mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? null}
       />
 
       {/* Existing episodes */}

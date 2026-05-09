@@ -12,6 +12,7 @@ const topLinks = [
 const findingZoraLinks = [
   { href: "/finding-zora", label: "overview" },
   { href: "/finding-zora/episodes", label: "episodes" },
+  { href: "/finding-zora/map", label: "map" },
   { href: "/finding-zora/eos-index", label: "eos index" },
   { href: "/finding-zora/discovery-log", label: "discoveries" },
   { href: "/finding-zora/records", label: "records" },

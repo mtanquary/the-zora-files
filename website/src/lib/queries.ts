@@ -29,6 +29,11 @@ export interface EpisodeRow {
   streak_active: boolean;
   thumbnail_url: string | null;
   notes: string | null;
+  track_geojson: {
+    type: "LineString";
+    coordinates: Array<[number, number, number?]>;
+  } | null;
+  gpx_storage_path: string | null;
   created_at: string;
 }
 
@@ -251,4 +256,111 @@ export async function getEpisodesSortedByEos(): Promise<EpisodeRow[]> {
     "SELECT * FROM episodes ORDER BY eos_total DESC"
   );
   return result.rows;
+}
+
+// ── Map data ──
+
+export interface MapExpedition {
+  id: string;
+  season: number;
+  episode_number: number;
+  slug: string;
+  title: string;
+  location_name: string;
+  country: string;
+  region: string | null;
+  coordinates: { lat: number; lng: number };
+  shoot_date: string;
+  eos_total: number;
+  effort_rating: number;
+  effort_points: number;
+  effort_label: string;
+  zora_total: number;
+  discovery_points: number;
+  thumbnail_url: string | null;
+  youtube_url: string | null;
+  distance_miles: number | null;
+  elevation_gain_ft: number | null;
+  track_geojson: {
+    type: "LineString";
+    coordinates: Array<[number, number, number?]>;
+  } | null;
+  discoveries: Array<{
+    id: string;
+    type: string;
+    name: string;
+    rarity_tier: string;
+    points: number;
+  }>;
+}
+
+const EFFORT_LABELS: Record<number, string> = {
+  1: "Roadside",
+  2: "Trail",
+  3: "Summit",
+  4: "Remote",
+  5: "Expedition",
+};
+
+export async function getMapData(): Promise<MapExpedition[]> {
+  const epRes = await pool.query(
+    `SELECT id, season, episode_number, title, location_name, country, region,
+            coordinates, shoot_date, eos_total, effort_rating, effort_points,
+            zora_score, thumbnail_url, youtube_url, distance_miles, elevation_gain_ft,
+            track_geojson
+     FROM episodes
+     WHERE coordinates IS NOT NULL
+       AND (coordinates->>'lat')::float != 0
+       AND (coordinates->>'lng')::float != 0
+     ORDER BY shoot_date DESC, episode_number DESC`
+  );
+
+  if (epRes.rows.length === 0) return [];
+
+  const ids = epRes.rows.map((r) => r.id);
+  const dRes = await pool.query(
+    `SELECT id, episode_id, type, name, rarity_tier, points
+     FROM discoveries
+     WHERE episode_id = ANY($1::text[])
+     ORDER BY type, name`,
+    [ids]
+  );
+
+  const byEp = new Map<string, MapExpedition["discoveries"]>();
+  for (const d of dRes.rows) {
+    const list = byEp.get(d.episode_id) ?? [];
+    list.push({
+      id: d.id,
+      type: d.type,
+      name: d.name,
+      rarity_tier: d.rarity_tier,
+      points: d.points,
+    });
+    byEp.set(d.episode_id, list);
+  }
+
+  return epRes.rows.map((r) => ({
+    id: r.id,
+    season: r.season,
+    episode_number: r.episode_number,
+    slug: `s${String(r.season).padStart(2, "0")}e${String(r.episode_number).padStart(2, "0")}`,
+    title: r.title,
+    location_name: r.location_name,
+    country: r.country,
+    region: r.region,
+    coordinates: r.coordinates,
+    shoot_date: r.shoot_date,
+    eos_total: r.eos_total,
+    effort_rating: r.effort_rating,
+    effort_points: r.effort_points,
+    effort_label: EFFORT_LABELS[r.effort_rating] ?? String(r.effort_rating),
+    zora_total: r.zora_score?.total ?? 0,
+    discovery_points: r.zora_score?.discovery_points ?? 0,
+    thumbnail_url: r.thumbnail_url,
+    youtube_url: r.youtube_url,
+    distance_miles: r.distance_miles,
+    elevation_gain_ft: r.elevation_gain_ft,
+    track_geojson: r.track_geojson ?? null,
+    discoveries: byEp.get(r.id) ?? [],
+  }));
 }

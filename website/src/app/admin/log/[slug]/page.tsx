@@ -43,6 +43,12 @@ export default async function EditEpisodePage({
     effortLevel: ep.effort_rating as 1 | 2 | 3 | 4 | 5,
     notes: ep.notes || "",
     thumbnailUrl: ep.thumbnail_url || "",
+    lat: ep.coordinates?.lat ?? 0,
+    lng: ep.coordinates?.lng ?? 0,
+    distanceMiles: ep.distance_miles ?? null,
+    elevationGainFt: ep.elevation_gain_ft ?? null,
+    trackGeojson: ep.track_geojson ?? null,
+    gpxStoragePath: ep.gpx_storage_path ?? null,
     scores: {
       color_intensity: eos.sky.color_intensity.score,
       cloud_engagement: eos.sky.cloud_engagement.score,
@@ -84,6 +90,7 @@ export default async function EditEpisodePage({
         totalExpeditions={totalExpeditions}
         shootDates={shootDates}
         editData={editData}
+        mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? null}
       />
     </div>
   );

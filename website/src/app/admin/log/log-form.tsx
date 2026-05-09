@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { EosScorePanel } from "./eos-score-panel";
+import { PlaceLookup } from "./place-lookup";
+import { parseGpx, gpxToGeoJsonLineString, type ParsedGpx } from "@/lib/gpx-parser";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { GemCeremony } from "@/components/gem-ceremony";
 import { FirstExpeditionCeremony } from "@/components/first-expedition-ceremony";
@@ -23,6 +25,12 @@ export interface EditData {
   effortLevel: 1 | 2 | 3 | 4 | 5;
   notes: string;
   thumbnailUrl: string;
+  lat: number;
+  lng: number;
+  distanceMiles: number | null;
+  elevationGainFt: number | null;
+  trackGeojson: { type: "LineString"; coordinates: Array<[number, number, number?]> } | null;
+  gpxStoragePath: string | null;
   scores: EosScores;
   rationales: { [key: string]: string | undefined };
   media?: ExistingMedia[];
@@ -35,6 +43,7 @@ interface LogFormProps {
   nextEpisodeNumber?: number;
   nextSeason?: number;
   editData?: EditData;
+  mapboxToken?: string | null;
 }
 
 interface EosScores {
@@ -61,7 +70,7 @@ const INITIAL_SCORES: EosScores = {
   weather_challenge: 0,
 };
 
-export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNumber, nextSeason, editData }: LogFormProps) {
+export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNumber, nextSeason, editData, mapboxToken = null }: LogFormProps) {
   const isEdit = !!editData;
 
   // Metadata
@@ -72,6 +81,15 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
   const [country, setCountry] = useState(editData?.country ?? "US");
   const [region, setRegion] = useState(editData?.region ?? "Arizona");
   const [trail, setTrail] = useState(editData?.trail ?? "");
+  const [latStr, setLatStr] = useState(
+    editData?.lat ? String(editData.lat) : ""
+  );
+  const [lngStr, setLngStr] = useState(
+    editData?.lng ? String(editData.lng) : ""
+  );
+  const [coordSource, setCoordSource] = useState<"manual" | "exif" | "lookup" | null>(
+    editData?.lat && editData?.lng ? "manual" : null
+  );
   const [shootDate, setShootDate] = useState(
     editData?.shootDate ?? new Date().toISOString().split("T")[0]
   );
@@ -124,17 +142,96 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
+  // Track + journey stats (GPX-derivable, manually overridable)
+  const [distanceMilesStr, setDistanceMilesStr] = useState(
+    editData?.distanceMiles != null ? String(editData.distanceMiles) : ""
+  );
+  const [elevationGainFtStr, setElevationGainFtStr] = useState(
+    editData?.elevationGainFt != null ? String(editData.elevationGainFt) : ""
+  );
+  const [trackGeojson, setTrackGeojson] = useState<EditData["trackGeojson"]>(
+    editData?.trackGeojson ?? null
+  );
+  const [gpxStoragePath, setGpxStoragePath] = useState<string | null>(
+    editData?.gpxStoragePath ?? null
+  );
+  const [gpxFileName, setGpxFileName] = useState<string | null>(null);
+  const [gpxParsed, setGpxParsed] = useState<ParsedGpx | null>(null);
+  const [gpxBusy, setGpxBusy] = useState(false);
+  const [gpxError, setGpxError] = useState<string | null>(null);
+
+  const handleGpxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setGpxBusy(true);
+    setGpxError(null);
+    setGpxFileName(file.name);
+    try {
+      const text = await file.text();
+      const parsed = parseGpx(text);
+      setGpxParsed(parsed);
+      setTrackGeojson(gpxToGeoJsonLineString(parsed));
+
+      // Upload to Supabase storage; fire and forget for speed but await
+      // so we have the storage path before save.
+      const folder = `episodes/s${String(season).padStart(2, "0")}e${String(episodeNumber).padStart(2, "0")}/track`;
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", folder);
+      const res = await fetch("/api/upload-gpx", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Upload failed");
+      setGpxStoragePath(data.path);
+    } catch (err) {
+      setGpxError(err instanceof Error ? err.message : "Could not parse GPX.");
+      setGpxParsed(null);
+      setTrackGeojson(null);
+      setGpxStoragePath(null);
+    } finally {
+      setGpxBusy(false);
+    }
+  };
+
+  const applyGpxStats = () => {
+    if (!gpxParsed) return;
+    setDistanceMilesStr(gpxParsed.distanceMiles.toFixed(2));
+    setElevationGainFtStr(String(Math.round(gpxParsed.elevationGainFt)));
+  };
+
+  const clearGpx = () => {
+    setGpxParsed(null);
+    setTrackGeojson(null);
+    setGpxStoragePath(null);
+    setGpxFileName(null);
+    setGpxError(null);
+  };
+
   // Additional media (photos + videos beyond the hero photo)
   const [pendingMedia, setPendingMedia] = useState<PendingMedia[]>([]);
   const [existingMedia, setExistingMedia] = useState<ExistingMedia[]>(
     editData?.media ?? []
   );
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setPhoto(file);
-      setPhotoPreview(URL.createObjectURL(file));
+    if (!file) return;
+    setPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+
+    // Auto-fill coordinates from EXIF if the user hasn't set them yet (or
+    // hadn't manually overridden). Only auto-fill when both fields are empty
+    // OR the previous source was also EXIF — never overwrite a manual entry.
+    if (coordSource === "manual" || coordSource === "lookup") return;
+    try {
+      const exifr = (await import("exifr")).default;
+      const gps = await exifr.gps(file);
+      if (gps && Number.isFinite(gps.latitude) && Number.isFinite(gps.longitude)) {
+        setLatStr(gps.latitude.toFixed(6));
+        setLngStr(gps.longitude.toFixed(6));
+        setCoordSource("exif");
+      }
+    } catch {
+      // EXIF parse errors are non-fatal.
     }
   };
 
@@ -259,6 +356,15 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
       }
     }
 
+    // Form-state coordinates win over EXIF (the user may have edited or used
+    // the place lookup). Fall back to EXIF, then to {0,0}.
+    const parsedLat = parseFloat(latStr);
+    const parsedLng = parseFloat(lngStr);
+    const coordinates =
+      Number.isFinite(parsedLat) && Number.isFinite(parsedLng)
+        ? { lat: parsedLat, lng: parsedLng }
+        : photoCoordinates || { lat: 0, lng: 0 };
+
     const payload = {
       episode_number: episodeNumber,
       season,
@@ -266,7 +372,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
       location_name: location,
       country,
       region: region || null,
-      coordinates: photoCoordinates || { lat: 0, lng: 0 },
+      coordinates,
       shoot_date: shootDate,
       eos_index: {
         sky: {
@@ -295,6 +401,10 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
       thumbnail_url: thumbnailUrl || existingThumbnail || null,
       notes: notes || null,
       streak_active: checkStreak(),
+      distance_miles: distanceMilesStr.trim() === "" ? null : parseFloat(distanceMilesStr),
+      elevation_gain_ft: elevationGainFtStr.trim() === "" ? null : parseFloat(elevationGainFtStr),
+      track_geojson: trackGeojson,
+      gpx_storage_path: gpxStoragePath,
     };
 
     try {
@@ -529,6 +639,16 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
             setTitle("");
             setLocation("");
             setTrail("");
+            setLatStr("");
+            setLngStr("");
+            setCoordSource(null);
+            setDistanceMilesStr("");
+            setElevationGainFtStr("");
+            setTrackGeojson(null);
+            setGpxStoragePath(null);
+            setGpxFileName(null);
+            setGpxParsed(null);
+            setGpxError(null);
             setNotes("");
             setPhoto(null);
             setPhotoPreview(null);
@@ -680,6 +800,198 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
                   onChange={(e) => setRegion(e.target.value)}
                   className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist focus:border-zora-amber/50 focus:outline-none"
                 />
+              </div>
+            </div>
+
+            {/* Coordinates — drives the map pin */}
+            <div className="rounded-xl border border-dawn-mist/10 bg-dawn-mist/[0.03] p-4 space-y-3">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-xs text-dawn-mist/60">
+                  coordinates <span className="text-dawn-mist/30">(drives the map pin)</span>
+                </p>
+                {coordSource && (
+                  <span className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim">
+                    {coordSource === "exif"
+                      ? "from photo EXIF"
+                      : coordSource === "lookup"
+                        ? "from place lookup"
+                        : "manual"}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                    latitude
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={latStr}
+                    onChange={(e) => {
+                      setLatStr(e.target.value);
+                      setCoordSource("manual");
+                    }}
+                    placeholder="34.358900"
+                    className="w-full rounded-lg border border-dawn-mist/10 bg-pre-dawn px-3 py-2 text-sm text-dawn-mist font-mono placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                    longitude
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={lngStr}
+                    onChange={(e) => {
+                      setLngStr(e.target.value);
+                      setCoordSource("manual");
+                    }}
+                    placeholder="-111.098700"
+                    className="w-full rounded-lg border border-dawn-mist/10 bg-pre-dawn px-3 py-2 text-sm text-dawn-mist font-mono placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                  or look up a place
+                </label>
+                <PlaceLookup
+                  token={mapboxToken}
+                  initialQuery={location}
+                  proximity={
+                    Number.isFinite(parseFloat(latStr)) && Number.isFinite(parseFloat(lngStr))
+                      ? { lat: parseFloat(latStr), lng: parseFloat(lngStr) }
+                      : null
+                  }
+                  onPick={(lat, lng) => {
+                    setLatStr(lat.toFixed(6));
+                    setLngStr(lng.toFixed(6));
+                    setCoordSource("lookup");
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Journey: track + distance + elevation */}
+            <div className="rounded-xl border border-dawn-mist/10 bg-dawn-mist/[0.03] p-4 space-y-3">
+              <div className="flex items-baseline justify-between">
+                <p className="text-xs text-dawn-mist/60">
+                  journey <span className="text-dawn-mist/30">(distance, elevation, optional GPX track)</span>
+                </p>
+                {trackGeojson && (
+                  <span className="font-mono text-[0.6rem] uppercase tracking-wider text-eos-teal">
+                    track attached
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                    distance (miles)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={distanceMilesStr}
+                    onChange={(e) => setDistanceMilesStr(e.target.value)}
+                    placeholder="3.4"
+                    className="w-full rounded-lg border border-dawn-mist/10 bg-pre-dawn px-3 py-2 text-sm text-dawn-mist font-mono placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                    elevation gain (ft)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={elevationGainFtStr}
+                    onChange={(e) => setElevationGainFtStr(e.target.value)}
+                    placeholder="850"
+                    className="w-full rounded-lg border border-dawn-mist/10 bg-pre-dawn px-3 py-2 text-sm text-dawn-mist font-mono placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[0.65rem] text-dawn-mist/40 mb-1 font-mono uppercase tracking-wider">
+                  GPX track (AllTrails / Garmin / Strava export)
+                </label>
+                {!gpxParsed && !trackGeojson && (
+                  <label className="block cursor-pointer rounded-lg border-2 border-dashed border-dawn-mist/15 hover:border-eos-teal/40 transition-colors p-4 text-center">
+                    <p className="text-xs text-dawn-mist/50">
+                      {gpxBusy ? "uploading…" : "click to attach a .gpx file"}
+                    </p>
+                    {gpxError && (
+                      <p className="mt-1 text-xs text-sunrise-orange">{gpxError}</p>
+                    )}
+                    <input
+                      type="file"
+                      accept=".gpx,application/gpx+xml,application/xml,text/xml"
+                      onChange={handleGpxChange}
+                      disabled={gpxBusy}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {gpxParsed && (
+                  <div className="rounded-lg border border-eos-teal/30 bg-eos-teal/5 p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-eos-teal font-mono">
+                        {gpxFileName ?? "track.gpx"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={clearGpx}
+                        className="text-[0.65rem] font-mono uppercase tracking-wider text-dawn-mist/40 hover:text-sunrise-orange transition-colors"
+                      >
+                        remove
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div>
+                        <p className="text-dawn-mist/40 font-mono text-[0.6rem] uppercase tracking-wider">distance</p>
+                        <p className="text-dawn-mist font-mono">{gpxParsed.distanceMiles.toFixed(2)} mi</p>
+                      </div>
+                      <div>
+                        <p className="text-dawn-mist/40 font-mono text-[0.6rem] uppercase tracking-wider">elevation</p>
+                        <p className="text-dawn-mist font-mono">+{Math.round(gpxParsed.elevationGainFt)} ft</p>
+                      </div>
+                      <div>
+                        <p className="text-dawn-mist/40 font-mono text-[0.6rem] uppercase tracking-wider">points</p>
+                        <p className="text-dawn-mist font-mono">{gpxParsed.pointCount}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={applyGpxStats}
+                      className="w-full rounded-md border border-eos-teal/30 hover:bg-eos-teal/10 text-eos-teal text-xs font-mono uppercase tracking-wider py-1.5 transition-colors"
+                    >
+                      use these numbers (overwrites the fields above)
+                    </button>
+                  </div>
+                )}
+
+                {!gpxParsed && trackGeojson && (
+                  <div className="rounded-lg border border-eos-teal/30 bg-eos-teal/5 p-3 flex items-center justify-between">
+                    <p className="text-xs text-eos-teal font-mono">
+                      track from earlier upload ({trackGeojson.coordinates.length} points)
+                    </p>
+                    <button
+                      type="button"
+                      onClick={clearGpx}
+                      className="text-[0.65rem] font-mono uppercase tracking-wider text-dawn-mist/40 hover:text-sunrise-orange transition-colors"
+                    >
+                      remove
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

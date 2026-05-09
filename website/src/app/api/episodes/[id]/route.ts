@@ -15,6 +15,7 @@ export async function PUT(
       effort_rating, effort_points, zora_score,
       distance_miles, elevation_gain_ft, minutes_before_sunrise,
       weather_notes, thumbnail_url, notes, streak_active,
+      track_geojson, gpx_storage_path,
     } = body;
 
     const result = await pool.query(
@@ -23,8 +24,9 @@ export async function PUT(
         coordinates=$7, shoot_date=$8, eos_index=$9, eos_total=$10,
         effort_rating=$11, effort_points=$12, zora_score=$13,
         distance_miles=$14, elevation_gain_ft=$15, minutes_before_sunrise=$16,
-        weather_notes=$17, thumbnail_url=$18, notes=$19, streak_active=$20, updated_at=now()
-      WHERE id=$21 RETURNING id`,
+        weather_notes=$17, thumbnail_url=$18, notes=$19, streak_active=$20,
+        track_geojson=$21, gpx_storage_path=$22, updated_at=now()
+      WHERE id=$23 RETURNING id`,
       [
         episode_number, season || 1, title, location_name, country || "US",
         region || null, JSON.stringify(coordinates || { lat: 0, lng: 0 }),
@@ -32,7 +34,9 @@ export async function PUT(
         effort_rating, effort_points, JSON.stringify(zora_score),
         distance_miles || null, elevation_gain_ft || null,
         minutes_before_sunrise || null, weather_notes || null,
-        thumbnail_url || null, notes || null, streak_active === true, id,
+        thumbnail_url || null, notes || null, streak_active === true,
+        track_geojson ? JSON.stringify(track_geojson) : null,
+        gpx_storage_path || null, id,
       ]
     );
 

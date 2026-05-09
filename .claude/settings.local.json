@@ -59,7 +59,14 @@
       "Bash(node --check tooling/_title_card_check.js)",
       "Bash(rm tooling/_title_card_check.js)",
       "Bash(node --check tooling/_check.js)",
-      "Bash(rm tooling/_check.js)"
+      "Bash(rm tooling/_check.js)",
+      "Bash(sed 's/=.*$/=<redacted>/')",
+      "Bash(grep -i \"expedition-map\\\\|finding-zora\\\\\\\\\\\\\\\\map\\\\|map\\\\\\\\\\\\\\\\page\")",
+      "Bash(curl -s -o /tmp/map.html -w \"STATUS=%{http_code}\\\\nSIZE=%{size_download}\\\\n\" http://localhost:3000/finding-zora/map)",
+      "Read(//tmp/**)",
+      "Bash(PGPASSWORD=myP0stgr3s2026 psql -h localhost -U postgres -d zorafiles -c \"SELECT season, episode_number, title, location_name, coordinates FROM episodes ORDER BY created_at DESC LIMIT 5;\")",
+      "Bash(curl -s \"http://localhost:3000/finding-zora/map\")",
+      "Bash(grep -oE \"pk\\\\.eyJ[A-Za-z0-9._-]{20,}\")"
     ]
   }
 }

@@ -32,7 +32,16 @@ Write 3-5 sentences of field notes. Be specific to this expedition. Include:
 - Any notable discoveries or conditions
 - One thing learned or one thing to do differently next time
 
-Write in first person. No headers or bullet points. Return only the text, no JSON.`, { maxTokens: 512 });
+Write in first person. No headers or bullet points. Return only the text, no JSON.
+
+Style constraints (important — readers can spot AI writing):
+- No em-dashes (—) or en-dashes (–). Use commas, periods, or parentheses.
+- Don't use semicolons as connectors. A period and a new sentence is fine.
+- Avoid these phrases and any close variants: "delve", "tapestry", "in the realm of", "a testament to", "navigate" / "navigating", "showcase" / "showcasing", "leverage", "respectable showing", "frustratingly elusive", "the system teaches you", "what worked and didn't" as a stock phrase.
+- No moralizing or aphoristic closers ("Sometimes ... teaches you that ..."). End on a concrete observation, not a lesson.
+- Use natural contractions ("didn't", "wasn't", "couldn't"). Vary sentence length — short sentences are good.
+- Be specific over evocative. "Sky was mostly blank east of the ridge until 6:12" beats "the sky offered a respectable showing". Concrete nouns and times beat adjectives.
+- Don't hedge with "managed to" or "proved to be". Just say what happened.`, { maxTokens: 512 });
 
     return NextResponse.json({ notes: text.trim() });
   } catch (err) {

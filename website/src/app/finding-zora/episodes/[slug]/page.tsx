@@ -1,10 +1,10 @@
-import Link from "next/link";
-import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode, getEpisodeMediaCounts } from "@/lib/queries";
+import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode, getEpisodeMedia } from "@/lib/queries";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { ZoraExpandable } from "@/components/zora-expandable";
 import { MedallionEmblem } from "@/components/medallion-emblem";
 import { Ornament } from "@/components/atmosphere";
 import { DiscoveryCard, groupDiscoveries } from "@/components/discovery-card";
+import { MediaGallery } from "@/components/media-gallery";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -26,8 +26,9 @@ export default async function EpisodeDetailPage({
 
   if (!ep) return notFound();
 
-  const mediaCounts = await getEpisodeMediaCounts(ep.id);
-  const slugLower = slug.toLowerCase();
+  const mediaRows = await getEpisodeMedia(ep.id);
+  const photoCount = mediaRows.filter((m) => m.kind === "photo").length;
+  const videoCount = mediaRows.filter((m) => m.kind === "video").length;
 
   const effort = EFFORT_LEVELS.find((e) => e.level === ep.effort_rating);
   const eos = ep.eos_index as {
@@ -159,25 +160,23 @@ export default async function EpisodeDetailPage({
         </section>
       )}
 
-      {/* Additional media — link-follow only, keeps the main record uncluttered */}
-      {(mediaCounts.photos + mediaCounts.videos) > 0 && (
+      {/* Companion media gallery */}
+      {mediaRows.length > 0 && (
         <section>
-          <Link
-            href={`/finding-zora/episodes/${slugLower}/media`}
-            className="group flex items-center justify-between rounded-xl border border-dawn-mist/10 bg-dawn-mist/5 p-5 hover:border-zora-amber/40 hover:bg-zora-amber/5 transition-colors"
-          >
-            <div>
-              <p className="font-display text-sm text-dawn-mist group-hover:text-zora-amber transition-colors">
-                official record media
-              </p>
-              <p className="text-xs text-dawn-mist/50 mt-1">
-                {mediaCounts.photos > 0 && `${mediaCounts.photos} photo${mediaCounts.photos !== 1 ? "s" : ""}`}
-                {mediaCounts.photos > 0 && mediaCounts.videos > 0 && " · "}
-                {mediaCounts.videos > 0 && `${mediaCounts.videos} video${mediaCounts.videos !== 1 ? "s" : ""}`}
-              </p>
-            </div>
-            <span className="text-zora-amber/60 group-hover:text-zora-amber transition-colors">→</span>
-          </Link>
+          <Ornament label="Official record media" />
+          <p className="text-xs text-dawn-mist/40 mb-4 -mt-4 font-mono uppercase tracking-wider">
+            {photoCount > 0 && `${photoCount} photo${photoCount !== 1 ? "s" : ""}`}
+            {photoCount > 0 && videoCount > 0 && " · "}
+            {videoCount > 0 && `${videoCount} video${videoCount !== 1 ? "s" : ""}`}
+          </p>
+          <MediaGallery
+            media={mediaRows.map((m) => ({
+              id: m.id,
+              kind: m.kind,
+              url: m.url,
+              caption: m.caption,
+            }))}
+          />
         </section>
       )}
     </div>
