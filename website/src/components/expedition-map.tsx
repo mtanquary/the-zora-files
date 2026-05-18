@@ -160,6 +160,12 @@ export function ExpeditionMap({
   // state-update timing issues.
   const filteredRef = useRef<MapExpedition[]>([]);
 
+  // GPX tracks are off by default; users opt in per-expedition via the
+  // popup toggle. Multiple tracks can be visible at once.
+  const [activeTrackIds, setActiveTrackIds] = useState<Set<string>>(new Set());
+  const activeTrackIdsRef = useRef<Set<string>>(activeTrackIds);
+  activeTrackIdsRef.current = activeTrackIds;
+
   const [activeTypes, setActiveTypes] = useState<Set<DiscoveryType>>(
     new Set(ALL_TYPES)
   );
@@ -466,6 +472,10 @@ export function ExpeditionMap({
               thumbnail_url: ep.thumbnail_url ?? "",
               distance_miles: ep.distance_miles ?? 0,
               elevation_gain_ft: ep.elevation_gain_ft ?? 0,
+              has_track:
+                !!ep.track_geojson && ep.track_geojson.coordinates.length >= 2
+                  ? 1
+                  : 0,
               discoveries_json: JSON.stringify(
                 ep.discoveries.map((d) => ({
                   n: d.name,
@@ -481,8 +491,15 @@ export function ExpeditionMap({
             | undefined;
           if (expSrc) expSrc.setData({ type: "FeatureCollection", features });
 
+          // Only render tracks the user has opted in to via the popup toggle.
+          const visibleIds = activeTrackIdsRef.current;
           const trackFeatures = list
-            .filter((ep) => ep.track_geojson && ep.track_geojson.coordinates.length >= 2)
+            .filter(
+              (ep) =>
+                visibleIds.has(ep.id) &&
+                ep.track_geojson &&
+                ep.track_geojson.coordinates.length >= 2
+            )
             .map((ep) => ({
               type: "Feature" as const,
               geometry: ep.track_geojson!,
@@ -549,6 +566,7 @@ export function ExpeditionMap({
           if (popupRef.current) {
             (popupRef.current as { remove: () => void }).remove();
           }
+          const trackVisible = activeTrackIdsRef.current.has(String(props.id));
           const popup = new maplibregl.Popup({
             closeButton: true,
             closeOnClick: true,
@@ -557,7 +575,7 @@ export function ExpeditionMap({
             className: "zora-popup",
           })
             .setLngLat(geom.coordinates)
-            .setHTML(buildPopupHtml(props, compact))
+            .setHTML(buildPopupHtml(props, compact, trackVisible))
             .addTo(map);
           popupRef.current = popup;
         });
@@ -617,14 +635,15 @@ export function ExpeditionMap({
     });
   }, [activeBasemap, token, mapReady]);
 
-  // Push filter changes through to the existing sources via the install-time
-  // helper stashed on the map instance. The ref was already updated above.
+  // Push filter / track-toggle changes through to the existing sources via
+  // the install-time helper stashed on the map instance. Refs were updated
+  // above at render time.
   useEffect(() => {
     if (!mapReady || !mapRef.current) return;
     const sync = (mapRef.current as unknown as { __syncSources?: () => void })
       .__syncSources;
     sync?.();
-  }, [filteredExpeditions, mapReady]);
+  }, [filteredExpeditions, mapReady, activeTrackIds]);
 
   // Auto-fit bounds once on initial mount.
   const didFitRef = useRef(false);
@@ -668,13 +687,16 @@ export function ExpeditionMap({
     didFitRef.current = true;
   }, [mapReady, expeditions, compact]);
 
-  // Delegated click handler for popup discovery chips and "view episode" / focus links.
+  // Delegated click handler for popup discovery chips and the per-expedition
+  // track toggle. The popup HTML is plain innerHTML so we delegate from the
+  // map container.
   useEffect(() => {
     if (!containerRef.current) return;
     const el = containerRef.current;
     function handleClick(e: MouseEvent) {
       const target = e.target as HTMLElement | null;
       if (!target) return;
+
       const focusEl = target.closest("[data-focus-discovery]") as HTMLElement | null;
       if (focusEl) {
         const name = focusEl.getAttribute("data-focus-discovery");
@@ -682,7 +704,26 @@ export function ExpeditionMap({
           e.preventDefault();
           setFocusDiscovery(name);
           setSearch("");
+          return;
         }
+      }
+
+      const toggleEl = target.closest("[data-toggle-track]") as HTMLButtonElement | null;
+      if (toggleEl) {
+        const id = toggleEl.getAttribute("data-toggle-track");
+        if (!id) return;
+        e.preventDefault();
+        setActiveTrackIds((prev) => {
+          const next = new Set(prev);
+          const willShow = !next.has(id);
+          if (willShow) next.add(id);
+          else next.delete(id);
+          // Update the button label and active state inline so the open
+          // popup reflects the new state without needing a re-render.
+          toggleEl.textContent = willShow ? "hide track" : "show track";
+          toggleEl.classList.toggle("zp-track-on", willShow);
+          return next;
+        });
       }
     }
     el.addEventListener("click", handleClick);
@@ -885,7 +926,7 @@ export function ExpeditionMap({
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-5 h-0.5 bg-amber-light" />
-            track
+            track (toggle in pin popup)
           </span>
           <span className="opacity-50">click a pin for the expedition record</span>
         </div>
@@ -950,8 +991,10 @@ function MapError({ message }: { message: string }) {
 
 function buildPopupHtml(
   props: Record<string, string>,
-  compact: boolean
+  compact: boolean,
+  trackVisible: boolean
 ): string {
+  const id = String(props.id);
   const slug = String(props.slug);
   const title = escapeHtml(String(props.title));
   const location = escapeHtml(String(props.location_name));
@@ -964,6 +1007,7 @@ function buildPopupHtml(
   const thumb = String(props.thumbnail_url);
   const distance = Number(props.distance_miles);
   const elevation = Number(props.elevation_gain_ft);
+  const hasTrack = String(props.has_track) === "1";
   const seasonNum = String(props.season).padStart(2, "0");
   const epNum = String(props.episode_number).padStart(2, "0");
 
@@ -1018,6 +1062,10 @@ function buildPopupHtml(
       </div>`;
   }
 
+  const trackToggleHtml = hasTrack
+    ? `<button type="button" class="zp-track-toggle ${trackVisible ? "zp-track-on" : ""}" data-toggle-track="${escapeHtml(id)}">${trackVisible ? "hide track" : "show track"}</button>`
+    : "";
+
   return `
     <div class="zp">
       ${photoHtml}
@@ -1028,7 +1076,10 @@ function buildPopupHtml(
         ${statsHtml}
         ${contextHtml}
         ${discoveriesHtml}
-        <a class="zp-cta" href="/finding-zora/episodes/${slug}">view episode →</a>
+        <div class="zp-actions">
+          ${trackToggleHtml}
+          <a class="zp-cta" href="/finding-zora/episodes/${slug}">view episode →</a>
+        </div>
       </div>
     </div>
   `;
@@ -1213,6 +1264,34 @@ const POPUP_CSS = `
 .zp-cta:hover {
   background: rgba(240, 165, 0, 0.12);
   color: #ffd166;
+}
+.zp-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.zp-track-toggle {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #2cc48f;
+  background: transparent;
+  border: 1px solid rgba(44, 196, 143, 0.4);
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.zp-track-toggle:hover {
+  background: rgba(44, 196, 143, 0.12);
+  border-color: rgba(44, 196, 143, 0.7);
+}
+.zp-track-toggle.zp-track-on {
+  background: rgba(44, 196, 143, 0.18);
+  color: #ffd166;
+  border-color: rgba(255, 209, 102, 0.5);
 }
 `;
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { recomputeAndStoreZoraScore } from "@/lib/zora-score";
 
 export async function PUT(
   request: NextRequest,
@@ -43,6 +44,10 @@ export async function PUT(
     if (result.rowCount === 0) {
       return NextResponse.json({ error: "Episode not found" }, { status: 404 });
     }
+
+    // discovery_points is derived from the discoveries table — recompute now
+    // so an edit that lost the form's draft list can't zero it out.
+    await recomputeAndStoreZoraScore(result.rows[0].id);
 
     return NextResponse.json({ id: result.rows[0].id });
   } catch (err) {

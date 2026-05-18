@@ -40,7 +40,7 @@ export default async function MapPage() {
         </span>
       </div>
 
-      <Ornament label="World atlas" />
+      <Ornament label="Atlas of dawns" />
 
       {expeditions.length === 0 ? (
         <div className="bg-pre-dawn-mid border border-rule rounded-md p-10 text-center">

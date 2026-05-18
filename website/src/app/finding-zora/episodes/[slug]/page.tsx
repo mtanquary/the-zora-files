@@ -3,7 +3,8 @@ import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { ZoraExpandable } from "@/components/zora-expandable";
 import { MedallionEmblem } from "@/components/medallion-emblem";
 import { Ornament } from "@/components/atmosphere";
-import { DiscoveryCard, groupDiscoveries } from "@/components/discovery-card";
+import { groupDiscoveries } from "@/components/discovery-card";
+import { DiscoveriesGrid } from "@/components/discoveries-grid";
 import { MediaGallery } from "@/components/media-gallery";
 import { notFound } from "next/navigation";
 
@@ -192,11 +193,7 @@ async function DiscoveriesSection({ episodeId }: { episodeId: string }) {
   return (
     <section className="mb-10">
       <Ornament label="Discoveries" />
-      <div className="grid gap-3 sm:grid-cols-2">
-        {grouped.map((d) => (
-          <DiscoveryCard key={d.name} discovery={d} showUnlockBadge />
-        ))}
-      </div>
+      <DiscoveriesGrid discoveries={grouped} showUnlockBadge />
     </section>
   );
 }

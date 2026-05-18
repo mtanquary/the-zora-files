@@ -90,7 +90,7 @@ export function MediaGallery({ media }: MediaGalleryProps) {
   );
 }
 
-interface LightboxProps {
+export interface LightboxProps {
   item: GalleryItem;
   index: number;
   total: number;
@@ -99,7 +99,7 @@ interface LightboxProps {
   onNext?: () => void;
 }
 
-function Lightbox({
+export function Lightbox({
   item,
   index,
   total,

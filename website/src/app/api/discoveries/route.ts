@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { recomputeAndStoreZoraScore } from "@/lib/zora-score";
 
 /** Search existing discovery names for autocomplete. */
 export async function GET(request: NextRequest) {
@@ -65,6 +66,11 @@ export async function POST(request: NextRequest) {
         actualFirstUnlock, subsequentNum, detection_method || "photographed",
       ]
     );
+
+    // Keep the parent episode's zora_score in sync with the discoveries
+    // table. The episode might have been saved before this discovery was
+    // added (or saved with a stale draft list during an edit).
+    await recomputeAndStoreZoraScore(episode_id);
 
     return NextResponse.json(result.rows[0], { status: 201 });
   } catch (err) {
