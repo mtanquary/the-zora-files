@@ -620,7 +620,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
           </div>
           <div>
             <p className="text-dawn-mist/40">zora score</p>
-            <p className="font-mono text-2xl text-zora-amber">{eosTotal + effortInfo.points}+</p>
+            <p className="font-mono text-2xl text-zora-amber">{eosTotal + effortInfo.points + discoveryPoints}</p>
           </div>
         </div>
         <a
