@@ -193,14 +193,18 @@ Every episode folder gets one.
 - **Additional shoots:** (if any)
 - **Series content used:** (intros/outros/b-roll referenced)
 
+## Tool pipeline
+
+_<which editor(s) used — Clipchamp / DaVinci / Descript / other. Note "no DaVinci" if you skipped it, so future-you knows there's no `.drb` to look for.>_
+
 ## Status
 
 - [ ] Selects copied to 01-selects
-- [ ] First cut in DaVinci
-- [ ] Talk pass in Descript
+- [ ] First cut
+- [ ] Talk pass
 - [ ] Final rendered
-- [ ] Published
-- [ ] Project archived to 02-projects (final .drb)
+- [ ] Published _(scheduled for YYYY-MM-DD)_
+- [ ] Project archived to 02-projects (final `.drb` — only if DaVinci was used)
 - [ ] Intermediates pruned (60 days post-publish)
 
 ## Render log
@@ -211,9 +215,10 @@ Every episode folder gets one.
 
 ## Publish info
 
-- **Publish date:**
+- **Publish date:** YYYY-MM-DD _(scheduled)_
 - **YouTube URL:**
 - **Final filename:** `<slug>-final.mp4`
+- **TikTok / Reels:** posted but URLs not tracked per episode
 ```
 
 ## Tool pipeline notes (current)
