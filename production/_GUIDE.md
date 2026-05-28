@@ -2,14 +2,19 @@
 
 This folder contains everything related to the filming and editing workflow.
 
+## Start here
+
+- **`workflow.md`** — the top-level production workflow document. Read this first. Covers the eight phases of a video, the file-routing system, naming conventions, and templates.
+- **`../STORAGE.md`** — the three-tier storage strategy. Which files live in git vs Proton vs local-only.
+
 ## Subfolders
 
 ### checklists/
-Printable/reviewable checklists for each phase of production. These mirror what's in ZORA_PROJECT.md but live here as standalone files you can pull up on your phone before a shoot.
+Printable/reviewable checklists for each phase of production. Pull these up on your phone before a shoot.
 
 - `pre-shoot.md` — the night-before and morning-of checklist
 - `on-location.md` — what to do on arrival and during the shoot
-- `post-production.md` — ingest through final upload
+- `post-production.md` — ingest through final upload (the most detailed of the three)
 
 ### luts/
 DaVinci Resolve LUT files (.cube) for the show's color grade:
@@ -24,13 +29,15 @@ DaVinci Resolve project templates and motion graphics:
 - Lower third templates
 - Intro/outro sequences
 
-## Post-production pipeline
+## Post-production pipeline (overview)
 
-1. Ingest all clips via Hedge to organized folder
-2. Sync all cameras in DaVinci Resolve via timestamp
-3. Edit long-form in DaVinci Resolve
-4. Score episode using Eos Index rubric
-5. Export to Descript for transcript-based talk editing
-6. Export short clips via OpusClip for TikTok/Reels
-7. Final polish on short clips in CapCut
-8. Upload YouTube first, then cross-post
+The detailed flow lives in `workflow.md`. The eight phases:
+
+1. **Plan** — episode plan in the repo
+2. **Shoot** — capture; footage stays on cards
+3. **Ingest** — drop in Proton `zora\_inbox\`, ask Claude to route
+4. **Cull** — copy keepers to the episode's `01-selects\`
+5. **Edit** — DaVinci/Clipchamp; projects in `02-projects\`, drafts in `03-intermediates\`
+6. **Final** — published cut to `04-final\`
+7. **Publish** — update repo metadata; archive final `.drb`; schedule 60-day prune
+8. **Prune** — wipe `03-intermediates\`; keep everything else
