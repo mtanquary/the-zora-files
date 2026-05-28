@@ -83,6 +83,24 @@ export default async function FindingZoraHub() {
 
       {/* ══ CONTENT ══ */}
       <div className="max-w-[780px] mx-auto px-8 pb-16">
+        {/* Score your own sunrise CTA */}
+        <Ornament label="Play along" />
+        <Link
+          href="/finding-zora/score"
+          className="block bg-pre-dawn-mid border border-zora-amber/30 rounded-md p-6 hover:border-zora-amber/60 transition-colors"
+        >
+          <p className="font-display text-lg text-zora-amber">
+            score your own sunrise
+          </p>
+          <p className="text-sm text-mist-dim mt-1">
+            Members get their own photos scored on the Eos Index — the same
+            0–100 rubric every expedition uses. Free, 10 sunrises a month.
+          </p>
+          <span className="inline-block mt-3 font-mono text-[0.6rem] tracking-[0.15em] text-zora-amber uppercase">
+            sign up free →
+          </span>
+        </Link>
+
         {/* Latest expedition */}
         {latest && (
           <>

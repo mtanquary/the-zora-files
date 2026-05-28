@@ -3,11 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const topLinks = [
-  { href: "/", label: "home" },
-  { href: "/about", label: "about" },
-];
+import { createClient } from "@/lib/supabase/client";
 
 const findingZoraLinks = [
   { href: "/finding-zora", label: "overview" },
@@ -18,15 +14,27 @@ const findingZoraLinks = [
   { href: "/finding-zora/records", label: "records" },
   { href: "/finding-zora/rules", label: "rules" },
   { href: "/finding-zora/archives", label: "archives" },
+  { href: "/finding-zora/score", label: "score your sunrise" },
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fzOpen, setFzOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const fzRef = useRef<HTMLLIElement>(null);
 
   const inFindingZora = pathname.startsWith("/finding-zora");
+
+  // Track member auth state for the account / sign-in link.
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(!!session);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   // Close desktop dropdown on outside click
   useEffect(() => {
@@ -112,6 +120,20 @@ export function Nav() {
               about
             </Link>
           </li>
+
+          {signedIn !== null && (
+            <li>
+              {signedIn ? (
+                <Link href="/account" className={linkClass("/account")}>
+                  account
+                </Link>
+              ) : (
+                <Link href="/login" className={linkClass("/login")}>
+                  sign in
+                </Link>
+              )}
+            </li>
+          )}
         </ul>
 
         {/* Mobile hamburger */}
@@ -194,6 +216,22 @@ export function Nav() {
                 about
               </Link>
             </li>
+
+            {signedIn !== null && (
+              <li>
+                <Link
+                  href={signedIn ? "/account" : "/login"}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block font-mono text-[0.7rem] tracking-[0.08em] uppercase transition-colors hover:text-zora-amber ${
+                    pathname.startsWith(signedIn ? "/account" : "/login")
+                      ? "text-zora-amber"
+                      : "text-mist-dim"
+                  }`}
+                >
+                  {signedIn ? "account" : "sign in"}
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       )}
