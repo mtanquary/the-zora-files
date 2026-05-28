@@ -16,6 +16,33 @@ interface ScoreResponse {
   remaining: number;
 }
 
+// Downscale in the browser before upload: keeps the request under Vercel's
+// 4.5 MB serverless body limit, and ~1568px is the size Claude vision wants.
+async function downscaleImage(file: File, maxEdge = 1568, quality = 0.85): Promise<File> {
+  if (!file.type.startsWith("image/")) return file;
+  try {
+    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob((b) => resolve(b), "image/jpeg", quality)
+    );
+    if (!blob || blob.size >= file.size) return file;
+    const name = file.name.replace(/\.\w+$/, "") + ".jpg";
+    return new File([blob], name, { type: "image/jpeg" });
+  } catch {
+    return file;
+  }
+}
+
 export function ScoreClient({
   remaining: initialRemaining,
   limit,
@@ -59,8 +86,9 @@ export function ScoreClient({
     setLoading(true);
     setError(null);
 
+    const upload = await downscaleImage(file);
     const formData = new FormData();
-    formData.append("photo", file);
+    formData.append("photo", upload);
     if (location.trim()) formData.append("location", location.trim());
 
     try {
