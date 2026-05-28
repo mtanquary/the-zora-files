@@ -1,6 +1,6 @@
 # The Zora Files
 
-> Every episode is a scored attempt at the perfect sunrise — the desert doesn't care about your plan.
+> Every episode is a scored expedition for the perfect sunrise. Every dawn, a new chance to discover something.
 
 This repository is the operational hub for **The Zora Files** channel and the **Finding Zora** series. Everything from brand guidelines to episode planning to the website lives here.
 

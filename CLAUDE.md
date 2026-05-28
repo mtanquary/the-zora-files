@@ -37,7 +37,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Episode titles** follow `S01E01 — "<Title>" — <Location>` format
 - **All UI copy** uses sentence case — never ALL CAPS or Title Case
 - **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; twilight violet (`#7A5FB8`) is reserved for Discovery elements only; never use pure black or pure white
-- **Geographic scope**: Arizona is home base but the show is global. **Never hardcode Arizona or "desert" as assumptions** in website architecture, data models, or UI copy. All fields must work for any location worldwide.
+- **Geographic scope**: The show is global by intent. **No location, biome, or geography is part of the brand identity** — bios, taglines, and channel-level copy should not lead with "Arizona-based" or similar framing. Individual expeditions are still named factually (e.g., "Horton Creek, AZ" as the episode location) — that's a factual reference, not brand voice. **Never hardcode any location or biome as assumptions** in website architecture, data models, UI copy, or brand voice. All fields must work for any location worldwide; all brand-voice copy must read as well for an Icelandic volcano as for a Sonoran wash.
 
 ## Scoring system
 
