@@ -14,7 +14,7 @@ create table if not exists public.profiles (
   id                uuid primary key references auth.users (id) on delete cascade,
   email             text,
   full_name         text,
-  marketing_consent boolean not null default false,
+  marketing_consent boolean not null default true,
   created_at        timestamptz not null default now()
 );
 
@@ -51,7 +51,7 @@ begin
       new.raw_user_meta_data ->> 'name',
       ''
     ),
-    coalesce((new.raw_user_meta_data ->> 'marketing_consent')::boolean, false)
+    coalesce((new.raw_user_meta_data ->> 'marketing_consent')::boolean, true)
   )
   on conflict (id) do nothing;
   return new;

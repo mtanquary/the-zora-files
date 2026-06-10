@@ -26,7 +26,7 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [consent, setConsent] = useState(false);
+  const [consent, setConsent] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -158,8 +158,7 @@ export default function SignupPage() {
               className="mt-0.5 accent-zora-amber"
             />
             <span className="text-xs text-mist-dim">
-              Email me new episodes and sunrise tips. (Optional — you can
-              unsubscribe anytime.)
+              Let me know when new episodes drop. Unsubscribe anytime.
             </span>
           </label>
 

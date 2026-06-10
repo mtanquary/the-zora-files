@@ -44,12 +44,14 @@ export default async function EpisodesPage() {
             );
             const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
             return (
-              <Link
+              <div
                 key={ep.id}
-                href={`/finding-zora/episodes/${slug}`}
-                className="flex items-center justify-between bg-pre-dawn-mid border border-rule rounded-md p-5 hover:border-zora-amber/40 transition-colors"
+                className="flex items-center justify-between gap-4 bg-pre-dawn-mid border border-rule rounded-md p-5 transition-colors hover:border-zora-amber/40"
               >
-                <div>
+                <Link
+                  href={`/finding-zora/episodes/${slug}`}
+                  className="min-w-0 flex-1"
+                >
                   <p className="font-display text-dawn-mist">
                     S{String(ep.season).padStart(2, "0")}E
                     {String(ep.episode_number).padStart(2, "0")} ·{" "}
@@ -59,8 +61,8 @@ export default async function EpisodesPage() {
                     {ep.location_name} ·{" "}
                     {new Date(ep.shoot_date).toLocaleDateString()}
                   </p>
-                </div>
-                <div className="flex gap-6 text-right">
+                </Link>
+                <div className="flex items-center gap-6 text-right">
                   <div>
                     <p className="font-mono text-[0.6rem] text-mist-dim uppercase">eos</p>
                     <EosExpandable
@@ -84,8 +86,19 @@ export default async function EpisodesPage() {
                       size="lg"
                     />
                   </div>
+                  {ep.youtube_url && (
+                    <a
+                      href={ep.youtube_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Watch on YouTube"
+                      className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
+                    >
+                      ▶ watch
+                    </a>
+                  )}
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

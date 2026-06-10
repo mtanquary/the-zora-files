@@ -25,6 +25,7 @@ export interface EditData {
   effortLevel: 1 | 2 | 3 | 4 | 5;
   notes: string;
   thumbnailUrl: string;
+  youtubeUrl: string;
   lat: number;
   lng: number;
   distanceMiles: number | null;
@@ -96,6 +97,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
   const [effortLevel, setEffortLevel] = useState(editData?.effortLevel ?? 1);
   const [notes, setNotes] = useState(editData?.notes ?? "");
   const [existingThumbnail] = useState(editData?.thumbnailUrl ?? "");
+  const [youtubeUrl, setYoutubeUrl] = useState(editData?.youtubeUrl ?? "");
 
   // AI assist
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
@@ -399,6 +401,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
         total: eosTotal + effortInfo.points + discoveries.reduce((sum, d) => sum + d.points, 0),
       },
       thumbnail_url: thumbnailUrl || existingThumbnail || null,
+      youtube_url: youtubeUrl.trim() || null,
       notes: notes || null,
       streak_active: checkStreak(),
       distance_miles: distanceMilesStr.trim() === "" ? null : parseFloat(distanceMilesStr),
@@ -1247,6 +1250,25 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
           >
             + add discovery
           </button>
+        </section>
+
+        {/* YouTube URL */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-dawn-mist">
+              youtube url
+            </h2>
+          </div>
+          <input
+            type="url"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v=…"
+            className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
+          />
+          <p className="mt-1 text-xs text-dawn-mist/40">
+            Once set, a ▶ watch link appears on the home, hub, archive, and the embed appears on the episode page.
+          </p>
         </section>
 
         {/* Field notes */}

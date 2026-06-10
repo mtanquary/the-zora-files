@@ -79,6 +79,62 @@ export default async function Home() {
           </div>
         </Link>
 
+        {/* Latest episodes — direct access to the videos */}
+        {episodes.length > 0 && (
+          <>
+            <Ornament label="Latest episodes" />
+            <div className="space-y-3">
+              {episodes.slice(0, 3).map((ep) => {
+                const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
+                return (
+                  <div
+                    key={ep.id}
+                    className="flex items-center justify-between gap-4 bg-pre-dawn-mid border border-rule rounded-md p-4 transition-colors hover:border-zora-amber/40"
+                  >
+                    <Link
+                      href={`/finding-zora/episodes/${slug}`}
+                      className="min-w-0 flex-1"
+                    >
+                      <p className="font-display text-sm text-dawn-mist truncate">
+                        S{String(ep.season).padStart(2, "0")}E
+                        {String(ep.episode_number).padStart(2, "0")} ·{" "}
+                        &ldquo;{ep.title}&rdquo;
+                      </p>
+                      <p className="text-xs text-mist-dim mt-1 truncate">
+                        {ep.location_name}
+                      </p>
+                    </Link>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <span className="font-mono text-lg text-eos-teal">
+                        {ep.eos_total}
+                      </span>
+                      {ep.youtube_url && (
+                        <a
+                          href={ep.youtube_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Watch on YouTube"
+                          className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
+                        >
+                          ▶ watch
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-right mt-3">
+              <Link
+                href="/finding-zora/episodes"
+                className="font-mono text-xs text-zora-amber hover:text-amber-light transition-colors tracking-wider"
+              >
+                all episodes →
+              </Link>
+            </p>
+          </>
+        )}
+
         {/* Future series placeholder */}
         <Ornament label="The philosophy" />
 
@@ -99,9 +155,36 @@ export default async function Home() {
           <p className="font-display text-lg text-zora-amber mb-3">
             Follow the pursuit
           </p>
-          <p className="text-mist-dim mb-5">
-            Season one of Finding Zora begins soon.
-          </p>
+          <Link
+            href="/finding-zora/episodes"
+            className="group inline-flex flex-col items-center gap-3 mb-5 text-zora-amber/70 hover:text-zora-amber transition-colors"
+          >
+            <svg
+              width="72"
+              height="60"
+              viewBox="0 0 72 60"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              aria-hidden="true"
+            >
+              {/* fanned stack of episode cards */}
+              <rect x="8" y="14" width="36" height="26" rx="3" opacity="0.35" />
+              <rect x="14" y="18" width="36" height="26" rx="3" opacity="0.6" />
+              <rect x="20" y="22" width="36" height="26" rx="3" />
+              {/* magnifier discovering the front card */}
+              <circle cx="44" cy="36" r="10" />
+              <path d="M52 44 L60 52" strokeLinecap="round" />
+              {/* play triangle inside the lens */}
+              <path
+                d="M41 31 L41 41 L49 36 Z"
+                fill="currentColor"
+                stroke="none"
+                opacity="0.75"
+              />
+            </svg>
+            <span className="font-display text-base">browse the episodes →</span>
+          </Link>
           <p className="font-mono text-sm text-amber-light tracking-wider mb-3">
             thezorafiles.com
           </p>

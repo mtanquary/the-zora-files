@@ -43,6 +43,7 @@ export default async function EditEpisodePage({
     effortLevel: ep.effort_rating as 1 | 2 | 3 | 4 | 5,
     notes: ep.notes || "",
     thumbnailUrl: ep.thumbnail_url || "",
+    youtubeUrl: ep.youtube_url || "",
     lat: ep.coordinates?.lat ?? 0,
     lng: ep.coordinates?.lng ?? 0,
     distanceMiles: ep.distance_miles ?? null,

@@ -6,6 +6,7 @@ import { Ornament } from "@/components/atmosphere";
 import { groupDiscoveries } from "@/components/discovery-card";
 import { DiscoveriesGrid } from "@/components/discoveries-grid";
 import { MediaGallery } from "@/components/media-gallery";
+import { youtubeEmbedUrl } from "@/lib/youtube";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -78,6 +79,37 @@ export default async function EpisodeDetailPage({
           />
         </div>
       )}
+
+      {/* YouTube episode */}
+      {(() => {
+        const url = ep.youtube_url;
+        const embed = youtubeEmbedUrl(url);
+        if (!embed || !url) return null;
+        return (
+          <section className="mb-10">
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-dawn-mist/10 bg-pre-dawn-light">
+              <iframe
+                src={embed}
+                title={`${ep.title} — watch on YouTube`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+            <p className="mt-2 text-right">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors"
+              >
+                watch on youtube ↗
+              </a>
+            </p>
+          </section>
+        );
+      })()}
 
       {/* Score summary */}
       <div className="grid grid-cols-3 gap-4 mb-10">

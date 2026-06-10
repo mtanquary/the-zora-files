@@ -262,12 +262,14 @@ export default async function FindingZoraHub() {
                   (e) => e.level === ep.effort_rating
                 );
                 return (
-                  <Link
+                  <div
                     key={ep.id}
-                    href={`/finding-zora/episodes/s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`}
-                    className="flex items-center justify-between bg-pre-dawn-mid border border-rule rounded-md p-4 hover:border-zora-amber/40 transition-colors"
+                    className="flex items-center justify-between gap-4 bg-pre-dawn-mid border border-rule rounded-md p-4 transition-colors hover:border-zora-amber/40"
                   >
-                    <div>
+                    <Link
+                      href={`/finding-zora/episodes/s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`}
+                      className="min-w-0 flex-1"
+                    >
                       <p className="font-display text-sm text-dawn-mist">
                         S{String(ep.season).padStart(2, "0")}E
                         {String(ep.episode_number).padStart(2, "0")} ·{" "}
@@ -276,8 +278,8 @@ export default async function FindingZoraHub() {
                       <p className="text-xs text-mist-dim">
                         {ep.location_name}
                       </p>
-                    </div>
-                    <div className="flex gap-6 text-right items-start">
+                    </Link>
+                    <div className="flex gap-6 text-right items-center">
                       <div>
                         <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
                           eos
@@ -307,8 +309,19 @@ export default async function FindingZoraHub() {
                           discoveryPoints={ep.zora_score.discovery_points}
                         />
                       </div>
+                      {ep.youtube_url && (
+                        <a
+                          href={ep.youtube_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Watch on YouTube"
+                          className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
+                        >
+                          ▶ watch
+                        </a>
+                      )}
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
