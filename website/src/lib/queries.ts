@@ -1,5 +1,15 @@
 import pool from "./db";
 
+/**
+ * SQL fragment that limits a query to AIRED episodes (publish_date set and on
+ * or before today). Used by every score-sensitive query so unaired expeditions
+ * never leak into leaderboards, records, the discovery log, or the map.
+ *
+ * `getEpisodes()` itself stays unfiltered — list pages need the upcoming rows
+ * so they can render "airs <date>" callouts instead of scores.
+ */
+const AIRED_WHERE_EP = "publish_date IS NOT NULL AND publish_date <= CURRENT_DATE";
+
 export interface EpisodeRow {
   id: string;
   episode_number: number;
@@ -57,7 +67,7 @@ export async function getEpisodeByNumber(
 
 export async function getLatestEpisode(): Promise<EpisodeRow | null> {
   const result = await pool.query(
-    "SELECT * FROM episodes ORDER BY shoot_date DESC, episode_number DESC LIMIT 1"
+    `SELECT * FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY shoot_date DESC, episode_number DESC LIMIT 1`
   );
   return result.rows[0] || null;
 }
@@ -128,10 +138,13 @@ export async function getEpisodeMediaCounts(episodeId: string): Promise<{ photos
 }
 
 export async function getAllDiscoveries(): Promise<(DiscoveryRow & { episode_title?: string })[]> {
+  // Only surface discoveries whose episode has aired — otherwise we'd leak
+  // species and points from upcoming expeditions before they air.
   const result = await pool.query(`
     SELECT d.*, e.title as episode_title
     FROM discoveries d
-    LEFT JOIN episodes e ON d.episode_id = e.id
+    JOIN episodes e ON d.episode_id = e.id
+    WHERE e.publish_date IS NOT NULL AND e.publish_date <= CURRENT_DATE
     ORDER BY d.created_at DESC
   `);
   return result.rows;
@@ -149,7 +162,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
 
   // Highest Eos Index
   const eosRes = await pool.query(
-    "SELECT title, season, episode_number, eos_total FROM episodes ORDER BY eos_total DESC LIMIT 1"
+    `SELECT title, season, episode_number, eos_total FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY eos_total DESC LIMIT 1`
   );
   if (eosRes.rows.length > 0) {
     const r = eosRes.rows[0];
@@ -163,7 +176,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
 
   // Highest Zora Score
   const zoraRes = await pool.query(
-    "SELECT title, season, episode_number, zora_score->>'total' as zora_total FROM episodes ORDER BY (zora_score->>'total')::int DESC LIMIT 1"
+    `SELECT title, season, episode_number, zora_score->>'total' as zora_total FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY (zora_score->>'total')::int DESC LIMIT 1`
   );
   if (zoraRes.rows.length > 0) {
     const r = zoraRes.rows[0];
@@ -179,6 +192,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
   const discRes = await pool.query(
     `SELECT e.title, e.season, e.episode_number, COUNT(d.id) as disc_count
      FROM episodes e JOIN discoveries d ON d.episode_id = e.id
+     WHERE e.publish_date IS NOT NULL AND e.publish_date <= CURRENT_DATE
      GROUP BY e.id, e.title, e.season, e.episode_number
      ORDER BY disc_count DESC LIMIT 1`
   );
@@ -193,7 +207,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
   }
 
   // Total expeditions
-  const expRes = await pool.query("SELECT COUNT(*) as count FROM episodes");
+  const expRes = await pool.query(`SELECT COUNT(*) as count FROM episodes WHERE ${AIRED_WHERE_EP}`);
   records.push({
     category: "Total expeditions",
     value: expRes.rows[0].count,
@@ -202,7 +216,11 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
   });
 
   // Total species discovered
-  const speciesRes = await pool.query("SELECT COUNT(DISTINCT name) as count FROM discoveries");
+  const speciesRes = await pool.query(
+    `SELECT COUNT(DISTINCT d.name) as count
+       FROM discoveries d JOIN episodes e ON e.id = d.episode_id
+      WHERE e.publish_date IS NOT NULL AND e.publish_date <= CURRENT_DATE`
+  );
   records.push({
     category: "Species discovered",
     value: speciesRes.rows[0].count,
@@ -211,7 +229,11 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
   });
 
   // Total discovery points
-  const ptsRes = await pool.query("SELECT COALESCE(SUM(points), 0) as total FROM discoveries");
+  const ptsRes = await pool.query(
+    `SELECT COALESCE(SUM(d.points), 0) as total
+       FROM discoveries d JOIN episodes e ON e.id = d.episode_id
+      WHERE e.publish_date IS NOT NULL AND e.publish_date <= CURRENT_DATE`
+  );
   records.push({
     category: "Discovery points earned",
     value: String(ptsRes.rows[0].total),
@@ -221,7 +243,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
 
   // Highest effort
   const effortRes = await pool.query(
-    "SELECT title, season, episode_number, effort_rating FROM episodes ORDER BY effort_rating DESC LIMIT 1"
+    `SELECT title, season, episode_number, effort_rating FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY effort_rating DESC LIMIT 1`
   );
   if (effortRes.rows.length > 0) {
     const r = effortRes.rows[0];
@@ -236,7 +258,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
 
   // Lowest Eos Index (for range context)
   const lowEosRes = await pool.query(
-    "SELECT title, season, episode_number, eos_total FROM episodes ORDER BY eos_total ASC LIMIT 1"
+    `SELECT title, season, episode_number, eos_total FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY eos_total ASC LIMIT 1`
   );
   if (lowEosRes.rows.length > 0 && eosRes.rows.length > 0 && lowEosRes.rows[0].eos_total !== eosRes.rows[0].eos_total) {
     const r = lowEosRes.rows[0];
@@ -253,7 +275,7 @@ export async function getComputedRecords(): Promise<RecordEntry[]> {
 
 export async function getEpisodesSortedByEos(): Promise<EpisodeRow[]> {
   const result = await pool.query(
-    "SELECT * FROM episodes ORDER BY eos_total DESC"
+    `SELECT * FROM episodes WHERE ${AIRED_WHERE_EP} ORDER BY eos_total DESC`
   );
   return result.rows;
 }
@@ -312,6 +334,8 @@ export async function getMapData(): Promise<MapExpedition[]> {
      WHERE coordinates IS NOT NULL
        AND (coordinates->>'lat')::float != 0
        AND (coordinates->>'lng')::float != 0
+       AND publish_date IS NOT NULL
+       AND publish_date <= CURRENT_DATE
      ORDER BY shoot_date DESC, episode_number DESC`
   );
 

@@ -26,6 +26,7 @@ export interface EditData {
   notes: string;
   thumbnailUrl: string;
   youtubeUrl: string;
+  publishDate: string;
   lat: number;
   lng: number;
   distanceMiles: number | null;
@@ -98,6 +99,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
   const [notes, setNotes] = useState(editData?.notes ?? "");
   const [existingThumbnail] = useState(editData?.thumbnailUrl ?? "");
   const [youtubeUrl, setYoutubeUrl] = useState(editData?.youtubeUrl ?? "");
+  const [publishDate, setPublishDate] = useState(editData?.publishDate ?? "");
 
   // AI assist
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
@@ -402,6 +404,7 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
       },
       thumbnail_url: thumbnailUrl || existingThumbnail || null,
       youtube_url: youtubeUrl.trim() || null,
+      publish_date: publishDate || null,
       notes: notes || null,
       streak_active: checkStreak(),
       distance_miles: distanceMilesStr.trim() === "" ? null : parseFloat(distanceMilesStr),
@@ -770,16 +773,32 @@ export function LogForm({ hasApiKey, totalExpeditions, shootDates, nextEpisodeNu
                 className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist placeholder:text-dawn-mist/20 focus:border-zora-amber/50 focus:outline-none"
               />
             </div>
-            <div>
-              <label className="block text-xs text-dawn-mist/50 mb-1">
-                shoot date
-              </label>
-              <input
-                type="date"
-                value={shootDate}
-                onChange={(e) => setShootDate(e.target.value)}
-                className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist focus:border-zora-amber/50 focus:outline-none"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-dawn-mist/50 mb-1">
+                  shoot date
+                </label>
+                <input
+                  type="date"
+                  value={shootDate}
+                  onChange={(e) => setShootDate(e.target.value)}
+                  className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist focus:border-zora-amber/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-dawn-mist/50 mb-1">
+                  release date
+                </label>
+                <input
+                  type="date"
+                  value={publishDate}
+                  onChange={(e) => setPublishDate(e.target.value)}
+                  className="w-full rounded-lg border border-dawn-mist/10 bg-dawn-mist/5 px-3 py-2 text-sm text-dawn-mist focus:border-zora-amber/50 focus:outline-none"
+                />
+                <p className="mt-1 text-[0.65rem] text-dawn-mist/40">
+                  Scores, discoveries, and video are hidden until this date.
+                </p>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

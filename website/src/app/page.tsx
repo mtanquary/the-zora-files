@@ -6,6 +6,7 @@ import {
   Ornament,
   Lore,
 } from "@/components/atmosphere";
+import { isAired, formatAirsDateShort } from "@/lib/airing";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +87,7 @@ export default async function Home() {
             <div className="space-y-3">
               {episodes.slice(0, 3).map((ep) => {
                 const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
+                const aired = isAired(ep.publish_date);
                 return (
                   <div
                     key={ep.id}
@@ -105,19 +107,32 @@ export default async function Home() {
                       </p>
                     </Link>
                     <div className="flex items-center gap-4 shrink-0">
-                      <span className="font-mono text-lg text-eos-teal">
-                        {ep.eos_total}
-                      </span>
-                      {ep.youtube_url && (
-                        <a
-                          href={ep.youtube_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Watch on YouTube"
-                          className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
-                        >
-                          ▶ watch
-                        </a>
+                      {aired ? (
+                        <>
+                          <span className="font-mono text-lg text-eos-teal">
+                            {ep.eos_total}
+                          </span>
+                          {ep.youtube_url && (
+                            <a
+                              href={ep.youtube_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Watch on YouTube"
+                              className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
+                            >
+                              ▶ watch
+                            </a>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-right">
+                          <p className="font-mono text-[0.55rem] uppercase tracking-wider text-zora-amber/80">
+                            airs
+                          </p>
+                          <p className="font-display text-sm text-zora-amber">
+                            {formatAirsDateShort(ep.publish_date)}
+                          </p>
+                        </div>
                       )}
                     </div>
                   </div>

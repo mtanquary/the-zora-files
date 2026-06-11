@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       weather_notes,
       thumbnail_url,
       youtube_url,
+      publish_date,
       notes,
       streak_active,
       track_geojson,
@@ -34,18 +35,18 @@ export async function POST(request: NextRequest) {
     const result = await pool.query(
       `INSERT INTO episodes (
         episode_number, season, title, location_name, country, region,
-        coordinates, shoot_date, eos_index, eos_total,
+        coordinates, shoot_date, publish_date, eos_index, eos_total,
         effort_rating, effort_points, zora_score,
         distance_miles, elevation_gain_ft, minutes_before_sunrise,
         weather_notes, thumbnail_url, youtube_url, notes, streak_active,
         track_geojson, gpx_storage_path
       ) VALUES (
         $1, $2, $3, $4, $5, $6,
-        $7, $8, $9, $10,
-        $11, $12, $13,
-        $14, $15, $16,
-        $17, $18, $19, $20, $21,
-        $22, $23
+        $7, $8, $9, $10, $11,
+        $12, $13, $14,
+        $15, $16, $17,
+        $18, $19, $20, $21, $22,
+        $23, $24
       ) RETURNING id`,
       [
         episode_number,
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
         region || null,
         JSON.stringify(coordinates || { lat: 0, lng: 0 }),
         shoot_date,
+        publish_date || null,
         JSON.stringify(eos_index),
         eos_total,
         effort_rating,

@@ -7,6 +7,7 @@ import { groupDiscoveries } from "@/components/discovery-card";
 import { DiscoveriesGrid } from "@/components/discoveries-grid";
 import { MediaGallery } from "@/components/media-gallery";
 import { youtubeEmbedUrl } from "@/lib/youtube";
+import { isAired, formatAirsDate } from "@/lib/airing";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,41 @@ export default async function EpisodeDetailPage({
   const ep = await getEpisodeByNumber(season, episodeNumber);
 
   if (!ep) return notFound();
+
+  const aired = isAired(ep.publish_date);
+
+  // Upcoming episode → render the "airs <date>" anticipation view and stop
+  // before any score / discovery / notes / media spoilers.
+  if (!aired) {
+    return (
+      <div className="mx-auto max-w-4xl px-6 py-16">
+        <div className="flex items-start gap-4 mb-1">
+          <div className="flex-1">
+            <p className="text-sm text-dawn-mist/40 mb-1">
+              S{String(ep.season).padStart(2, "0")}E{String(ep.episode_number).padStart(2, "0")}
+            </p>
+            <h1 className="font-display text-3xl font-bold text-zora-amber">
+              &ldquo;{ep.title}&rdquo;
+            </h1>
+          </div>
+        </div>
+        <p className="text-dawn-mist/50 mb-10">{ep.location_name}</p>
+
+        <div className="rounded-xl border border-zora-amber/30 bg-pre-dawn-mid p-10 text-center">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-zora-amber/80 mb-3">
+            episode airs
+          </p>
+          <p className="font-display text-4xl font-bold text-zora-amber mb-3">
+            {formatAirsDate(ep.publish_date)}
+          </p>
+          <p className="text-dawn-mist/60 text-sm max-w-md mx-auto">
+            The expedition is in the can. Sunrise score, discoveries, and the
+            full breakdown go live the day it airs. Check back then.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const mediaRows = await getEpisodeMedia(ep.id);
   const photoCount = mediaRows.filter((m) => m.kind === "photo").length;

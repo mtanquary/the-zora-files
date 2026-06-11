@@ -44,6 +44,11 @@ export default async function EditEpisodePage({
     notes: ep.notes || "",
     thumbnailUrl: ep.thumbnail_url || "",
     youtubeUrl: ep.youtube_url || "",
+    publishDate: ep.publish_date
+      ? (typeof ep.publish_date === "string"
+          ? ep.publish_date.split("T")[0]
+          : new Date(ep.publish_date).toISOString().split("T")[0])
+      : "",
     lat: ep.coordinates?.lat ?? 0,
     lng: ep.coordinates?.lng ?? 0,
     distanceMiles: ep.distance_miles ?? null,

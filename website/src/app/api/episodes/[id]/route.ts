@@ -15,23 +15,23 @@ export async function PUT(
       coordinates, shoot_date, eos_index, eos_total,
       effort_rating, effort_points, zora_score,
       distance_miles, elevation_gain_ft, minutes_before_sunrise,
-      weather_notes, thumbnail_url, youtube_url, notes, streak_active,
+      weather_notes, thumbnail_url, youtube_url, publish_date, notes, streak_active,
       track_geojson, gpx_storage_path,
     } = body;
 
     const result = await pool.query(
       `UPDATE episodes SET
         episode_number=$1, season=$2, title=$3, location_name=$4, country=$5, region=$6,
-        coordinates=$7, shoot_date=$8, eos_index=$9, eos_total=$10,
-        effort_rating=$11, effort_points=$12, zora_score=$13,
-        distance_miles=$14, elevation_gain_ft=$15, minutes_before_sunrise=$16,
-        weather_notes=$17, thumbnail_url=$18, youtube_url=$19, notes=$20, streak_active=$21,
-        track_geojson=$22, gpx_storage_path=$23, updated_at=now()
-      WHERE id=$24 RETURNING id`,
+        coordinates=$7, shoot_date=$8, publish_date=$9, eos_index=$10, eos_total=$11,
+        effort_rating=$12, effort_points=$13, zora_score=$14,
+        distance_miles=$15, elevation_gain_ft=$16, minutes_before_sunrise=$17,
+        weather_notes=$18, thumbnail_url=$19, youtube_url=$20, notes=$21, streak_active=$22,
+        track_geojson=$23, gpx_storage_path=$24, updated_at=now()
+      WHERE id=$25 RETURNING id`,
       [
         episode_number, season || 1, title, location_name, country || "US",
         region || null, JSON.stringify(coordinates || { lat: 0, lng: 0 }),
-        shoot_date, JSON.stringify(eos_index), eos_total,
+        shoot_date, publish_date || null, JSON.stringify(eos_index), eos_total,
         effort_rating, effort_points, JSON.stringify(zora_score),
         distance_miles || null, elevation_gain_ft || null,
         minutes_before_sunrise || null, weather_notes || null,

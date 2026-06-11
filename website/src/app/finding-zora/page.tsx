@@ -14,14 +14,18 @@ import {
   Ornament,
   Lore,
 } from "@/components/atmosphere";
+import { isAired, formatAirsDate, formatAirsDateShort } from "@/lib/airing";
 
 export const metadata: Metadata = { title: "finding zora" };
 export const dynamic = "force-dynamic";
 
 export default async function FindingZoraHub() {
   const episodes = await getEpisodes();
-  const latest = episodes[0] ?? null;
-  const totalExpeditions = episodes.length;
+  // Featured "Latest expedition" + medallion progress reflect AIRED episodes
+  // only — otherwise an upcoming entry would headline and inflate the level.
+  const airedEpisodes = episodes.filter((e) => isAired(e.publish_date));
+  const latest = airedEpisodes[0] ?? null;
+  const totalExpeditions = airedEpisodes.length;
   const currentLevel = LEVELS.filter(
     (l) => totalExpeditions >= l.expeditions
   ).pop()!;
@@ -261,6 +265,7 @@ export default async function FindingZoraHub() {
                 const effort = EFFORT_LEVELS.find(
                   (e) => e.level === ep.effort_rating
                 );
+                const aired = isAired(ep.publish_date);
                 return (
                   <div
                     key={ep.id}
@@ -279,48 +284,59 @@ export default async function FindingZoraHub() {
                         {ep.location_name}
                       </p>
                     </Link>
-                    <div className="flex gap-6 text-right items-center">
-                      <div>
-                        <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
-                          eos
-                        </p>
-                        <EosExpandable
-                          total={ep.eos_total}
-                          sub={extractEosSub(ep.eos_index)}
-                        />
+                    {aired ? (
+                      <div className="flex gap-6 text-right items-center">
+                        <div>
+                          <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
+                            eos
+                          </p>
+                          <EosExpandable
+                            total={ep.eos_total}
+                            sub={extractEosSub(ep.eos_index)}
+                          />
+                        </div>
+                        <div>
+                          <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
+                            effort
+                          </p>
+                          <p className="text-sunrise-orange text-sm">
+                            {effort?.label}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
+                            zora
+                          </p>
+                          <ZoraExpandable
+                            total={ep.zora_score.total}
+                            eosIndex={ep.zora_score.eos_index}
+                            effortPoints={ep.zora_score.effort_points}
+                            effortLabel={effort?.label || ""}
+                            discoveryPoints={ep.zora_score.discovery_points}
+                          />
+                        </div>
+                        {ep.youtube_url && (
+                          <a
+                            href={ep.youtube_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Watch on YouTube"
+                            className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
+                          >
+                            ▶ watch
+                          </a>
+                        )}
                       </div>
-                      <div>
-                        <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
-                          effort
+                    ) : (
+                      <div className="text-right shrink-0">
+                        <p className="font-mono text-[0.6rem] uppercase tracking-wider text-zora-amber/80">
+                          airs
                         </p>
-                        <p className="text-sunrise-orange text-sm">
-                          {effort?.label}
+                        <p className="font-display text-base text-zora-amber">
+                          {formatAirsDateShort(ep.publish_date)}
                         </p>
                       </div>
-                      <div>
-                        <p className="font-mono text-[0.6rem] text-mist-dim uppercase">
-                          zora
-                        </p>
-                        <ZoraExpandable
-                          total={ep.zora_score.total}
-                          eosIndex={ep.zora_score.eos_index}
-                          effortPoints={ep.zora_score.effort_points}
-                          effortLabel={effort?.label || ""}
-                          discoveryPoints={ep.zora_score.discovery_points}
-                        />
-                      </div>
-                      {ep.youtube_url && (
-                        <a
-                          href={ep.youtube_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Watch on YouTube"
-                          className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
-                        >
-                          ▶ watch
-                        </a>
-                      )}
-                    </div>
+                    )}
                   </div>
                 );
               })}
