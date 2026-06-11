@@ -1,0 +1,828 @@
+<!--
+  The Zora Files · Finding Zora
+  Outro title card · transition from the expedition cut to the scoring screencast
+  16:9 frame · same family as intro_title_card · Eos Index dial awaits the reveal
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --pre-dawn: #0D0F14;
+    --zora-amber: #F0A500;
+    --sunrise-orange: #E8520A;
+    --eos-teal: #1D9E75;
+    --dawn-mist: #C8D4E0;
+    --dawn-mist-dim: rgba(200, 212, 224, 0.45);
+    --dawn-mist-faint: rgba(200, 212, 224, 0.18);
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+  }
+
+  .zf-wrap {
+    background: #050709;
+    padding: 1.6rem;
+    border-radius: 14px;
+    color: var(--dawn-mist);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── THE CARD ── 16:9 ── */
+  .zf-card {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(232, 82, 10, 0.22) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 80% at 50% 120%, rgba(240, 165, 0, 0.12) 0%, transparent 50%),
+      linear-gradient(180deg, #060910 0%, #0a0d14 55%, #130c0a 100%);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  /* subtle noise — atmospheric depth */
+  .zf-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 60% 60%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 85% 15%, rgba(200,212,224,0.04) 50%, transparent 50%),
+      radial-gradient(1px 1px at 30% 80%, rgba(200,212,224,0.04) 50%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* vignette */
+  .zf-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 60%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .zf-card-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: 4%;
+    padding: 6% 6%;
+    height: 100%;
+    align-items: center;
+  }
+
+  /* graphic side */
+  .zf-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .zf-graphic canvas {
+    width: 100%;
+    height: auto;
+    max-width: 360px;
+    filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55));
+  }
+
+  /* text side */
+  .zf-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .zf-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68em;
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    color: var(--zora-amber);
+    text-transform: lowercase;
+  }
+
+  .zf-location {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--dawn-mist);
+    font-variation-settings: "opsz" 120;
+    margin-top: 0.15rem;
+  }
+
+  .zf-sublocation {
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--dawn-mist-dim);
+    margin-top: 0.25rem;
+    letter-spacing: 0.005em;
+  }
+
+  .zf-rule {
+    width: 46%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(240, 165, 0, 0.55) 0%, rgba(240, 165, 0, 0) 100%);
+    margin: 0.9rem 0 0.55rem;
+  }
+
+  .zf-tagline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: var(--eos-teal);
+    text-transform: uppercase;
+    margin-top: 0.05rem;
+  }
+  .zf-tagline::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--eos-teal);
+    box-shadow: 0 0 8px var(--eos-teal);
+  }
+
+  .zf-brandmark {
+    position: absolute;
+    bottom: 4%;
+    right: 5%;
+    font-family: var(--font-mono);
+    font-size: 0.5em;
+    font-weight: 400;
+    letter-spacing: 0.32em;
+    color: rgba(200, 212, 224, 0.32);
+    text-transform: lowercase;
+    z-index: 2;
+  }
+
+  /* ── CONTROLS ── */
+  .zf-panel {
+    background: #0a0d13;
+    border: 1px solid rgba(200, 212, 224, 0.08);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+
+  .zf-panel-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+    margin-bottom: 1rem;
+  }
+
+  .zf-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem 1.4rem;
+  }
+
+  .zf-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .zf-field label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+  }
+
+  .zf-field input[type=text],
+  .zf-field input[type=number] {
+    background: #0d0f14;
+    color: var(--dawn-mist);
+    border: 1px solid rgba(200, 212, 224, 0.13);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .zf-field input:focus { border-color: var(--zora-amber); }
+  .zf-field input[type=range] { accent-color: var(--zora-amber); width: 100%; }
+
+  .zf-row { display: flex; align-items: center; gap: 0.6rem; }
+  .zf-readout {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--zora-amber);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .zf-note {
+    margin-top: 1rem;
+    padding: 0.75rem 0.95rem;
+    background: rgba(29, 158, 117, 0.06);
+    border-left: 2px solid var(--eos-teal);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dawn-mist);
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── EXPORT PANEL ── */
+  .zf-export {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem 1.4rem;
+    align-items: center;
+  }
+  .zf-export-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+  .zf-radio-group { display: inline-flex; gap: 0.65rem; }
+  .zf-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dawn-mist);
+    user-select: none;
+  }
+  .zf-radio input { accent-color: var(--zora-amber); }
+  .zf-btn {
+    background: transparent;
+    border: 1px solid rgba(240, 165, 0, 0.4);
+    color: var(--zora-amber);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .zf-btn:hover { background: rgba(240, 165, 0, 0.08); border-color: var(--zora-amber); }
+  .zf-btn:disabled { opacity: 0.45; cursor: wait; }
+  .zf-export-meta {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dawn-mist-dim);
+    letter-spacing: 0.04em;
+    min-height: 14px;
+  }
+  .zf-export-meta .zf-fname { color: var(--dawn-mist); word-break: break-all; }
+  .zf-export-meta .zf-status { color: var(--eos-teal); opacity: 0; transition: opacity 0.2s; }
+  .zf-export-meta .zf-status.is-on { opacity: 1; }
+  .zf-export-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--dawn-mist-dim);
+    text-transform: lowercase;
+  }
+</style>
+
+<div class="zf-wrap">
+
+  <!-- ═══ THE CARD ═══ -->
+  <div class="zf-card">
+    <div class="zf-card-grid">
+      <div class="zf-graphic">
+        <canvas id="dial" width="520" height="520"></canvas>
+      </div>
+
+      <div class="zf-text">
+        <div class="zf-eyebrow" id="eyebrow">to the scorecard · finding zora</div>
+        <div class="zf-location" id="location">Horton Creek</div>
+        <div class="zf-sublocation" id="sublocation">Tonto National Forest, Arizona</div>
+        <div class="zf-rule"></div>
+        <div class="zf-tagline" id="tagline">scoring the sunrise</div>
+      </div>
+    </div>
+
+    <div class="zf-brandmark">the zora files</div>
+  </div>
+
+  <!-- ═══ CONTROLS ═══ -->
+  <div class="zf-panel">
+    <div class="zf-panel-title">live state · outro card preview</div>
+    <div class="zf-controls">
+
+      <div class="zf-field">
+        <label>episode number</label>
+        <input type="text" id="c-ep" value="01">
+      </div>
+
+      <div class="zf-field">
+        <label>location (headline)</label>
+        <input type="text" id="c-loc" value="Horton Creek">
+      </div>
+
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label>location (sub)</label>
+        <input type="text" id="c-subloc" value="Tonto National Forest, Arizona">
+      </div>
+
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label>eyebrow</label>
+        <input type="text" id="c-eyebrow" value="to the scorecard · finding zora">
+      </div>
+
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label>tagline</label>
+        <input type="text" id="c-tagline" value="scoring the sunrise">
+      </div>
+
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label>preview score (0 = awaiting the reveal)</label>
+        <div class="zf-row">
+          <input type="range" id="c-score" min="0" max="100" step="1" value="0">
+          <span class="zf-readout" id="c-score-val">—</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="zf-note">
+      Outro · holds 4 to 6 seconds at the end of the expedition cut and hands off to the screencast where the Eos Index gets entered. Leave the dial at 0 for the awaiting-reveal feel; push it up to preview a filled dial.
+    </div>
+  </div>
+
+  <!-- ═══ EXPORT PANEL ═══ -->
+  <div class="zf-panel" style="margin-top: 1rem;">
+    <div class="zf-panel-title">export · png</div>
+    <div class="zf-export">
+      <span class="zf-export-label">resolution</span>
+      <div class="zf-export-row">
+        <div class="zf-radio-group">
+          <label class="zf-radio"><input type="radio" name="zf-res" value="1080" checked> 1080p</label>
+          <label class="zf-radio"><input type="radio" name="zf-res" value="2160"> 4K</label>
+        </div>
+      </div>
+
+      <span class="zf-export-label">export</span>
+      <div class="zf-export-row">
+        <button class="zf-btn" id="zf-export-full" type="button">export full card</button>
+      </div>
+
+      <div class="zf-export-meta">
+        <span>filename:</span>
+        <span class="zf-fname" id="zf-fname">&mdash;</span>
+        <span class="zf-status" id="zf-status"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ── palette ──
+  const TEAL = '#1D9E75';
+  const TEAL_LIGHT = '#6FDEB4';
+  const AMBER = '#F0A500';
+  const MIST = '#C8D4E0';
+  const MIST_DIM = 'rgba(200, 212, 224, 0.45)';
+  const MIST_FAINT = 'rgba(200, 212, 224, 0.22)';
+  const FRAUNCES = '"Fraunces", Georgia, serif';
+  const MONO = '"JetBrains Mono", ui-monospace, "Courier New", monospace';
+
+  // ── live preview canvas ──
+  const cv = document.getElementById('dial');
+  const ctx = cv.getContext('2d');
+  const S = 520;
+
+  // ── state ──
+  const state = {
+    ep: '01',
+    loc: 'Horton Creek',
+    subloc: 'Tonto National Forest, Arizona',
+    eyebrow: 'to the scorecard · finding zora',
+    tagline: 'scoring the sunrise',
+    score: 0
+  };
+
+  // ────────────────────────────────────────────────────────────
+  // DIAL DRAWING — horizon-style semicircular Eos Index gauge,
+  // reused at any logical scale (live preview + export both call this).
+  // ────────────────────────────────────────────────────────────
+  function drawDial(t, score) {
+    const CX = S / 2;
+    const CY = S * 0.64;   // pushed down so the arc fills the top portion
+    const R  = S * 0.38;
+    const LW = S * 0.042;
+    const tickInner = R + LW / 2 + S * 0.012;
+    const tickMajorEnd = tickInner + S * 0.030;
+    const tickMinorEnd = tickInner + S * 0.018;
+    const labelR = tickInner + S * 0.058;
+
+    // background arc — faint teal track
+    t.save();
+    t.lineCap = 'round';
+    t.lineWidth = LW;
+    t.strokeStyle = 'rgba(29, 158, 117, 0.16)';
+    t.beginPath();
+    t.arc(CX, CY, R, Math.PI, 2 * Math.PI);
+    t.stroke();
+
+    // filled arc up to score, with glow
+    if (score > 0) {
+      const endAngle = Math.PI + (score / 100) * Math.PI;
+      t.shadowColor = TEAL;
+      t.shadowBlur = S * 0.045;
+      t.strokeStyle = TEAL;
+      t.beginPath();
+      t.arc(CX, CY, R, Math.PI, endAngle);
+      t.stroke();
+      t.shadowBlur = 0;
+    }
+    t.restore();
+
+    // tick marks — every 10, longer + brighter at 0/25/50/75/100
+    t.save();
+    for (let i = 0; i <= 100; i += 10) {
+      const a = Math.PI + (i / 100) * Math.PI;
+      const reached = score >= i;
+      const major = i % 25 === 0;
+      const outer = major ? tickMajorEnd : tickMinorEnd;
+      t.strokeStyle = reached ? TEAL_LIGHT : 'rgba(200, 212, 224, 0.28)';
+      t.lineWidth = major ? S * 0.005 : S * 0.0028;
+      t.beginPath();
+      t.moveTo(CX + Math.cos(a) * tickInner, CY + Math.sin(a) * tickInner);
+      t.lineTo(CX + Math.cos(a) * outer, CY + Math.sin(a) * outer);
+      t.stroke();
+    }
+    t.restore();
+
+    // major tick numerals (0, 25, 50, 75, 100)
+    t.save();
+    t.font = `500 ${(S * 0.024).toFixed(2)}px ${MONO}`;
+    t.fillStyle = MIST_DIM;
+    t.textAlign = 'center';
+    t.textBaseline = 'middle';
+    [0, 25, 50, 75, 100].forEach(v => {
+      const a = Math.PI + (v / 100) * Math.PI;
+      t.fillText(String(v), CX + Math.cos(a) * labelR, CY + Math.sin(a) * labelR);
+    });
+    t.restore();
+
+    // central readout — always "??" so the message stays "we don't yet know,"
+    // regardless of how full the arc is.
+    t.save();
+    t.textAlign = 'center';
+    t.textBaseline = 'middle';
+    t.fillStyle = MIST_DIM;
+    t.font = `800 ${(S * 0.22).toFixed(2)}px ${FRAUNCES}`;
+    t.fillText('??', CX, CY - S * 0.17);
+    // EOS INDEX caption
+    t.fillStyle = MIST_DIM;
+    t.font = `500 ${(S * 0.024).toFixed(2)}px ${MONO}`;
+    t.letterSpacing && (t.letterSpacing = `${S * 0.005}px`);
+    t.fillText('EOS INDEX', CX, CY - S * 0.045);
+    t.letterSpacing && (t.letterSpacing = '0px');
+    // of 100 possible
+    t.fillStyle = 'rgba(200, 212, 224, 0.32)';
+    t.font = `400 ${(S * 0.019).toFixed(2)}px ${MONO}`;
+    t.fillText('of 100 possible', CX, CY - S * 0.006);
+    t.restore();
+  }
+
+  // ── live update ──
+  const els = {
+    eyebrow: document.getElementById('eyebrow'),
+    location: document.getElementById('location'),
+    sublocation: document.getElementById('sublocation'),
+    tagline: document.getElementById('tagline')
+  };
+
+  function update() {
+    els.eyebrow.textContent = state.eyebrow;
+    els.location.textContent = state.loc;
+    els.sublocation.textContent = state.subloc;
+    els.tagline.textContent = state.tagline;
+    ctx.clearRect(0, 0, S, S);
+    drawDial(ctx, state.score);
+    refreshFname();
+  }
+
+  // ── controls ──
+  document.getElementById('c-ep').addEventListener('input', e => { state.ep = e.target.value; update(); });
+  document.getElementById('c-loc').addEventListener('input', e => { state.loc = e.target.value; update(); });
+  document.getElementById('c-subloc').addEventListener('input', e => { state.subloc = e.target.value; update(); });
+  document.getElementById('c-eyebrow').addEventListener('input', e => { state.eyebrow = e.target.value; update(); });
+  document.getElementById('c-tagline').addEventListener('input', e => { state.tagline = e.target.value; update(); });
+  const scoreEl = document.getElementById('c-score');
+  const scoreVal = document.getElementById('c-score-val');
+  scoreEl.addEventListener('input', e => {
+    state.score = parseInt(e.target.value, 10) || 0;
+    scoreVal.textContent = state.score === 0 ? '—' : String(state.score);
+    update();
+  });
+
+  // ────────────────────────────────────────────────────────────
+  // EXPORT — draws the full 16:9 card to an offscreen canvas
+  // ────────────────────────────────────────────────────────────
+  const xEls = {
+    full: document.getElementById('zf-export-full'),
+    fname: document.getElementById('zf-fname'),
+    status: document.getElementById('zf-status'),
+    resRadios: () => document.getElementsByName('zf-res')
+  };
+
+  function getResolution() {
+    for (const r of xEls.resRadios()) if (r.checked) return +r.value;
+    return 1080;
+  }
+
+  function sanitize(s) {
+    if (!s) return '';
+    const cleaned = s.normalize('NFKD').replace(/[̀-ͯ]/g, '');
+    const parts = cleaned.split(/[^A-Za-z0-9]+/).filter(Boolean);
+    return parts.map(p => p[0].toUpperCase() + p.slice(1)).join('');
+  }
+
+  function buildFilename() {
+    const ep = sanitize(state.ep) || 'untitled';
+    const title = sanitize(state.loc) || 'untitled';
+    const sc = state.score > 0 ? `_${state.score}` : '';
+    return `zora_outro_${ep}_${title}${sc}.png`;
+  }
+
+  function refreshFname() {
+    if (xEls.fname) xEls.fname.textContent = buildFilename();
+  }
+
+  let statusTimer = null;
+  function showStatus(msg) {
+    if (!xEls.status) return;
+    xEls.status.textContent = msg;
+    xEls.status.classList.add('is-on');
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(() => xEls.status.classList.remove('is-on'), 3000);
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
+  // CSS radial-gradient(ellipse Wpct Hpct at Xpct Ypct, ...) emulation
+  function fillEllipticalRadial(t, W, H, cxPct, cyPct, radWPct, radHPct, stops) {
+    t.save();
+    const cx = W * cxPct, cy = H * cyPct;
+    const rx = W * radWPct * 0.5;
+    const ry = H * radHPct * 0.5;
+    t.translate(cx, cy);
+    t.scale(1, ry / rx);
+    const g = t.createRadialGradient(0, 0, 0, 0, 0, rx);
+    for (const [pos, color] of stops) g.addColorStop(pos, color);
+    t.fillStyle = g;
+    t.fillRect(-W * 2, -H * 2, W * 4, H * 4);
+    t.restore();
+  }
+
+  function drawSpacedText(t, text, x, y, letterSpacingPx) {
+    if ('letterSpacing' in t) {
+      t.letterSpacing = `${letterSpacingPx}px`;
+      t.fillText(text, x, y);
+      t.letterSpacing = '0px';
+      return;
+    }
+    let cursor = x;
+    for (const ch of text) {
+      t.fillText(ch, cursor, y);
+      cursor += t.measureText(ch).width + letterSpacingPx;
+    }
+  }
+
+  function measureSpacedWidth(t, text, sp) {
+    if (!text) return 0;
+    return t.measureText(text).width + sp * Math.max(0, text.length - 1);
+  }
+
+  function wrapText(t, text, maxW) {
+    const words = (text || '').split(/\s+/).filter(Boolean);
+    const lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (t.measureText(test).width > maxW && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = test;
+      }
+    }
+    if (line) lines.push(line);
+    return lines.length ? lines : [''];
+  }
+
+  function renderFullCard(W, H) {
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const oc = off.getContext('2d');
+
+    // background
+    const lin = oc.createLinearGradient(0, 0, 0, H);
+    lin.addColorStop(0.00, '#060910');
+    lin.addColorStop(0.55, '#0a0d14');
+    lin.addColorStop(1.00, '#130c0a');
+    oc.fillStyle = lin;
+    oc.fillRect(0, 0, W, H);
+
+    fillEllipticalRadial(oc, W, H, 0.5, 1.0, 0.8, 0.5, [
+      [0.00, 'rgba(232,82,10,0.22)'],
+      [0.55, 'rgba(232,82,10,0)']
+    ]);
+    fillEllipticalRadial(oc, W, H, 0.5, 1.2, 1.0, 0.8, [
+      [0.00, 'rgba(240,165,0,0.12)'],
+      [0.50, 'rgba(240,165,0,0)']
+    ]);
+    fillEllipticalRadial(oc, W, H, 0.5, 0.5, 0.8, 0.7, [
+      [0.60, 'rgba(0,0,0,0)'],
+      [1.00, 'rgba(0,0,0,0.45)']
+    ]);
+
+    // layout — 0.85fr | 1fr matches the live grid
+    const pad = W * 0.06;
+    const gap = W * 0.04;
+    const contentW = W - 2 * pad;
+    const contentH = H - 2 * pad;
+    const col1 = (contentW - gap) * (0.85 / 1.85);
+    const col2 = (contentW - gap) * (1.00 / 1.85);
+    const col1X = pad;
+    const col2X = pad + col1 + gap;
+    const centerY = pad + contentH / 2;
+
+    // dial — render into its own buffer at the placed size, then composite with drop-shadow
+    const dialSize = Math.min(col1, contentH);
+    const dialX = col1X + (col1 - dialSize) / 2;
+    const dialY = centerY - dialSize / 2;
+    const dialBuf = document.createElement('canvas');
+    dialBuf.width = dialSize; dialBuf.height = dialSize;
+    const dialCtx = dialBuf.getContext('2d');
+    dialCtx.save();
+    dialCtx.scale(dialSize / S, dialSize / S);
+    drawDial(dialCtx, state.score);
+    dialCtx.restore();
+
+    oc.save();
+    oc.filter = `drop-shadow(0px ${(H * 0.0207).toFixed(2)}px ${(H * 0.0578).toFixed(2)}px rgba(0,0,0,0.55))`;
+    oc.drawImage(dialBuf, dialX, dialY, dialSize, dialSize);
+    oc.restore();
+
+    // text — 16px em baseline mapped from the 484px preview-card height
+    const em = H * (16 / 484);
+
+    const eyebrowText = state.eyebrow.toLowerCase();
+    const locText = state.loc || '';
+    const sublocText = state.subloc || '';
+    const taglineText = (state.tagline || '').toUpperCase();
+
+    oc.textBaseline = 'top';
+    oc.textAlign = 'left';
+
+    const eyebrowSize = 0.68 * em;
+    const eyebrowSpacing = 0.42 * eyebrowSize;
+    const locSize = 2.4 * em;
+    const sublocSize = 1.05 * em;
+    const taglineSize = 0.7 * em;
+    const taglineSpacing = 0.32 * taglineSize;
+    const locLineH = locSize * 0.98;
+    const sublocLineH = sublocSize * 1.2;
+
+    oc.font = `800 ${locSize}px ${FRAUNCES}`;
+    const locLines = wrapText(oc, locText, col2);
+    oc.font = `italic 400 ${sublocSize}px ${FRAUNCES}`;
+    const sublocLines = wrapText(oc, sublocText, col2);
+
+    const gapEyebrowLoc = em * 0.15;
+    const gapLocSubloc = em * 0.25;
+    const gapBeforeRule = em * 0.9;
+    const gapAfterRule = em * 0.55;
+
+    let totalH = eyebrowSize
+      + gapEyebrowLoc
+      + locLines.length * locLineH
+      + gapLocSubloc
+      + sublocLines.length * sublocLineH
+      + gapBeforeRule
+      + 1
+      + gapAfterRule
+      + taglineSize;
+
+    let y = centerY - totalH / 2;
+    const tx = col2X;
+
+    // eyebrow (amber mono)
+    oc.font = `500 ${eyebrowSize}px ${MONO}`;
+    oc.fillStyle = AMBER;
+    drawSpacedText(oc, eyebrowText, tx, y, eyebrowSpacing);
+    y += eyebrowSize + gapEyebrowLoc;
+
+    // location (display, multi-line)
+    oc.font = `800 ${locSize}px ${FRAUNCES}`;
+    oc.fillStyle = MIST;
+    for (const line of locLines) { oc.fillText(line, tx, y); y += locLineH; }
+    y += gapLocSubloc;
+
+    // sublocation (italic, dim)
+    oc.font = `italic 400 ${sublocSize}px ${FRAUNCES}`;
+    oc.fillStyle = MIST_DIM;
+    for (const line of sublocLines) { oc.fillText(line, tx, y); y += sublocLineH; }
+    y += gapBeforeRule;
+
+    // amber rule
+    const ruleW = col2 * 0.46;
+    const ruleH = Math.max(1, H * 0.001);
+    const ruleG = oc.createLinearGradient(tx, y, tx + ruleW, y);
+    ruleG.addColorStop(0, 'rgba(240, 165, 0, 0.55)');
+    ruleG.addColorStop(1, 'rgba(240, 165, 0, 0)');
+    oc.fillStyle = ruleG;
+    oc.fillRect(tx, y, ruleW, ruleH);
+    y += 1 + gapAfterRule;
+
+    // tagline — teal dot + teal mono caps
+    const dotR = taglineSize * 0.27;
+    const dotCx = tx + dotR;
+    const dotCy = y + taglineSize / 2;
+    oc.save();
+    oc.shadowColor = TEAL;
+    oc.shadowBlur = taglineSize * 0.5;
+    oc.fillStyle = TEAL;
+    oc.beginPath();
+    oc.arc(dotCx, dotCy, dotR, 0, Math.PI * 2);
+    oc.fill();
+    oc.restore();
+    oc.font = `500 ${taglineSize}px ${MONO}`;
+    oc.fillStyle = TEAL;
+    drawSpacedText(oc, taglineText, dotCx + dotR + 0.5 * em, y, taglineSpacing);
+
+    // brand mark (bottom-right)
+    const brandSize = 0.5 * em;
+    const brandSpacing = 0.32 * brandSize;
+    const brandText = 'the zora files';
+    oc.font = `400 ${brandSize}px ${MONO}`;
+    oc.fillStyle = 'rgba(200, 212, 224, 0.32)';
+    oc.textBaseline = 'alphabetic';
+    oc.textAlign = 'left';
+    const brandW = measureSpacedWidth(oc, brandText, brandSpacing);
+    drawSpacedText(oc, brandText, W - W * 0.05 - brandW, H - H * 0.04, brandSpacing);
+
+    return off;
+  }
+
+  async function exportPNG() {
+    const res = getResolution();
+    const filename = buildFilename();
+    const btn = xEls.full;
+    btn.disabled = true;
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      const H = res;
+      const W = Math.round(H * 16 / 9);
+      const canvas = renderFullCard(W, H);
+      await new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (!blob) return reject(new Error('toBlob returned null'));
+          triggerDownload(blob, filename);
+          resolve();
+        }, 'image/png');
+      });
+      showStatus(`exported · ${filename}`);
+    } catch (err) {
+      console.error('[zora-outro-export]', err);
+      showStatus('export failed · see console');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  xEls.full.addEventListener('click', exportPNG);
+  for (const r of xEls.resRadios()) r.addEventListener('change', refreshFname);
+
+  // initial
+  scoreVal.textContent = '—';
+  update();
+})();
+</script>

@@ -108,6 +108,14 @@ const ARTIFACTS = [
     gem: null,
     description: "Unit B of the episode intro — 16:9 title card with medallion, opening-state rank and gem count, optional streak. Live controls plus PNG export at 1080p or 4K (full card or medallion only on transparent).",
   },
+  {
+    file: "outro_title_card.html",
+    title: "Outro title card builder",
+    level: null,
+    metal: null,
+    gem: null,
+    description: "Hand-off card that closes the expedition cut and bridges into the scoring screencast — 16:9 frame with a horizon-style Eos Index dial (blank by default, awaiting the reveal), location, and a 'now scoring' tagline. Live controls plus PNG export at 1080p or 4K.",
+  },
 ];
 
 const LEVEL_COLORS: Record<number, string> = {
