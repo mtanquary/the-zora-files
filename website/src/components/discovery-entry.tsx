@@ -70,6 +70,8 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
   const [searching, setSearching] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiWarning, setAiWarning] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiUnsure, setAiUnsure] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +133,8 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
     if (!draft.name && !draft.photo) return;
     setAiLoading(true);
     setAiWarning(null);
+    setAiError(null);
+    setAiUnsure(false);
 
     const fd = new FormData();
     if (draft.name) fd.append("name", draft.name);
@@ -141,7 +145,25 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
     try {
       const res = await fetch("/api/discovery-assist", { method: "POST", body: fd });
       const data = await res.json();
-      if (!res.ok) return;
+      if (!res.ok) {
+        setAiError(data?.error || `Lookup failed (${res.status}).`);
+        return;
+      }
+
+      // AI explicitly couldn't place it — keep the user's entry, signal it.
+      if (data.understood === false) {
+        setAiUnsure(true);
+        // Still accept type/rarity defaults so the form has something workable.
+        const rarity = RARITIES.find((r) => r.value === data.rarity_tier);
+        onChange({
+          ...draft,
+          type: (data.type as DiscoveryDraft["type"]) || draft.type,
+          rarity_tier:
+            (data.rarity_tier as DiscoveryDraft["rarity_tier"]) || draft.rarity_tier,
+          points: data.suggested_points || rarity?.default || draft.points,
+        });
+        return;
+      }
 
       const rarity = RARITIES.find((r) => r.value === data.rarity_tier);
 
@@ -156,10 +178,10 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
       setQuery(data.corrected_name || draft.name);
 
       if (data.plausibility === "unlikely" || data.plausibility === "impossible") {
-        setAiWarning(data.plausibility_note || `This species seems ${data.plausibility} at this location.`);
+        setAiWarning(data.plausibility_note || `This seems ${data.plausibility} at this location.`);
       }
     } catch {
-      // AI assist is best-effort
+      setAiError("Network error — couldn't reach the lookup service.");
     } finally {
       setAiLoading(false);
     }
@@ -195,11 +217,22 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
           onChange={(e) => {
             setQuery(e.target.value);
             onChange({ ...draft, name: e.target.value, is_first_unlock: true });
+            if (aiUnsure) setAiUnsure(false);
           }}
           onFocus={() => results.length > 0 && setShowResults(true)}
           placeholder="Search or type a new discovery..."
-          className="w-full rounded-md border border-rule bg-pre-dawn-light px-3 py-2 text-sm text-dawn-mist placeholder:text-mist-dim/30 focus:border-zora-amber/50 focus:outline-none font-body"
+          className={`w-full rounded-md border bg-pre-dawn-light px-3 py-2 text-sm text-dawn-mist placeholder:text-mist-dim/30 focus:outline-none font-body transition-colors ${
+            aiUnsure
+              ? "border-sunrise-orange focus:border-sunrise-orange"
+              : "border-rule focus:border-zora-amber/50"
+          }`}
         />
+        {aiUnsure && (
+          <p className="mt-1 text-[0.65rem] text-sunrise-orange">
+            AI couldn&apos;t confidently place this. Double-check the name or
+            add more context, then try again.
+          </p>
+        )}
 
         {showResults && (
           <div className="absolute z-20 top-full mt-1 left-0 right-0 bg-pre-dawn-mid border border-rule rounded-md shadow-xl max-h-48 overflow-y-auto">
@@ -249,6 +282,11 @@ export function DiscoveryEntry({ draft, onChange, onRemove, index, hasApiKey, lo
           {aiWarning && (
             <div className="mt-2 rounded-md border border-sunrise-orange/30 bg-sunrise-orange/5 px-3 py-2 text-xs text-sunrise-orange">
               {aiWarning}
+            </div>
+          )}
+          {aiError && (
+            <div className="mt-2 rounded-md border border-sunrise-orange/30 bg-sunrise-orange/5 px-3 py-2 text-xs text-sunrise-orange">
+              {aiError}
             </div>
           )}
         </div>
