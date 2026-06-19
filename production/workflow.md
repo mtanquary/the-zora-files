@@ -43,6 +43,7 @@ C:\Users\mattt\
 │   │   └── interstitials\
 │   ├── davinci-media\               ← Resolve-side audio captures
 │   ├── davinci-backups\             ← Resolve global backup pool (UUID subfolders)
+│   ├── personal\                    ← non-Zora trips (family, vacations); see Personal section
 │   └── _archive\                    ← completed seasons, cold storage
 │
 └── Resolve-Cache\                   ← DaVinci cache, local-only, never backed up
@@ -275,3 +276,22 @@ The inbox is for **fresh raw footage**. Some files don't fit that mold:
 - **Stock footage from other sources** → `series\<type>\` with a `_source.md` noting the license
 
 If you're not sure, drop it in `_inbox\` anyway and ask. Claude will route it correctly.
+
+## Personal content (non-Zora)
+
+Family trips, vacations, and anything else that isn't a Finding Zora expedition lives under `personal\` — a peer to `shoots\` and `episodes\` inside the `zora\` Proton root. This keeps your Zora data clean (no Niagara Falls clip showing up in a future "all sunrise shoots this year" query) while still benefiting from the same cloud sync and inbox workflow.
+
+**Structure:** mirrors `shoots\` so the date convention is uniform across the system.
+
+```
+zora\personal\
+   └── YYYY\MM\DD-trip-slug\
+       ├── phone\, dslr\, etc. (device subfolders, same convention)
+       └── _trip.md
+```
+
+The `_trip.md` template is intentionally lighter than `_shoot.md` — no Eos scoring, no episode hookup, no sunrise timing. Just: where, when, who, and a "is any of this worth pulling for series content?" check.
+
+**Inbox routing for personal content:** drop files in `_inbox\` like any other batch; mention it's a trip rather than an expedition (*"family trip to <location>"*). Claude will route it to `personal\` instead of `shoots\` and use the `_trip.md` template.
+
+**Important — pollution check:** personal content does NOT get pulled into Zora analytics, leaderboards, or anything that walks `shoots\` / `episodes\`. If you ever borrow a photo or clip from `personal\` for a Zora video (b-roll, atmospheric inserts), **copy** it into `series\<subfolder>\` rather than referencing it from `personal\` — keeps the boundary clean.

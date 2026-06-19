@@ -79,6 +79,7 @@ Everything in Tier 2 lives under one root: `C:\Users\mattt\Proton Drive\willowra
 | `series\intros\`, `outros\`, `drone-broll\`, `interstitials\` | Reusable across episodes | Forever |
 | `davinci-media\` | Resolve-side audio captures | Forever |
 | `davinci-backups\<UUID>\` | Resolve's global auto-backup pool | Resolve manages (rolls) |
+| `personal\YYYY\MM\DD-trip-slug\` | Non-Zora trips (family, vacations) — peer to `shoots\` but kept separate from show data. See `production/workflow.md` "Personal content" section | Forever |
 | `_archive\season-XX\` | Completed seasons, cold storage | Forever |
 
 **Also Tier 2 but outside the `zora\` root**: nothing right now. (The DaVinci Resolve Media folder at `C:\Users\mattt\DaVinci Resolve Media\` will be moved into `zora\davinci-media\` during the migration.)

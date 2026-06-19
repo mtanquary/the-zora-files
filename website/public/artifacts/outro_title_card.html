@@ -86,6 +86,19 @@
     filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55));
   }
 
+  /* — dial-hidden mode — text centers and scales up so the card works
+        as a generic transition title card. — */
+  .zf-card.is-dial-hidden .zf-graphic { display: none; }
+  .zf-card.is-dial-hidden .zf-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zf-card.is-dial-hidden .zf-text {
+    font-size: 1.2em;
+    text-align: center;
+    align-items: center;
+  }
+  .zf-card.is-dial-hidden .zf-rule { margin-left: auto; margin-right: auto; }
+
   /* text side */
   .zf-text {
     display: flex;
@@ -214,6 +227,18 @@
   .zf-field input:focus { border-color: var(--zora-amber); }
   .zf-field input[type=range] { accent-color: var(--zora-amber); width: 100%; }
 
+  .zf-checkbox-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--dawn-mist);
+    user-select: none;
+  }
+  .zf-checkbox-row input { accent-color: var(--zora-amber); }
+
   .zf-row { display: flex; align-items: center; gap: 0.6rem; }
   .zf-readout {
     font-family: var(--font-mono);
@@ -323,6 +348,13 @@
     <div class="zf-panel-title">live state · outro card preview</div>
     <div class="zf-controls">
 
+      <div class="zf-field" style="grid-column: 1 / -1;">
+        <label class="zf-checkbox-row">
+          <input type="checkbox" id="c-show-dial" checked>
+          show eos index dial
+        </label>
+      </div>
+
       <div class="zf-field">
         <label>episode number</label>
         <input type="text" id="c-ep" value="01">
@@ -359,7 +391,7 @@
     </div>
 
     <div class="zf-note">
-      Outro · holds 4 to 6 seconds at the end of the expedition cut and hands off to the screencast where the Eos Index gets entered. Leave the dial at 0 for the awaiting-reveal feel; push it up to preview a filled dial.
+      Outro · holds 4 to 6 seconds at the end of the expedition cut and hands off to the screencast where the Eos Index gets entered. Leave the dial at 0 for the awaiting-reveal feel; push it up to preview a filled dial. Uncheck &ldquo;show eos index dial&rdquo; to reuse this as a generic transition title card — the text re-centers and scales up about 20%.
     </div>
   </div>
 
@@ -413,7 +445,8 @@
     subloc: 'Tonto National Forest, Arizona',
     eyebrow: 'to the scorecard · finding zora',
     tagline: 'scoring the sunrise',
-    score: 0
+    score: 0,
+    showDial: true
   };
 
   // ────────────────────────────────────────────────────────────
@@ -506,7 +539,8 @@
     eyebrow: document.getElementById('eyebrow'),
     location: document.getElementById('location'),
     sublocation: document.getElementById('sublocation'),
-    tagline: document.getElementById('tagline')
+    tagline: document.getElementById('tagline'),
+    card: document.querySelector('.zf-card')
   };
 
   function update() {
@@ -514,12 +548,14 @@
     els.location.textContent = state.loc;
     els.sublocation.textContent = state.subloc;
     els.tagline.textContent = state.tagline;
+    els.card.classList.toggle('is-dial-hidden', !state.showDial);
     ctx.clearRect(0, 0, S, S);
-    drawDial(ctx, state.score);
+    if (state.showDial) drawDial(ctx, state.score);
     refreshFname();
   }
 
   // ── controls ──
+  document.getElementById('c-show-dial').addEventListener('change', e => { state.showDial = e.target.checked; update(); });
   document.getElementById('c-ep').addEventListener('input', e => { state.ep = e.target.value; update(); });
   document.getElementById('c-loc').addEventListener('input', e => { state.loc = e.target.value; update(); });
   document.getElementById('c-subloc').addEventListener('input', e => { state.subloc = e.target.value; update(); });
@@ -663,7 +699,8 @@
       [1.00, 'rgba(0,0,0,0.45)']
     ]);
 
-    // layout — 0.85fr | 1fr matches the live grid
+    // layout — 0.85fr | 1fr in dial mode, single centered column when hidden
+    const showDial = state.showDial;
     const pad = W * 0.06;
     const gap = W * 0.04;
     const contentW = W - 2 * pad;
@@ -675,24 +712,27 @@
     const centerY = pad + contentH / 2;
 
     // dial — render into its own buffer at the placed size, then composite with drop-shadow
-    const dialSize = Math.min(col1, contentH);
-    const dialX = col1X + (col1 - dialSize) / 2;
-    const dialY = centerY - dialSize / 2;
-    const dialBuf = document.createElement('canvas');
-    dialBuf.width = dialSize; dialBuf.height = dialSize;
-    const dialCtx = dialBuf.getContext('2d');
-    dialCtx.save();
-    dialCtx.scale(dialSize / S, dialSize / S);
-    drawDial(dialCtx, state.score);
-    dialCtx.restore();
+    if (showDial) {
+      const dialSize = Math.min(col1, contentH);
+      const dialX = col1X + (col1 - dialSize) / 2;
+      const dialY = centerY - dialSize / 2;
+      const dialBuf = document.createElement('canvas');
+      dialBuf.width = dialSize; dialBuf.height = dialSize;
+      const dialCtx = dialBuf.getContext('2d');
+      dialCtx.save();
+      dialCtx.scale(dialSize / S, dialSize / S);
+      drawDial(dialCtx, state.score);
+      dialCtx.restore();
 
-    oc.save();
-    oc.filter = `drop-shadow(0px ${(H * 0.0207).toFixed(2)}px ${(H * 0.0578).toFixed(2)}px rgba(0,0,0,0.55))`;
-    oc.drawImage(dialBuf, dialX, dialY, dialSize, dialSize);
-    oc.restore();
+      oc.save();
+      oc.filter = `drop-shadow(0px ${(H * 0.0207).toFixed(2)}px ${(H * 0.0578).toFixed(2)}px rgba(0,0,0,0.55))`;
+      oc.drawImage(dialBuf, dialX, dialY, dialSize, dialSize);
+      oc.restore();
+    }
 
-    // text — 16px em baseline mapped from the 484px preview-card height
-    const em = H * (16 / 484);
+    // text — 16px em baseline mapped from the 484px preview-card height;
+    // bumped 20% when the dial is hidden (matches the live CSS bump)
+    const em = H * (16 / 484) * (showDial ? 1 : 1.2);
 
     const eyebrowText = state.eyebrow.toLowerCase();
     const locText = state.loc || '';
@@ -700,7 +740,7 @@
     const taglineText = (state.tagline || '').toUpperCase();
 
     oc.textBaseline = 'top';
-    oc.textAlign = 'left';
+    oc.textAlign = showDial ? 'left' : 'center';
 
     const eyebrowSize = 0.68 * em;
     const eyebrowSpacing = 0.42 * eyebrowSize;
@@ -711,10 +751,11 @@
     const locLineH = locSize * 0.98;
     const sublocLineH = sublocSize * 1.2;
 
+    const textWrapW = showDial ? col2 : contentW;
     oc.font = `800 ${locSize}px ${FRAUNCES}`;
-    const locLines = wrapText(oc, locText, col2);
+    const locLines = wrapText(oc, locText, textWrapW);
     oc.font = `italic 400 ${sublocSize}px ${FRAUNCES}`;
-    const sublocLines = wrapText(oc, sublocText, col2);
+    const sublocLines = wrapText(oc, sublocText, textWrapW);
 
     const gapEyebrowLoc = em * 0.15;
     const gapLocSubloc = em * 0.25;
@@ -732,7 +773,10 @@
       + taglineSize;
 
     let y = centerY - totalH / 2;
-    const tx = col2X;
+    // tx = the x value passed to fillText. In left-aligned mode it's the left
+    // edge of col2. In centered mode it's the card's horizontal centre, so
+    // textAlign='center' centres each line around it.
+    const tx = showDial ? col2X : W / 2;
 
     // eyebrow (amber mono)
     oc.font = `500 ${eyebrowSize}px ${MONO}`;
@@ -752,20 +796,28 @@
     for (const line of sublocLines) { oc.fillText(line, tx, y); y += sublocLineH; }
     y += gapBeforeRule;
 
-    // amber rule
-    const ruleW = col2 * 0.46;
+    // amber rule — left-anchored at tx in dial mode, horizontally centred otherwise
+    const ruleW = textWrapW * 0.46;
     const ruleH = Math.max(1, H * 0.001);
-    const ruleG = oc.createLinearGradient(tx, y, tx + ruleW, y);
+    const ruleX = showDial ? tx : (W / 2 - ruleW / 2);
+    const ruleG = oc.createLinearGradient(ruleX, y, ruleX + ruleW, y);
     ruleG.addColorStop(0, 'rgba(240, 165, 0, 0.55)');
     ruleG.addColorStop(1, 'rgba(240, 165, 0, 0)');
     oc.fillStyle = ruleG;
-    oc.fillRect(tx, y, ruleW, ruleH);
+    oc.fillRect(ruleX, y, ruleW, ruleH);
     y += 1 + gapAfterRule;
 
-    // tagline — teal dot + teal mono caps
+    // tagline — teal dot + teal mono caps. Compute the composite width so the
+    // whole dot+text unit can be left-anchored or centred as one piece.
     const dotR = taglineSize * 0.27;
-    const dotCx = tx + dotR;
+    const dotToTextGap = 0.5 * em;
+    oc.font = `500 ${taglineSize}px ${MONO}`;
+    const tagTextW = measureSpacedWidth(oc, taglineText, taglineSpacing);
+    const taglineTotal = dotR * 2 + dotToTextGap + tagTextW;
+    const taglineStartX = showDial ? col2X : (W / 2 - taglineTotal / 2);
+    const dotCx = taglineStartX + dotR;
     const dotCy = y + taglineSize / 2;
+
     oc.save();
     oc.shadowColor = TEAL;
     oc.shadowBlur = taglineSize * 0.5;
@@ -774,9 +826,15 @@
     oc.arc(dotCx, dotCy, dotR, 0, Math.PI * 2);
     oc.fill();
     oc.restore();
+
+    // Force left-align for the tagline text so we can place it precisely
+    // after the dot regardless of the outer alignment mode.
+    const savedAlign = oc.textAlign;
+    oc.textAlign = 'left';
     oc.font = `500 ${taglineSize}px ${MONO}`;
     oc.fillStyle = TEAL;
-    drawSpacedText(oc, taglineText, dotCx + dotR + 0.5 * em, y, taglineSpacing);
+    drawSpacedText(oc, taglineText, dotCx + dotR + dotToTextGap, y, taglineSpacing);
+    oc.textAlign = savedAlign;
 
     // brand mark (bottom-right)
     const brandSize = 0.5 * em;
