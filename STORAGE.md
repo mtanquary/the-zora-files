@@ -72,14 +72,16 @@ Everything in Tier 2 lives under one root: `C:\Users\mattt\Proton Drive\willowra
 |---|---|---|
 | `_inbox\` | New media awaiting routing | Cleared as Claude routes files |
 | `shoots\` | All raw footage, organized `YYYY\MM\DD-slug\<device>\` | Forever |
-| `episodes\<SXXEXX-slug>\01-selects\` | Curated keepers per episode | Forever |
+| `episodes\<SXXEXX-slug>\01-selects\` | Curated keepers per episode (**Finding Zora only**) | Forever |
 | `episodes\<SXXEXX-slug>\02-projects\` | Editor project files + archived final `.drb` | Forever |
 | `episodes\<SXXEXX-slug>\03-intermediates\` | Draft renders, handoff exports | 60 days after publish |
 | `episodes\<SXXEXX-slug>\04-final\` | Published cut | Forever |
+| `videos\<YYYY-MM-DD-slug>\` | **Zora Files standalone videos** (channel-level, not part of Finding Zora). Same internal structure as episodes but lighter `_video.md` doc (no Eos / Discovery integration). See `production/workflow.md` "Standalone Zora Files videos" section | Forever |
 | `series\intros\`, `outros\`, `drone-broll\`, `interstitials\` | Reusable across episodes | Forever |
 | `davinci-media\` | Resolve-side audio captures | Forever |
 | `davinci-backups\<UUID>\` | Resolve's global auto-backup pool | Resolve manages (rolls) |
 | `personal\YYYY\MM\DD-trip-slug\` | Non-Zora trips (family, vacations) — peer to `shoots\` but kept separate from show data. See `production/workflow.md` "Personal content" section | Forever |
+| `favorites\` | Personal curated catalog of best photos and frames from across the project. **Copies, not links** — survives drive migration. Manifest in `_favorites.md` uses paths relative to the `zora\` root. See `production/workflow.md` "Favorites catalog" section | Forever |
 | `_archive\season-XX\` | Completed seasons, cold storage | Forever |
 
 **Also Tier 2 but outside the `zora\` root**: nothing right now. (The DaVinci Resolve Media folder at `C:\Users\mattt\DaVinci Resolve Media\` will be moved into `zora\davinci-media\` during the migration.)

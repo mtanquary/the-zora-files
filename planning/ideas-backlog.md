@@ -22,11 +22,9 @@ A running list of project ideas — tooling, workflow improvements, website feat
 ### Rename stale `coons-bluff` folders (typo cleanup)
 
 - **Added:** 2026-06-13
-- **Status:** `open`
+- **Status:** `done` _(2026-06-23)_
 - **Origin:** Coon Bluff ingest — surfaced the inconsistency
-- **The idea:** Two existing shoot folders use the incorrect plural spelling: `shoots/2026/04/20-coons-bluff-eos-index-dialog` and `shoots/2026/05/01-coons-bluff`. The actual place name is **Coon Bluff** (singular). New shoots use the correct slug; the older folders are inconsistent. Rename for cleanliness.
-- **Cost to do:** ~2 minutes (two PowerShell `Rename-Item` calls; commands already documented at the bottom of the Coon Bluff routing exchange).
-- **When to do it:** Whenever — low priority, no downstream blocker.
+- **What was done:** Both folders renamed in one PowerShell pass — `shoots/2026/04/20-coons-bluff-eos-index-dialog` → `20-coon-bluff-eos-index-dialog`, and `shoots/2026/05/01-coons-bluff` → `01-coon-bluff`. All cross-references in `_shoot.md` files updated. The Coons Bluff 5/01 shoot picked up a `dslr/` layer with 10 retroactive Canon raws (`IMG_4454–4463.CR2`) at the same time.
 
 ### Auto-generate `_shoot.md` from phone/EXIF metadata
 
@@ -69,6 +67,35 @@ A running list of project ideas — tooling, workflow improvements, website feat
 - **The idea:** Build a dedicated UI page that *animates* the Eos Index reveal — sub-scores fade in one at a time, the total counts up, the medallion/level updates. Designed specifically to be screen-recorded for the verdict segment of each episode, replacing the current admin-form screencast.
 - **Why it matters:** The verdict is one of the show's most repeated moments. Upgrading it once pays off every episode.
 - **Cost to do:** Multi-day project — needs a route under `/admin/score-reveal/` or `/finding-zora/eos-index/<slug>/reveal/`, takes an episode slug and the Eos sub-scores as input, animates them deterministically so the recording is always frame-accurate.
+
+### Batch-transcribe-a-shoot script (repeat what Red Butte proved out)
+
+- **Added:** 2026-07-07
+- **Status:** `open` — proven manually against Red Butte; needs to become a reusable script
+- **Origin:** Red Butte S01E05 production. Proved that Descript MCP + PowerShell upload manifest + agent-built chronological composition + timecoded transcript export = a `_storyboard.md` that compresses editing time significantly. See `zora\shoots\2026\05\23-red-butte\_storyboard.md` for what the output looks like.
+- **The idea:** Package the manual workflow into a reusable pattern that takes a shoot folder path and produces:
+  - `_transcript.md` — raw full transcript from Descript with per-clip chapter markers
+  - `_storyboard.md` — the editing companion with clip index, hero-line highlights, editorial recommendations, VO extraction candidates, and Discovery Log candidates
+- **Steps the script needs to handle** (roughly what was done manually):
+  1. Enumerate video files (`.mp4`, `.mov`) in the shoot's device subfolders, chronologically
+  2. Chunk into batches of 5 (Descript's practical query-limit sweet spot; 10+ hits "Query count exceeded")
+  3. Call `import_media` per batch with content_type + file_size for direct upload
+  4. Emit each batch's presigned upload URLs to a JSON manifest that a PowerShell poller reads
+  5. Poller uploads bytes as new URLs appear; loops until manifest.complete=true
+  6. Between batches, `wait_for_job` on each import job; submit next batch when done
+  7. When all files uploaded, use `prompt_project_agent` to build a chronological composition with per-clip chapter markers (this is the workflow unlock — makes the transcript navigable)
+  8. `export_transcript` as markdown with timecodes and marker inclusion → save as `_transcript.md`
+  9. Distill into `_storyboard.md` via a follow-up LLM pass or template
+- **Why it matters:** Red Butte took ~45 minutes of my active time end-to-end. As a script it becomes: kick off, come back to a finished storyboard. Every future shoot gets a searchable "what was said and when" index before the editor even opens. That is the single largest edit-time compression available right now.
+- **Cost to do:** Half-day to build v1 (single-folder happy path, no error recovery). Another half-day to polish (retry logic, better `_storyboard.md` templating, handling of already-uploaded files, per-shoot progress tracking).
+- **Dependencies:** Descript MCP connected (done), PowerShell 5+ on the local machine (done), enough Descript transcription budget for whatever shoot is being processed
+- **Storage overhead:** Descript keeps uploaded media indefinitely per plan tier. For a full trip like Glacier (~50 videos, ~20 GB), that's a real budget consideration — worth including a "delete project when done" post-step if space becomes tight
+- **Lessons from the Red Butte run to bake in:**
+  - Batch size = 5. Composition with 5-clip references also hits the 100-query limit; import media-only, build composition via agent afterward
+  - Silent clips get empty transcript sections — that's correct behavior, useful "this is b-roll, no VO to lift" signal for the editor
+  - The `prompt_project_agent` call to build the composition took ~5 minutes for 40 clips due to per-marker latency. Batch-add markers if the API allows
+  - Filename prefix `NN-` for chronological order carries through Descript nicely and makes the transcript legible
+  - Multi-day trips: probably one project per day, not per trip — projects with 100+ clips get unwieldy
 
 ## Content angles
 

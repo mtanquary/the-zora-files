@@ -29,13 +29,20 @@ C:\Users\mattt\
 │   │       ├── hover\
 │   │       ├── phone\
 │   │       └── _shoot.md
-│   ├── episodes\                    ← per-episode editing work
+│   ├── episodes\                    ← Finding Zora per-episode editing
 │   │   └── S01E01-horton-creek\
 │   │       ├── 01-selects\
 │   │       ├── 02-projects\
 │   │       ├── 03-intermediates\    (60-day prune after publish)
 │   │       ├── 04-final\
 │   │       └── _episode.md
+│   ├── videos\                      ← Zora Files standalone (non-Finding-Zora)
+│   │   └── YYYY-MM-DD-slug\
+│   │       ├── 01-selects\
+│   │       ├── 02-projects\
+│   │       ├── 03-intermediates\
+│   │       ├── 04-final\
+│   │       └── _video.md
 │   ├── series\                      ← reusable content across episodes
 │   │   ├── intros\
 │   │   ├── outros\
@@ -44,6 +51,7 @@ C:\Users\mattt\
 │   ├── davinci-media\               ← Resolve-side audio captures
 │   ├── davinci-backups\             ← Resolve global backup pool (UUID subfolders)
 │   ├── personal\                    ← non-Zora trips (family, vacations); see Personal section
+│   ├── favorites\                   ← personal curated catalog of best photos; see Favorites section
 │   └── _archive\                    ← completed seasons, cold storage
 │
 └── Resolve-Cache\                   ← DaVinci cache, local-only, never backed up
@@ -295,3 +303,116 @@ The `_trip.md` template is intentionally lighter than `_shoot.md` — no Eos sco
 **Inbox routing for personal content:** drop files in `_inbox\` like any other batch; mention it's a trip rather than an expedition (*"family trip to <location>"*). Claude will route it to `personal\` instead of `shoots\` and use the `_trip.md` template.
 
 **Important — pollution check:** personal content does NOT get pulled into Zora analytics, leaderboards, or anything that walks `shoots\` / `episodes\`. If you ever borrow a photo or clip from `personal\` for a Zora video (b-roll, atmospheric inserts), **copy** it into `series\<subfolder>\` rather than referencing it from `personal\` — keeps the boundary clean.
+
+## Standalone Zora Files videos
+
+Some content is for **The Zora Files channel** but is *not* part of Finding Zora — gear talks, prep videos, channel updates, opinion pieces, anything that doesn't fit the sunrise-expedition format. That content lives under `videos\`, not `episodes\`.
+
+**When to use `videos\` vs `episodes\`:**
+
+| Content type | Goes in |
+|---|---|
+| Sunrise expedition with Eos scoring | `episodes\SXXEXX-<slug>\` |
+| Gear / packing / prep talk | `videos\YYYY-MM-DD-<slug>\` |
+| Behind-the-scenes / channel update | `videos\YYYY-MM-DD-<slug>\` |
+| Recap / reflection / season review | `videos\YYYY-MM-DD-<slug>\` (unless it's structurally a Finding Zora episode) |
+| Standalone short / one-off opinion | `videos\YYYY-MM-DD-<slug>\` |
+
+**Structure** mirrors episodes:
+
+```
+zora\videos\YYYY-MM-DD-slug\
+   ├── 01-selects\
+   ├── 02-projects\
+   ├── 03-intermediates\
+   ├── 04-final\
+   │   └── shorts\
+   └── _video.md
+```
+
+The `_video.md` template is **lighter than `_episode.md`** — no Eos sub-scores, no Discovery integration, no episode-arc fields. Just identity, tool pipeline, status, render log, publish info, notes, and an optional "relationship to Finding Zora" section for cross-references.
+
+**Naming:** `YYYY-MM-DD-<slug>\` — date-prefixed since these aren't a numbered sequence. The slug stays immutable like episode slugs (lowercase, hyphen-separated, no spaces).
+
+**Inbox workflow for standalone videos:** drop the file in `_inbox\` like always; tell Claude *"this is a standalone Zora Files video, working title X."* Claude routes to `videos\YYYY-MM-DD-<slug>\01-selects\` and pre-fills `_video.md`.
+
+**If a content thread becomes a recurring format** (e.g., "packing for X" becomes a multi-episode series), that's the trigger to reorganize: introduce a series subfolder under `videos\` (or split out as a new top-level peer to `episodes\` if the format grows enough). Don't pre-optimize for that until a third video in the thread justifies it.
+
+## The `_video.md` template
+
+```markdown
+# <Working title>
+
+## Identity
+
+- **Slug:** <slug>
+- **Title:** <marketing title — may change>
+- **Date recorded:** YYYY-MM-DD
+- **Type:** Zora Files standalone — not Finding Zora, not part of a series
+
+## Tool pipeline
+
+_<which editor(s) — Clipchamp / DaVinci / Descript / other>_
+
+## Status
+
+- [ ] Selects culled to 01-selects
+- [ ] First cut
+- [ ] Talk pass
+- [ ] Final rendered
+- [ ] Published _(scheduled for YYYY-MM-DD)_
+- [ ] Project archived to 02-projects (final `.drb` — only if DaVinci was used)
+
+## Source
+
+- **Raw take(s):** <list source files in 01-selects>
+
+## Render log
+
+| Date | Stage | File | Notes |
+|------|-------|------|-------|
+
+## Publish info
+
+- **Publish date:** YYYY-MM-DD
+- **YouTube URL:**
+- **Final filename:** `<slug>-final.mp4`
+- **TikTok / Reels:** posted but URLs not tracked
+
+## Notes
+
+_<context that matters>_
+
+## Relationship to Finding Zora
+
+_<if any — cross-link episodes that reference this video or vice versa>_
+```
+
+## Favorites catalog
+
+The `favorites\` folder is a personal curated collection of the best photos and frames from across the project — wildlife hero shots, peak sunrise moments, character portraits, anything that's earned its way in.
+
+**Structure:**
+
+```
+zora\favorites\
+   ├── YYYY-MM-DD-subject-slug.{jpg,png}
+   ├── ...
+   └── _favorites.md       ← the manifest (catalog table + conventions)
+```
+
+**Rules of the road:**
+
+- **Copies, not links.** Lightroom catalogs corrupt, hardcoded paths break on drive moves, hardlinks don't survive cross-volume migration. Copies survive everything.
+- **Finished versions only.** Favorites are JPG/PNG outputs (post-edit), not raws. Raws stay in their shoot folders. Lightroom catalogs (if you keep one) are a parallel workflow for the raw side.
+- **Naming:** `YYYY-MM-DD-subject-slug.{jpg,png}` where the date is the capture date, not the date it was added to favorites. Sortable, self-describing.
+- **Manifest paths are relative** (no `C:\Users\...`) — relative to the `zora\` root. So `_favorites.md` keeps working when `zora\` migrates to an external drive.
+- **Cross-references the source.** Every catalog row lists both the favorite's path and the original source path so you can always trace context.
+
+**Adding a favorite:**
+
+1. Decide it's a favorite (it earned its way)
+2. Copy the finished version into `favorites\` with the naming convention
+3. Add a row to `_favorites.md`'s catalog table — date, subject, category, favorite path, source path, brief notes
+
+**Why this matters for the drive migration:** when `zora\` eventually moves to a larger external drive, `favorites\` moves with it. All relative paths in the manifest still resolve. Nothing breaks. The catalog is portable by design.
