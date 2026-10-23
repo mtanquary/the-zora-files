@@ -285,18 +285,18 @@ export default function BannerPage() {
     c.save();
     c.shadowColor = "rgba(240,165,0,0.3)";
     c.shadowBlur = 60;
-    c.font = "bold 120px 'Cinzel Decorative', serif";
+    c.font = "bold 120px 'Big Shoulders Stencil Display', 'Arial Narrow', sans-serif";
     c.fillStyle = "#F0A500";
     c.fillText("The Zora Files", W / 2, SAFE_Y + SAFE_H * 0.4);
     c.restore();
 
     // Title crisp
-    c.font = "bold 120px 'Cinzel Decorative', serif";
+    c.font = "bold 120px 'Big Shoulders Stencil Display', 'Arial Narrow', sans-serif";
     c.fillStyle = "#F0A500";
     c.fillText("The Zora Files", W / 2, SAFE_Y + SAFE_H * 0.4);
 
     // Subtitle
-    c.font = "400 36px 'Cinzel', serif";
+    c.font = "400 36px 'Overpass', sans-serif";
     c.fillStyle = "rgba(200,212,224,0.85)";
     c.fillText("early to rise", W / 2, SAFE_Y + SAFE_H * 0.62);
 

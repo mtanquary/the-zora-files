@@ -1,42 +1,13 @@
 import type { Metadata } from "next";
-import fs from "fs";
-import path from "path";
-import { Ornament, Stars } from "@/components/atmosphere";
+import { Ornament } from "@/components/atmosphere";
 import { ArchiveGallery } from "./archive-gallery";
+import { getArchiveEntries } from "@/lib/archives";
 
 export const metadata: Metadata = { title: "sunrise archives" };
 
-interface ArchiveEntry {
-  filename: string;
-  taken_at: string | null;
-  camera: string | null;
-  lat: number | null;
-  lng: number | null;
-  location_name: string | null;
-  scores: {
-    sky: { color_intensity: number; cloud_engagement: number; horizon_definition: number };
-    setting: { foreground_composition: number; location_uniqueness: number };
-    conditions: { access_difficulty: number; weather_challenge: number };
-    sky_total: number;
-    setting_total: number;
-    conditions_total: number;
-    eos_total: number;
-  };
-  vibe: string | null;
-}
-
-function getArchiveData(): ArchiveEntry[] {
-  try {
-    const dataPath = path.join(process.cwd(), "public/archives/archive-data.json");
-    if (!fs.existsSync(dataPath)) return [];
-    return JSON.parse(fs.readFileSync(dataPath, "utf-8"));
-  } catch {
-    return [];
-  }
-}
 
 export default function ArchivesPage() {
-  const entries = getArchiveData();
+  const entries = getArchiveEntries();
   const withGps = entries.filter((e) => e.lat && e.lng);
 
   // Stats
@@ -56,14 +27,13 @@ export default function ArchivesPage() {
     <div>
       {/* Header */}
       <section className="relative overflow-hidden px-6 py-16 text-center border-b border-rule">
-        <Stars />
         <div className="relative z-10">
           <p className="font-mono text-[0.65rem] tracking-[0.35em] text-zora-amber uppercase opacity-75 mb-4">
             finding zora
           </p>
           <h1
             className="font-display-ornate text-zora-amber font-bold mb-2"
-            style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", textShadow: "0 0 50px rgba(240,165,0,0.25)" }}
+            style={{ fontSize: "clamp(2.4rem, 6vw, 3.6rem)" }}
           >
             Sunrise archives
           </h1>

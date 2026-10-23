@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import exifr from "exifr";
+import { prepareWebImage } from "@/lib/image-prep";
 
 // Larger payload limit for video uploads (handler runs as Node runtime).
 export const maxDuration = 300;
@@ -42,13 +43,18 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const ext = (file.name.split(".").pop() || (isVideo ? "mp4" : "jpg")).toLowerCase();
-  const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const originalExt = (file.name.split(".").pop() || (isVideo ? "mp4" : "jpg")).toLowerCase();
+
+  // Photos are stored as a web master (EXIF already read above); video untouched.
+  const prepared = isImage
+    ? await prepareWebImage(buffer, mime, originalExt)
+    : { buffer, contentType: mime || "video/mp4", ext: originalExt, optimized: false };
+  const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${prepared.ext}`;
 
   const { data, error } = await supabase.storage
     .from("photos")
-    .upload(filename, buffer, {
-      contentType: mime || (isVideo ? "video/mp4" : "image/jpeg"),
+    .upload(filename, prepared.buffer, {
+      contentType: prepared.contentType || (isVideo ? "video/mp4" : "image/jpeg"),
       upsert: false,
     });
 
@@ -68,8 +74,8 @@ export async function POST(request: NextRequest) {
     path: data.path,
     url: urlData.publicUrl,
     kind,
-    mime_type: mime,
-    size_bytes: file.size,
+    mime_type: prepared.contentType || mime,
+    size_bytes: prepared.buffer.length,
     exif: exif
       ? {
           coordinates:

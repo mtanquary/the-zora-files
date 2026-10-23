@@ -96,7 +96,7 @@ export default function RulesPage() {
       </p>
 
       <p className="mt-4">
-        A discovery&apos;s <strong>first unlock</strong> across the series earns
+        A discovery&apos;s <strong>first unlock</strong>{" "}across the series earns
         the full tier value. Common and uncommon finds score zero on repeat.
         Rare and above earn a single token point on later outings — presence is
         still worth noting, even when it isn&apos;t new.

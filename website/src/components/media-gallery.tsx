@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface GalleryItem {
@@ -45,11 +46,13 @@ export function MediaGallery({ media }: MediaGalleryProps) {
             className="block w-full mb-3 break-inside-avoid rounded-lg overflow-hidden border border-rule bg-pre-dawn-mid hover:border-zora-amber/50 transition-colors group text-left"
           >
             {m.kind === "photo" ? (
-              <img
+              <Image
                 src={m.url}
                 alt={m.caption || `Photo ${i + 1}`}
-                loading="lazy"
-                className="w-full block group-hover:opacity-90 transition-opacity"
+                width={1200}
+                height={900}
+                sizes="(min-width: 768px) 360px, 100vw"
+                className="block h-auto w-full group-hover:opacity-90 transition-opacity"
               />
             ) : (
               <div className="relative w-full aspect-video">
@@ -193,10 +196,14 @@ export function Lightbox({
         )}
 
         {item.kind === "photo" ? (
-          <img
+          <Image
+            key={item.url}
             src={item.url}
             alt={item.caption || ""}
-            className="max-h-full max-w-full object-contain rounded"
+            width={1920}
+            height={1440}
+            sizes="100vw"
+            className="h-auto max-h-full w-auto max-w-full object-contain rounded"
           />
         ) : (
           <video

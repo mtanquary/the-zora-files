@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getEpisodeByNumber, getEpisodes, getDiscoveriesByEpisode, getEpisodeMedia } from "@/lib/queries";
 import { EFFORT_LEVELS, LEVELS } from "@/lib/types";
 import { ZoraExpandable } from "@/components/zora-expandable";
@@ -108,11 +109,9 @@ export default async function EpisodeDetailPage({
       {/* Sunrise photo */}
       {ep.thumbnail_url && (
         <div className="mb-10 rounded-xl overflow-hidden">
-          <img
-            src={ep.thumbnail_url}
-            alt={`Sunrise at ${ep.location_name}`}
-            className="w-full object-cover max-h-96"
-          />
+          <div className="relative h-96 w-full">
+            <Image src={ep.thumbnail_url} alt={`Sunrise at ${ep.location_name}`} fill preload sizes="(min-width: 780px) 720px, 100vw" className="object-cover" />
+          </div>
         </div>
       )}
 

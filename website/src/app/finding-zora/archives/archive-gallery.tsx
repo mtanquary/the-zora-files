@@ -1,25 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
-interface ArchiveEntry {
-  filename: string;
-  taken_at: string | null;
-  camera: string | null;
-  lat: number | null;
-  lng: number | null;
-  location_name: string | null;
-  scores: {
-    sky: { color_intensity: number; cloud_engagement: number; horizon_definition: number };
-    setting: { foreground_composition: number; location_uniqueness: number };
-    conditions: { access_difficulty: number; weather_challenge: number };
-    sky_total: number;
-    setting_total: number;
-    conditions_total: number;
-    eos_total: number;
-  };
-  vibe: string | null;
-}
+import type { ArchiveEntry } from "@/lib/archives";
 
 function eosColor(score: number): string {
   if (score >= 80) return "text-teal-light";
@@ -50,11 +34,12 @@ export function ArchiveGallery({ entries }: { entries: ArchiveEntry[] }) {
             onClick={() => setSelected(entry)}
             className="group relative overflow-hidden rounded-md border border-rule hover:border-zora-amber/40 transition-colors bg-pre-dawn-mid aspect-[4/3]"
           >
-            <img
+            <Image
               src={`/archives/${entry.filename}`}
               alt={entry.vibe || "Sunrise"}
-              className="w-full h-full object-cover transition-transform group-hover:scale-105"
-              loading="lazy"
+              fill
+              sizes="(min-width: 640px) 300px, 50vw"
+              className="object-cover transition-transform group-hover:scale-105"
             />
             {/* Score overlay */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
@@ -90,10 +75,13 @@ export function ArchiveGallery({ entries }: { entries: ArchiveEntry[] }) {
             className="bg-pre-dawn border border-rule rounded-lg max-w-[700px] w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Image
               src={`/archives/${selected.filename}`}
               alt={selected.vibe || "Sunrise"}
-              className="w-full rounded-t-lg"
+              width={selected.width ?? 1600}
+              height={selected.height ?? 1200}
+              sizes="(min-width: 700px) 700px, 100vw"
+              className="h-auto w-full rounded-t-lg"
             />
             <div className="p-6 space-y-4">
               {/* Vibe */}

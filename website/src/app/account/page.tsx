@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -74,12 +75,9 @@ export default async function AccountPage() {
               className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden"
             >
               {s.photo_url && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={s.photo_url}
-                  alt={s.location ?? "Scored sunrise"}
-                  className="w-full aspect-video object-cover bg-pre-dawn-light"
-                />
+                <div className="relative aspect-video w-full bg-pre-dawn-light">
+                  <Image src={s.photo_url} alt={s.location ?? "Scored sunrise"} fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
+                </div>
               )}
               <div className="p-4 flex items-center justify-between">
                 <div>

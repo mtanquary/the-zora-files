@@ -1,221 +1,296 @@
+import Image from "next/image";
 import Link from "next/link";
-import { getEpisodes } from "@/lib/queries";
+import { getEpisodes, getAllDiscoveries } from "@/lib/queries";
 import { LEVELS } from "@/lib/types";
-import { LivingCover } from "@/components/living-cover";
+import { groupDiscoveries } from "@/components/discovery-card";
+import { isAired } from "@/lib/airing";
+import { getArchiveEntries, archiveImageUrl } from "@/lib/archives";
 import {
-  Ornament,
-  Lore,
-} from "@/components/atmosphere";
-import { isAired, formatAirsDateShort } from "@/lib/airing";
+  ParkHero,
+  HeroTitle,
+  ParkButton,
+  ParkSection,
+  FieldStamp,
+  StatStrip,
+  Wayside,
+  ZoraMark,
+  Kicker,
+  dateKey,
+  formatFix,
+} from "@/components/park";
+import { ParkExpeditionCard } from "@/components/park-expedition-card";
 
 export const dynamic = "force-dynamic";
 
+const explore = [
+  {
+    href: "/expeditions",
+    title: "Expeditions",
+    body: "Every expedition, with the trail facts and the film.",
+    icon: <path d="M6 40 L18 22 L26 32 L34 16 L46 40 Z M34 16 v-8 l8 3 -8 3" />,
+  },
+  {
+    href: "/lookouts",
+    title: "Lookouts",
+    body: "Every rentable fire lookout, and when its dates open.",
+    icon: (
+      <>
+        <path d="M14 44 L20 22 M38 44 L32 22 M18 32 H34" />
+        <rect x="16" y="12" width="20" height="10" />
+        <path d="M13 12 L26 5 L39 12" />
+      </>
+    ),
+  },
+  {
+    href: "/gallery",
+    title: "Gallery",
+    body: "What the first light looked like.",
+    icon: (
+      <>
+        <rect x="6" y="12" width="40" height="28" />
+        <circle cx="26" cy="26" r="8" />
+        <path d="M18 12 l3 -5 h10 l3 5" />
+      </>
+    ),
+  },
+  {
+    href: "/field-guide",
+    title: "Field guide",
+    body: "The animals, plants, and history met along the way.",
+    icon: (
+      <>
+        <path d="M26 10 C14 10 8 20 8 30 c10 0 18 -6 18 -20 Z" />
+        <path d="M26 10 C38 10 44 20 44 30 c-10 0 -18 -6 -18 -20 Z" />
+        <path d="M26 10 V44" />
+      </>
+    ),
+  },
+  {
+    href: "/finding-zora/map",
+    title: "Map",
+    body: "Every trailhead pinned.",
+    icon: (
+      <>
+        <path d="M6 12 L18 8 L32 13 L46 9 V40 L32 44 L18 39 L6 43 Z" />
+        <path d="M18 8 V39 M32 13 V44" />
+      </>
+    ),
+  },
+];
+
+/** "08 SEP 2026" for field stamps. Accepts a pg DATE or an ISO string. */
+function stampDate(value: string | Date | null | undefined): string {
+  const iso = dateKey(value);
+  if (iso.startsWith("9999")) return "—";
+  const [y, m, d] = iso.split("-").map(Number);
+  const mon = new Date(Date.UTC(y, m - 1, d)).toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+  return `${String(d).padStart(2, "0")} ${mon.toUpperCase()} ${y}`;
+}
+
 export default async function Home() {
-  const episodes = await getEpisodes();
-  const totalExpeditions = episodes.length;
-  const currentLevel = LEVELS.filter(
-    (l) => totalExpeditions >= l.expeditions
-  ).pop()!;
+  const [episodes, discoveries] = await Promise.all([getEpisodes(), getAllDiscoveries()]);
+  const archives = getArchiveEntries();
+
+  const aired = episodes.filter((e) => isAired(e.publish_date));
+  const latestAired = aired[0] ?? null;
+  const upcoming = episodes
+    .filter((e) => !isAired(e.publish_date))
+    .sort((a, b) => dateKey(a.publish_date).localeCompare(dateKey(b.publish_date)))[0];
+
+  // Up to three cards: the next premiere (if any) plus the most recent aired.
+  const latestCards = [...(upcoming ? [upcoming] : []), ...aired].slice(0, 3);
+
+  const miles = aired.reduce((n, e) => n + (Number(e.distance_miles) || 0), 0);
+  const feet = aired.reduce((n, e) => n + (Number(e.elevation_gain_ft) || 0), 0);
+  const species = groupDiscoveries(discoveries).length;
+  const currentLevel = LEVELS.filter((l) => aired.length >= l.expeditions).pop()!;
+
+  const stats = [
+    { value: String(aired.length), label: aired.length === 1 ? "Expedition logged" : "Expeditions logged" },
+    { value: miles > 0 ? miles.toFixed(miles < 100 ? 1 : 0) : "—", label: "Trail miles" },
+    { value: feet > 0 ? Math.round(feet).toLocaleString() : "—", label: "Feet climbed" },
+    { value: String(species), label: "Field guide entries" },
+  ];
+
+  const photos = archives.slice(0, 9);
+  const heroPhoto = archives[0] ? archiveImageUrl(archives[0]) : null;
+
+  const stamp = latestAired ? (
+    <FieldStamp
+      number={latestAired.episode_number}
+      rows={[
+        { label: "Site", value: latestAired.location_name },
+        { label: "Fix", value: formatFix(latestAired.coordinates?.lat, latestAired.coordinates?.lng) },
+        { label: "First light", value: stampDate(latestAired.shoot_date) },
+        { label: "Eos", value: `${latestAired.eos_total} / 100` },
+      ]}
+      className="shadow-[8px_8px_0_var(--first-light)]"
+    />
+  ) : null;
 
   return (
-    <div>
-      {/* ══ COVER ══ */}
-      <LivingCover>
-        <div className="max-w-[600px]">
-          <h1
-            className="font-display-ornate text-zora-amber font-bold leading-none"
-            style={{
-              fontSize: "clamp(2.4rem, 8vw, 4.5rem)",
-              textShadow: "0 0 70px rgba(240,165,0,0.35)",
-            }}
-          >
-            The Zora Files
-          </h1>
-          <p className="font-display text-dawn-mist text-sm tracking-[0.15em] mt-2">
-            early to rise
-          </p>
+    <div className="park">
+      {/* ══ Hero: over a real sunrise, with the latest field stamp ══ */}
+      <ParkHero photo={heroPhoto} aside={stamp}>
+        <Kicker tone="amber">The Zora Files</Kicker>
+        <div className="mt-4">
+          <HeroTitle>The sunrise is the excuse.</HeroTitle>
         </div>
-      </LivingCover>
-
-      {/* Subtext overlaps into the landscape feel */}
-      <div className="text-center px-6 py-8 -mt-2">
-        <p className="italic text-mist-dim text-lg leading-relaxed max-w-md mx-auto">
-          The best things discovered in life come through early to rise.
+        <p className="mt-6 max-w-[540px] font-park-sans text-lg leading-relaxed text-bone/90">
+          Everything else is the point. Fire lookouts you can sleep in, places
+          worth the drive in the dark, the photographs, the field notes, and
+          the idea that started it all.
         </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ParkButton href="/lookouts">Find a lookout</ParkButton>
+          {latestAired?.youtube_url ? (
+            <ParkButton href={latestAired.youtube_url} variant="ghost" external>
+              ▶ Watch the latest
+            </ParkButton>
+          ) : (
+            <ParkButton href="/expeditions" variant="ghost">
+              See the expeditions
+            </ParkButton>
+          )}
+        </div>
+      </ParkHero>
+
+      {/* ══ Explore ══ */}
+      <ParkSection kicker="Start here" title="Explore the files">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {explore.map((x) => (
+            <Link
+              key={x.href}
+              href={x.href}
+              className="group flex flex-col border-[3px] border-ink bg-bone p-5 transition-colors hover:bg-blue-hour hover:text-bone"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 52 52"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                className="text-ink group-hover:text-first-light"
+                aria-hidden="true"
+              >
+                {x.icon}
+              </svg>
+              <span className="mt-3 font-park-display text-3xl font-extrabold leading-none">{x.title}</span>
+              <span className="mt-2 font-park-sans text-sm text-muted group-hover:text-bone/80">{x.body}</span>
+            </Link>
+          ))}
+        </div>
+      </ParkSection>
+
+      {/* ══ Photographs ══ */}
+      {photos.length > 0 && (
+        <div className="border-y-[3px] border-ink bg-park-paper-2">
+          <ParkSection kicker="From the field" title="First light" action={{ href: "/gallery", label: "Open the gallery" }}>
+            <div className="grid auto-rows-[150px] grid-cols-2 gap-2 sm:auto-rows-[180px] md:grid-cols-4">
+              {photos.map((p, i) => (
+                <Link
+                  key={p.filename}
+                  href="/gallery"
+                  className={`group relative overflow-hidden bg-blue-hour ${i === 0 ? "col-span-2 row-span-2" : ""}`}
+                >
+                  <Image
+                    src={archiveImageUrl(p)}
+                    alt={p.caption ?? p.vibe ?? "Sunrise photograph"}
+                    fill
+                    sizes={i === 0 ? "(min-width: 768px) 540px, 100vw" : "(min-width: 768px) 270px, 50vw"}
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  {p.caption && i === 0 && (
+                    <span className="absolute inset-x-0 bottom-0 bg-blue-hour/85 p-4 font-park-sans text-sm leading-snug text-bone">
+                      {p.caption}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </ParkSection>
+        </div>
+      )}
+
+      {/* ══ The show ══ */}
+      <div className="border-t-[3px] border-ink">
+        <StatStrip items={stats} />
       </div>
 
-      {/* ══ CONTENT ══ */}
-      <div className="max-w-[780px] mx-auto px-8 pb-16">
-        {/* Flagship series: Finding Zora */}
-        <Ornament label="Flagship series" />
-
-        <Link
-          href="/finding-zora"
-          className="block bg-pre-dawn-mid border border-rule rounded-md overflow-hidden hover:border-zora-amber/40 transition-colors"
+      {/* ══ Latest expeditions ══ */}
+      {latestCards.length > 0 && (
+        <ParkSection
+          kicker="From the show"
+          title="Recent expeditions"
+          action={{ href: "/expeditions", label: "All expeditions" }}
         >
-          <div className="p-6">
-            <p className="font-mono text-[0.6rem] tracking-[0.2em] text-mist-dim uppercase mb-2">
-              now airing
-            </p>
-            <h2
-              className="font-display-ornate text-zora-amber font-bold leading-none mb-2"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)" }}
-            >
-              Finding Zora
-            </h2>
-            <p className="font-display text-dawn-mist text-sm tracking-[0.1em] mb-4">
-              the pursuit of the perfect sunrise
-            </p>
-            <p className="text-mist-dim">
-              Every sunrise gets scored. A game played before most people wake up
-              scored by sky quality, discovery, and the effort to get there.
-              {totalExpeditions > 0 && (
-                <> {totalExpeditions} expedition{totalExpeditions !== 1 ? "s" : ""} logged.
-                Level {currentLevel.level} · {currentLevel.title}.</>
-              )}
-            </p>
-            <p className="font-mono text-xs text-zora-amber mt-4 tracking-wider">
-              enter →
-            </p>
+          <div className="grid gap-6 md:grid-cols-3">
+            {latestCards.map((ep) => (
+              <ParkExpeditionCard key={ep.id} episode={ep} />
+            ))}
           </div>
-        </Link>
+        </ParkSection>
+      )}
 
-        {/* Latest episodes — direct access to the videos */}
-        {episodes.length > 0 && (
-          <>
-            <Ornament label="Latest episodes" />
-            <div className="space-y-3">
-              {episodes.slice(0, 3).map((ep) => {
-                const slug = `s${String(ep.season).padStart(2, "0")}e${String(ep.episode_number).padStart(2, "0")}`;
-                const aired = isAired(ep.publish_date);
-                return (
-                  <div
-                    key={ep.id}
-                    className="flex items-center justify-between gap-4 bg-pre-dawn-mid border border-rule rounded-md p-4 transition-colors hover:border-zora-amber/40"
-                  >
-                    <Link
-                      href={`/finding-zora/episodes/${slug}`}
-                      className="min-w-0 flex-1"
-                    >
-                      <p className="font-display text-sm text-dawn-mist truncate">
-                        S{String(ep.season).padStart(2, "0")}E
-                        {String(ep.episode_number).padStart(2, "0")} ·{" "}
-                        &ldquo;{ep.title}&rdquo;
-                      </p>
-                      <p className="text-xs text-mist-dim mt-1 truncate">
-                        {ep.location_name}
-                      </p>
-                    </Link>
-                    <div className="flex items-center gap-4 shrink-0">
-                      {aired ? (
-                        <>
-                          <span className="font-mono text-lg text-eos-teal">
-                            {ep.eos_total}
-                          </span>
-                          {ep.youtube_url && (
-                            <a
-                              href={ep.youtube_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title="Watch on YouTube"
-                              className="font-mono text-[0.6rem] uppercase tracking-wider text-mist-dim hover:text-zora-amber transition-colors whitespace-nowrap"
-                            >
-                              ▶ watch
-                            </a>
-                          )}
-                        </>
-                      ) : (
-                        <div className="text-right">
-                          <p className="font-mono text-[0.55rem] uppercase tracking-wider text-zora-amber/80">
-                            airs
-                          </p>
-                          <p className="font-display text-sm text-zora-amber">
-                            {formatAirsDateShort(ep.publish_date)}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+      {/* ══ The purpose ══ */}
+      <section className="mx-auto max-w-[1080px] px-6 pb-12 pt-12">
+        <Wayside
+          title="There's always more to it."
+          aside={
+            <div className="hidden px-6 md:block">
+              <ZoraMark size={140} title="The Z: a switchback trail with the sun rising off the top" />
             </div>
-            <p className="text-right mt-3">
-              <Link
-                href="/finding-zora/episodes"
-                className="font-mono text-xs text-zora-amber hover:text-amber-light transition-colors tracking-wider"
-              >
-                all episodes →
-              </Link>
-            </p>
-          </>
-        )}
-
-        {/* Future series placeholder */}
-        <Ornament label="The philosophy" />
-
-        <Lore>
-          The best discoveries happen before the world wakes up. Early to rise
-          isn&apos;t a discipline. It&apos;s an unfair advantage. The Zora Files is a
-          collection of pursuits that prove it.
-        </Lore>
-
-        <p className="text-mist-dim mt-4">
-          <strong>Finding Zora</strong> is the flagship series, a sunrise-chasing
-          expedition series with its own scoring system, discovery log, and
-          level-up progression. More series may follow as the pursuit expands.
-        </p>
-
-        {/* Subscribe CTA */}
-        <div className="bg-pre-dawn-mid border border-rule rounded-lg p-8 mt-12 text-center">
-          <p className="font-display text-lg text-zora-amber mb-3">
-            Follow the pursuit
+          }
+        >
+          <p className="text-lg">
+            Zora is Slavic for dawn. Every trip starts there and ends wherever
+            the story does.
+          </p>
+          <p className="text-muted">
+            The Z is a switchback. It starts at the trailhead, climbs, and tops
+            out on the horizon with the sun coming up off the end. The view is
+            nice. The climb is the part you remember.
           </p>
           <Link
-            href="/finding-zora/episodes"
-            className="group inline-flex flex-col items-center gap-3 mb-5 text-zora-amber/70 hover:text-zora-amber transition-colors"
+            href="/about"
+            className="inline-block font-park-sans text-sm font-bold text-ink underline decoration-first-light decoration-[3px] underline-offset-[6px] hover:text-muted"
           >
-            <svg
-              width="72"
-              height="60"
-              viewBox="0 0 72 60"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              {/* fanned stack of episode cards */}
-              <rect x="8" y="14" width="36" height="26" rx="3" opacity="0.35" />
-              <rect x="14" y="18" width="36" height="26" rx="3" opacity="0.6" />
-              <rect x="20" y="22" width="36" height="26" rx="3" />
-              {/* magnifier discovering the front card */}
-              <circle cx="44" cy="36" r="10" />
-              <path d="M52 44 L60 52" strokeLinecap="round" />
-              {/* play triangle inside the lens */}
-              <path
-                d="M41 31 L41 41 L49 36 Z"
-                fill="currentColor"
-                stroke="none"
-                opacity="0.75"
-              />
-            </svg>
-            <span className="font-display text-base">browse the episodes →</span>
+            Meet the host →
           </Link>
-          <p className="font-mono text-sm text-amber-light tracking-wider mb-3">
-            thezorafiles.com
-          </p>
-          <div className="flex justify-center gap-6 flex-wrap">
-            <span className="font-mono text-xs text-mist-dim tracking-wider">
-              YouTube · @TheZoraFiles
-            </span>
-            <span className="font-mono text-xs text-mist-dim tracking-wider">
-              Instagram · @thezorafiles
-            </span>
-            <span className="font-mono text-xs text-mist-dim tracking-wider">
-              TikTok · @thezorafiles
+        </Wayside>
+      </section>
+
+      {/* ══ The game it grew from ══ */}
+      <section className="mx-auto max-w-[1080px] px-6 pb-20">
+        <Link
+          href="/finding-zora"
+          className="night group block border-[3px] border-blue-hour p-8 transition-colors hover:border-first-light md:p-10"
+        >
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <p className="stamp text-[0.72rem] text-mist-dim">Where it started</p>
+              <h2 className="mt-2 font-display text-5xl font-extrabold uppercase leading-none text-bone">
+                Finding Zora, the game
+              </h2>
+              <p className="mt-3 max-w-[560px] text-mist-dim">
+                Every dawn scored on the Eos index, every find logged for
+                points, and a slow climb through eleven ranks.
+                {aired.length > 0 && (
+                  <>
+                    {" "}Currently <strong>level {currentLevel.level} · {currentLevel.title}</strong>.
+                  </>
+                )}
+              </p>
+            </div>
+            <span className="font-park-sans text-sm font-bold uppercase tracking-[0.12em] text-first-light">
+              Play along →
             </span>
           </div>
-        </div>
-      </div>
+        </Link>
+      </section>
     </div>
   );
 }

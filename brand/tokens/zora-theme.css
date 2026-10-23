@@ -1,0 +1,56 @@
+/* Finding Zora brand tokens for Tailwind 4. Import after "tailwindcss". */
+
+@font-face { font-family: "Big Shoulders Stencil Display"; src: url("/fonts/BigShouldersStencilDisplay.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Overpass"; src: url("/fonts/Overpass.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Overpass Mono"; src: url("/fonts/OverpassMono.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
+
+@theme {
+  --color-blue-hour: #1D2342;
+  --color-first-light: #F2A93B;
+  --color-lichen: #C5CC5A;
+  --color-dawn-rose: #C8667A;
+  --color-rhyolite: #7D6A70;
+  --color-bone: #F2EBDD;
+  --color-char: #1B1719;
+  --color-ground: var(--zora-ground);
+  --color-night-sky: var(--zora-night-sky);
+  --color-ink: var(--zora-ink);
+  --color-muted: var(--zora-muted);
+  --color-rule: var(--zora-rule);
+  --font-display: "Big Shoulders Stencil Display", "Arial Narrow", sans-serif;
+  --font-body: Overpass, system-ui, sans-serif;
+  --font-mono: "Overpass Mono", ui-monospace, monospace;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-12: 48px;
+  --radius-0: 0px;
+  --radius-sm: 4px;
+  --radius-disc: 50%;
+}
+
+:root {
+  --zora-ground: #F2EBDD;
+  --zora-night-sky: #1D2342;
+  --zora-ink: #1D2342;
+  --zora-muted: #5E5054;
+  --zora-rule: #7D6A70;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --zora-ground: #12152B;
+    --zora-night-sky: #353D78;
+    --zora-ink: #F2EBDD;
+    --zora-muted: #B8ADB2;
+    --zora-rule: #5A5476;
+  }
+}
+
+:root[data-theme="dark"] {
+  --zora-ground: #12152B;
+  --zora-night-sky: #353D78;
+  --zora-ink: #F2EBDD;
+  --zora-muted: #B8ADB2;
+  --zora-rule: #5A5476;
+}

@@ -1,40 +1,95 @@
 @import "tailwindcss";
 
-/* Fonts: local via fontsource */
-@import "@fontsource/cinzel/400.css";
-@import "@fontsource/cinzel/600.css";
-@import "@fontsource/cinzel/700.css";
-@import "@fontsource/cinzel-decorative/400.css";
-@import "@fontsource/cinzel-decorative/700.css";
-@import "@fontsource/crimson-text/400.css";
-@import "@fontsource/crimson-text/400-italic.css";
-@import "@fontsource/crimson-text/600.css";
-@import "@fontsource/crimson-text/600-italic.css";
-@import "@fontsource/space-mono/400.css";
-@import "@fontsource/space-mono/700.css";
+/*
+ * Finding Zora brand system (source of truth: brand/BRAND-GUIDE.md and
+ * brand/tokens/). Fonts and logos are copied into public/fonts and
+ * public/brand. Field theme (light) on channel pages, Night theme (dark)
+ * on the Finding Zora game section and admin.
+ */
+@font-face { font-family: "Big Shoulders Stencil Display"; src: url("/fonts/BigShouldersStencilDisplay.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Overpass"; src: url("/fonts/Overpass.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Overpass Mono"; src: url("/fonts/OverpassMono.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
 
 :root {
-  /* Brand palette */
-  --pre-dawn: #0D0F14;
-  --pre-dawn-mid: #141820;
-  --pre-dawn-light: #1C2230;
-  --zora-amber: #F0A500;
-  --amber-dark: #B87800;
-  --amber-light: #FFD166;
-  --amber-glow: rgba(240,165,0,0.10);
-  --sunrise-orange: #E8520A;
-  --eos-teal: #1D9E75;
-  --teal-light: #2CC48F;
-  --dawn-mist: #C8D4E0;
-  --mist-dim: #8A9AAE;
-  --rule: rgba(240,165,0,0.22);
+  /* ── Brand palette (brand/tokens/tokens.json) ── */
+  --blue-hour: #1D2342;   /* primary: the sky before sunrise */
+  --first-light: #F2A93B; /* the sun; one accent per piece; never text on bone */
+  --lichen: #C5CC5A;      /* surprise accent, once per piece; never text on bone */
+  --dawn-rose: #C8667A;   /* bands and fills, not text; once per piece */
+  --rhyolite: #7D6A70;    /* warm stone gray, rules */
+  --bone: #F2EBDD;        /* off-white ground */
+  --char: #1B1719;        /* near-black */
 
-  /* Semantic */
+  /* Field theme (light) semantic tokens */
+  --ground: #F2EBDD;
+  --night-sky: #1D2342;
+  --ink: #1D2342;
+  --muted: #5E5054;
+  --brand-rule: #7D6A70;
+
+  /* Night theme values, used by .night and the game section */
+  --night-ground: #12152B;
+  --night-slab: #353D78;
+  --night-muted: #B8ADB2;
+  --night-rule: #5A5476;
+
+  /* ── Game palette (Finding Zora section + admin), mapped onto Night ── */
+  --pre-dawn: var(--night-ground);
+  --pre-dawn-mid: var(--blue-hour);
+  --pre-dawn-light: #262D55;
+  --zora-amber: var(--first-light);
+  --amber-dark: #C98A2E;
+  --amber-light: #F6C77A;
+  --amber-glow: rgba(242,169,59,0.10);
+  --sunrise-orange: var(--dawn-rose);
+  --eos-teal: #1D9E75;      /* game scoring only */
+  --teal-light: #2CC48F;
+  --dawn-mist: var(--bone);
+  --mist-dim: var(--night-muted);
+  --rule: var(--night-rule);
+  --twilight-violet: #7A5FB8; /* game discovery only */
+
+  /* ── Channel page tokens (historic "park" names), mapped onto Field ── */
+  --park-paper: var(--bone);
+  --park-paper-2: #EAE2D2;
+  --park-paper-3: #DDD3C2;
+  --park-ink: var(--ink);
+  --park-ink-soft: var(--muted);
+  --park-ink-faint: var(--rhyolite);
+  --park-forest: var(--blue-hour);
+  --park-forest-deep: var(--night-ground);
+  --park-moss: var(--muted);
+  --park-sage: var(--night-muted);
+  --park-bark: var(--rhyolite);
+  --park-bark-deep: var(--blue-hour);
+  --park-amber: var(--first-light);
+  --park-amber-ink: var(--muted);   /* first-light is never text on bone */
+  --park-dusk: var(--night-slab);
+  --park-rule: rgba(125,106,112,0.35);
+
+  /* Semantic page defaults (game look) */
   --background: var(--pre-dawn);
   --foreground: var(--dawn-mist);
 }
 
 @theme inline {
+  --color-blue-hour: var(--blue-hour);
+  --color-first-light: var(--first-light);
+  --color-lichen: var(--lichen);
+  --color-dawn-rose: var(--dawn-rose);
+  --color-rhyolite: var(--rhyolite);
+  --color-bone: var(--bone);
+  --color-char: var(--char);
+  --color-ground: var(--ground);
+  --color-night-sky: var(--night-sky);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-brand-rule: var(--brand-rule);
+  --color-night-ground: var(--night-ground);
+  --color-night-slab: var(--night-slab);
+  --color-night-muted: var(--night-muted);
+  --color-night-rule: var(--night-rule);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-pre-dawn: var(--pre-dawn);
@@ -49,10 +104,32 @@
   --color-eos-teal: var(--eos-teal);
   --color-teal-light: var(--teal-light);
   --color-rule: var(--rule);
-  --font-body: "Crimson Text", Georgia, serif;
-  --font-display: "Cinzel", serif;
-  --font-display-ornate: "Cinzel Decorative", serif;
-  --font-mono: "Space Mono", ui-monospace, monospace;
+  --color-twilight-violet: var(--twilight-violet);
+  --color-park-paper: var(--park-paper);
+  --color-park-paper-2: var(--park-paper-2);
+  --color-park-paper-3: var(--park-paper-3);
+  --color-park-ink: var(--park-ink);
+  --color-park-ink-soft: var(--park-ink-soft);
+  --color-park-ink-faint: var(--park-ink-faint);
+  --color-park-forest: var(--park-forest);
+  --color-park-forest-deep: var(--park-forest-deep);
+  --color-park-moss: var(--park-moss);
+  --color-park-sage: var(--park-sage);
+  --color-park-bark: var(--park-bark);
+  --color-park-bark-deep: var(--park-bark-deep);
+  --color-park-amber: var(--park-amber);
+  --color-park-amber-ink: var(--park-amber-ink);
+  --color-park-dusk: var(--park-dusk);
+  --color-park-rule: var(--park-rule);
+
+  /* Type: display = stencil (headlines, wordmark, rim text; never long text),
+     body = Overpass, mono = Overpass Mono (field-stamp data only). */
+  --font-display: "Big Shoulders Stencil Display", "Arial Narrow", sans-serif;
+  --font-display-ornate: "Big Shoulders Stencil Display", "Arial Narrow", sans-serif;
+  --font-body: "Overpass", system-ui, sans-serif;
+  --font-mono: "Overpass Mono", ui-monospace, monospace;
+  --font-park-display: "Big Shoulders Stencil Display", "Arial Narrow", sans-serif;
+  --font-park-sans: "Overpass", system-ui, sans-serif;
 }
 
 body {
@@ -60,16 +137,70 @@ body {
   color: var(--foreground);
   font-family: var(--font-body);
   font-size: 17px;
-  line-height: 1.75;
+  line-height: 1.65;
 }
 
-/* Utility classes for the teaser design language */
+/* Section rule for the game pages (solid: the brand allows no decorative gradients) */
 .ornament-rule {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--zora-amber), transparent);
+  background: var(--rule);
 }
 
 strong { color: var(--amber-light); }
+
+/* Stencil display text: heavy weight, slight tracking */
+.font-display, .font-park-display, .font-display-ornate {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* Field-stamp data style (coordinates, dates, first light, Eos) */
+.stamp {
+  font-family: "Overpass Mono", ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Field theme scope (channel pages) ──
+   Wrap channel-level pages in .park. Re-points the game tokens so shared
+   components dropped inside read correctly on bone. */
+.park {
+  --background: var(--ground);
+  --foreground: var(--ink);
+  --pre-dawn: var(--park-paper);
+  --pre-dawn-mid: var(--park-paper-2);
+  --pre-dawn-light: var(--park-paper-3);
+  --dawn-mist: var(--ink);
+  --mist-dim: var(--muted);
+  --zora-amber: var(--ink);
+  --amber-light: var(--ink);
+  --rule: var(--park-rule);
+  background: var(--ground);
+  color: var(--ink);
+  font-size: 17px;
+}
+/* Night theme panel inside a field page (and its restore of game tokens). */
+.night {
+  --pre-dawn: var(--night-ground);
+  --pre-dawn-mid: var(--blue-hour);
+  --pre-dawn-light: #262D55;
+  --dawn-mist: var(--bone);
+  --mist-dim: var(--night-muted);
+  --zora-amber: var(--first-light);
+  --amber-light: #F6C77A;
+  --rule: var(--night-rule);
+  background: var(--pre-dawn);
+  color: var(--dawn-mist);
+}
+.night strong, .park .night strong { color: var(--amber-light); font-weight: 700; }
+
+body:has(.park) { background: var(--ground); }
+.park strong { color: var(--ink); font-weight: 700; }
+.park ::selection { background: rgba(242,169,59,0.4); }
+
+/* Retired textures (kept as no-ops so stray class names stay harmless). */
+.park-grain, .park-wood { background-image: none; }
 
 /* ── Print styles ──
    Tailwind 4 compiles colors at build time, so overriding CSS variables

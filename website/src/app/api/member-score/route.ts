@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prepareWebImage } from "@/lib/image-prep";
 import { createClient } from "@/lib/supabase/server";
 import { supabase as storage } from "@/lib/supabase";
 import { scoreEosPhoto } from "@/lib/eos-score";
@@ -67,13 +68,14 @@ export async function POST(request: NextRequest) {
   // Store the photo (best-effort) under a per-member folder.
   let photoPath: string | null = null;
   let photoUrl: string | null = null;
-  const ext = (photo.name.split(".").pop() || "jpg").toLowerCase();
+  const stored = await prepareWebImage(buffer, mediaType, (photo.name.split(".").pop() || "jpg").toLowerCase());
+  const ext = stored.ext;
   const filename = `member-sunrises/${user.id}/${Date.now()}-${Math.random()
     .toString(36)
     .slice(2, 8)}.${ext}`;
   const { data: uploaded, error: uploadError } = await storage.storage
     .from("photos")
-    .upload(filename, buffer, { contentType: mediaType, upsert: false });
+    .upload(filename, stored.buffer, { contentType: stored.contentType, upsert: false });
   if (!uploadError && uploaded) {
     photoPath = uploaded.path;
     photoUrl = storage.storage.from("photos").getPublicUrl(uploaded.path).data.publicUrl;

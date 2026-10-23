@@ -1004,7 +1004,7 @@ function buildPopupHtml(
   const eos = props.eos_total;
   const zora = props.zora_total;
   const effort = escapeHtml(String(props.effort_label));
-  const thumb = String(props.thumbnail_url);
+  const thumb = props.thumbnail_url ? String(props.thumbnail_url) : "";
   const distance = Number(props.distance_miles);
   const elevation = Number(props.elevation_gain_ft);
   const hasTrack = String(props.has_track) === "1";
@@ -1022,7 +1022,7 @@ function buildPopupHtml(
 
   const photoHtml = thumb
     ? `<a href="/finding-zora/episodes/${slug}" class="zp-photo">
-         <img src="${escapeHtml(thumb)}" alt="Sunrise at ${location}" loading="lazy" />
+         <img src="${escapeHtml(`/_next/image?url=${encodeURIComponent(thumb)}&w=384&q=75`)}" alt="Sunrise at ${location}" loading="lazy" />
        </a>`
     : "";
 
@@ -1145,7 +1145,7 @@ const POPUP_CSS = `
 }
 .zora-popup .maplibregl-popup-close-button:hover { color: #f0a500; }
 
-.zp { font-family: "Crimson Text", Georgia, serif; }
+.zp { font-family: "Overpass", system-ui, sans-serif; }
 .zp-photo { display: block; }
 .zp-photo img {
   width: 100%;
@@ -1155,7 +1155,7 @@ const POPUP_CSS = `
 }
 .zp-body { padding: 12px 14px 14px; }
 .zp-eyebrow {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1163,7 +1163,7 @@ const POPUP_CSS = `
   margin: 0 0 4px;
 }
 .zp-title {
-  font-family: "Cinzel", serif;
+  font-family: "Big Shoulders Stencil Display", "Arial Narrow", sans-serif;
   font-size: 14px;
   color: #ffd166;
   margin: 0 0 2px;
@@ -1193,14 +1193,14 @@ const POPUP_CSS = `
   gap: 2px;
 }
 .zp-lbl {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #8a9aae;
 }
 .zp-val {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 14px;
   font-weight: 700;
 }
@@ -1208,13 +1208,13 @@ const POPUP_CSS = `
 .zp-orange { color: #e8520a; font-size: 11px; }
 .zp-amber { color: #f0a500; }
 .zp-context {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 10px;
   color: #8a9aae;
   margin: 0 0 8px;
 }
 .zp-section-lbl {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1228,7 +1228,7 @@ const POPUP_CSS = `
   gap: 4px;
 }
 .zp-chip {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 10px;
   color: #c8d4e0;
   background: rgba(255, 255, 255, 0.03);
@@ -1243,14 +1243,14 @@ const POPUP_CSS = `
   color: #0d0f14;
 }
 .zp-more {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 10px;
   color: #8a9aae;
   align-self: center;
 }
 .zp-cta {
   display: inline-block;
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1272,7 +1272,7 @@ const POPUP_CSS = `
   align-items: center;
 }
 .zp-track-toggle {
-  font-family: "Space Mono", ui-monospace, monospace;
+  font-family: "Overpass Mono", ui-monospace, monospace;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;

@@ -9,13 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fontsource/cinzel": "^5.2.8",
-    "@fontsource/cinzel-decorative": "^5.2.8",
-    "@fontsource/crimson-text": "^5.2.7",
     "@fontsource/geist-mono": "^5.2.7",
     "@fontsource/geist-sans": "^5.2.5",
     "@fontsource/outfit": "^5.2.8",
-    "@fontsource/space-mono": "^5.2.9",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.99.3",
     "@types/pg": "^8.20.0",
@@ -25,7 +21,8 @@
     "next": "16.2.1",
     "pg": "^8.20.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -203,7 +203,7 @@ function drawSunMark(c: CanvasRenderingContext2D, alpha: number) {
   // "TZF" small text below ridge
   c.textAlign = "center";
   c.textBaseline = "middle";
-  c.font = "bold 18px 'Cinzel Decorative', serif";
+  c.font = "bold 18px 'Big Shoulders Stencil Display', 'Arial Narrow', sans-serif";
   c.fillStyle = `rgba(240,165,0,${alpha * 0.8})`;
   c.fillText("TZF", cx, SIZE * 0.82);
 }
@@ -230,7 +230,7 @@ function drawMonogram(c: CanvasRenderingContext2D, alpha: number) {
   // "Z" letter
   c.textAlign = "center";
   c.textBaseline = "middle";
-  c.font = "bold 72px 'Cinzel Decorative', serif";
+  c.font = "bold 72px 'Big Shoulders Stencil Display', 'Arial Narrow', sans-serif";
   c.fillStyle = `rgba(240,165,0,${alpha})`;
   c.fillText("Z", cx, cy + 2);
 }
@@ -278,7 +278,7 @@ function drawRing(c: CanvasRenderingContext2D, alpha: number) {
   // "Z" in center
   c.textAlign = "center";
   c.textBaseline = "middle";
-  c.font = "bold 40px 'Cinzel Decorative', serif";
+  c.font = "bold 40px 'Big Shoulders Stencil Display', 'Arial Narrow', sans-serif";
   c.fillStyle = `rgba(240,165,0,${alpha})`;
   c.fillText("Z", cx, cy + 1);
 }

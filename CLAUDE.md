@@ -36,7 +36,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Episode folders** follow `S01E01-short-title` naming (e.g. `S01E01-horton-creek`)
 - **Episode titles** follow `S01E01 — "<Title>" — <Location>` format
 - **All UI copy** uses sentence case — never ALL CAPS or Title Case
-- **Color rules**: amber (`#F0A500`) is primary accent everywhere; teal (`#1D9E75`) is reserved for Eos Index only; twilight violet (`#7A5FB8`) is reserved for Discovery elements only; never use pure black or pure white
+- **Brand system (since 2026-10-22)**: `brand/BRAND-GUIDE.md` is the source of truth for names, the Z mark, color, type and voice. Finding Zora is the forward brand (show, posts, game); The Zora Files is the archive and this website. Palette: `blue-hour` #1D2342 (primary), `first-light` #F2A93B (the sun, one accent per piece, never text on bone), `bone` #F2EBDD, `rhyolite` #7D6A70, `char` #1B1719, with `dawn-rose` #C8667A and `lichen` #C5CC5A at most once per piece. Type: Big Shoulders Stencil Display (headlines only, never long text), Overpass (body), Overpass Mono (field-stamp data only). No decorative gradients or sunset silhouettes; never mirror, rotate or recolor the Z. Logos live in `website/public/brand/`, fonts in `website/public/fonts/`.
+- **Website themes**: channel pages wrap in `<div className="park">` (Field theme: bone ground, blue-hour ink) and use the components in `website/src/components/park.tsx` (`ZoraMark`, `BrandLockup`, `ParkHero`, `FieldStamp`, `StatStrip`, `Wayside`). The game section (`/finding-zora/*`) and admin use the Night theme; `.night` drops a Night panel into a Field page. The old `park-*` and `pre-dawn` token names still exist but now map onto the brand palette in `globals.css`. Teal (Eos) and violet (Discovery) survive only inside the game section.
 - **Geographic scope**: The show is global by intent. **No location, biome, or geography is part of the brand identity** — bios, taglines, and channel-level copy should not lead with "Arizona-based" or similar framing. Individual expeditions are still named factually (e.g., "Horton Creek, AZ" as the episode location) — that's a factual reference, not brand voice. **Never hardcode any location or biome as assumptions** in website architecture, data models, UI copy, or brand voice. All fields must work for any location worldwide; all brand-voice copy must read as well for an Icelandic volcano as for a Sonoran wash.
 
 ## Scoring system
@@ -85,6 +86,7 @@ Production surfaces beyond the spec in `website/_GUIDE.md`: `log` (expedition lo
 **Route structure:**
 - `/` — channel home (The Zora Files umbrella)
 - `/about` — channel-level about page
+- `/lookouts` — fire lookout finder (map, availability, release calendar). Setup and operations: `docs/lookouts-setup.md`
 - `/finding-zora/` — Finding Zora series hub
 - `/finding-zora/episodes` — episode archive
 - `/finding-zora/episodes/[slug]` — episode detail

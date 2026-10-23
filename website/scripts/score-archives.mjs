@@ -254,6 +254,9 @@ async function processPhoto(filename, index, total) {
       eos_total: eosTotal,
     },
     vibe: scores.vibe || null,
+    // Your own caption (place, month and year, one true thing). Shown on the site;
+    // the vibe line above is only used as alt text. Fill in by hand.
+    caption: null,
   };
 }
 

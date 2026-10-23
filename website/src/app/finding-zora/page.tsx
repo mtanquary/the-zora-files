@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getEpisodes, getAllDiscoveries } from "@/lib/queries";
@@ -8,9 +9,8 @@ import { LevelEmblem } from "@/components/level-emblem";
 import { MedallionEmblem } from "@/components/medallion-emblem";
 import { EosExpandable } from "@/components/eos-expandable";
 import { ZoraExpandable } from "@/components/zora-expandable";
-import { LivingCover } from "@/components/living-cover";
+import { ZoraMark } from "@/components/park";
 import {
-  SunIcon,
   Ornament,
   Lore,
 } from "@/components/atmosphere";
@@ -37,27 +37,24 @@ export default async function FindingZoraHub() {
   return (
     <div>
       {/* ══ COVER ══ */}
-      <LivingCover>
-        <div className="max-w-[600px]">
+      <section className="border-b-[3px] border-first-light bg-blue-hour px-6 py-16 text-center sm:py-20">
+        <div className="mx-auto flex max-w-[600px] flex-col items-center">
           <p className="font-mono text-[0.65rem] tracking-[0.35em] text-zora-amber uppercase opacity-75 mb-6">
-            the zora files presents
+            the game it all grew from
           </p>
 
-          <SunIcon />
+          <ZoraMark size={96} variant="reverse" />
 
           <h1
-            className="font-display-ornate text-zora-amber font-bold leading-none mb-1 mt-5"
-            style={{
-              fontSize: "clamp(2.8rem, 9vw, 5.5rem)",
-              textShadow: "0 0 70px rgba(240,165,0,0.35)",
-            }}
+            className="font-display-ornate text-zora-amber font-extrabold uppercase leading-[0.9] mb-2 mt-6"
+            style={{ fontSize: "clamp(3.2rem, 10vw, 6.5rem)" }}
           >
             Finding
             <br />
             Zora
           </h1>
           <p className="font-display text-dawn-mist text-sm tracking-[0.15em] mb-8">
-            the pursuit of the perfect sunrise
+            Finding Zora, the game
           </p>
 
           <div className="ornament-rule w-40 mx-auto mb-6" />
@@ -83,7 +80,7 @@ export default async function FindingZoraHub() {
             Season one · finding zora
           </span>
         </div>
-      </LivingCover>
+      </section>
 
       {/* ══ CONTENT ══ */}
       <div className="max-w-[780px] mx-auto px-8 pb-16">
@@ -115,11 +112,9 @@ export default async function FindingZoraHub() {
               className="block bg-pre-dawn-mid border border-rule rounded-md overflow-hidden hover:border-zora-amber/40 transition-colors"
             >
               {latest.thumbnail_url && (
-                <img
-                  src={latest.thumbnail_url}
-                  alt={`Sunrise at ${latest.location_name}`}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative h-48 w-full">
+                  <Image src={latest.thumbnail_url} alt={`Sunrise at ${latest.location_name}`} fill sizes="(min-width: 780px) 720px, 100vw" className="object-cover" />
+                </div>
               )}
               <div className="p-5">
                 <p className="font-mono text-[0.65rem] tracking-[0.1em] text-mist-dim uppercase mb-1">

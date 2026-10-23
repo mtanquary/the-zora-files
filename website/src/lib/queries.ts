@@ -388,3 +388,28 @@ export async function getMapData(): Promise<MapExpedition[]> {
     discoveries: byEp.get(r.id) ?? [],
   }));
 }
+
+export interface GalleryPhotoRow {
+  id: string;
+  url: string;
+  caption: string | null;
+  episode_title: string;
+  location_name: string;
+  season: number;
+  episode_number: number;
+  shoot_date: string;
+}
+
+/** Photos attached to AIRED episodes, newest expedition first (public gallery). */
+export async function getAiredEpisodePhotos(): Promise<GalleryPhotoRow[]> {
+  const result = await pool.query(`
+    SELECT m.id, m.url, m.caption,
+           e.title AS episode_title, e.location_name, e.season,
+           e.episode_number, e.shoot_date
+    FROM episode_media m
+    JOIN episodes e ON m.episode_id = e.id
+    WHERE m.kind = 'photo' AND ${AIRED_WHERE_EP.replace(/publish_date/g, "e.publish_date")}
+    ORDER BY e.episode_number DESC, m.sort_order, m.created_at
+  `);
+  return result.rows;
+}

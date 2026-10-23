@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { DiscoveryRow } from "@/lib/queries";
 
 const RARITY_COLORS: Record<string, string> = {
@@ -94,11 +95,9 @@ export function DiscoveryCard({
   return (
     <div className="bg-pre-dawn-mid border border-rule rounded-md overflow-hidden">
       {d.photo_url ? (
-        <img
-          src={d.photo_url}
-          alt={d.name}
-          className="w-full h-32 object-cover"
-        />
+        <div className="relative h-32 w-full">
+          <Image src={d.photo_url} alt={d.name} fill sizes="(min-width: 640px) 380px, 100vw" className="object-cover" />
+        </div>
       ) : (
         <div className="w-full h-28 bg-gradient-to-br from-pre-dawn-light to-pre-dawn-mid flex flex-col items-center justify-center gap-2 border-b border-rule">
           <span className="text-3xl" style={{ filter: "grayscale(0.4) opacity(0.5)" }}>

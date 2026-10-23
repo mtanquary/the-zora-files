@@ -38,6 +38,8 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 
 ## Color Palette
 
+> **Superseded October 2026.** The Finding Zora brand kit in `brand/` (BRAND-GUIDE.md, tokens/, logos/, fonts/) replaces the palette, type, and park-theme notes below. Kept for history; teal and violet still apply inside the game section only.
+
 | Name | Hex | Usage |
 |------|-----|-------|
 | Pre-dawn | `#0D0F14` | Dark backgrounds, hero sections |
@@ -55,6 +57,23 @@ The host is a **systems thinker who is allergic to chaos but keeps getting surpr
 - Pre-dawn dark background is the signature look
 
 ---
+
+### Park theme (channel level, added 2026-10-06)
+
+The channel site moved from a gaming look to a national-park look so it reads as nature, hiking, and photography first. Finding Zora keeps the pre-dawn palette above as its own game section.
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| Parchment | `#F3ECDD` | Page background |
+| Parchment 2 / 3 | `#EAE0CB` / `#DCCFB4` | Cards, panels |
+| Ink | `#2B241D` | Body text on parchment |
+| Bark deep | `#2A1F17` | Header band, wayside frames |
+| Bark | `#5A3F2A` | Trailhead sign wood |
+| Forest / forest deep | `#2E4636` / `#1C2B22` | Buttons, footer |
+| Moss | `#5E7A4F` | Location kickers |
+| Amber ink | `#95590A` | Amber for text on parchment (contrast) |
+
+Amber `#F0A500` stays the primary accent (buttons, header rule, emblem ring). Teal and violet keep their Eos and Discovery reservations. Display type is Bitter, UI labels Source Sans 3, long text Crimson Text. Illustration is biome-neutral: ridgelines, mist, sun, birds, a hiker with a tripod.
 
 ## Typography
 
