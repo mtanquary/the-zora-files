@@ -28,7 +28,7 @@ Nothing in this feature books, holds, or logs in anywhere. It links out.
       node scripts/stays/load-lookouts.mjs --supabase
       ```
    It should print `Target: Supabase (...)` and `Upserted 89 sites.` If it says the table doesn't exist, run step 3 first.
-5. **Deploy**, then **schedule the poller.** Push to `main` so `/api/cron/lookouts` exists in production. Then in the Supabase SQL Editor, open `website/scripts/setup-stays-cron.sql`, replace both `<CRON_SECRET>` placeholders with your secret, and run it. If it complains about an extension, enable `pg_cron` and `pg_net` under Database → Extensions and run it again.
+5. **Deploy**, then **schedule the poller.** Push to `main` so `/api/cron/lookouts` exists in production. Then in the Supabase SQL Editor, open `website/scripts/setup-stays-cron.sql`, replace `<CRON_SECRET>` on the one marked line with your secret (in the editor, not in the repo file), and run it. If it complains about an extension, enable `pg_cron` and `pg_net` under Database → Extensions and run it again.
 6. **Check it's working** after 10 minutes:
    ```sql
    select * from stay_poll_runs order by started_at desc limit 5;
