@@ -9,10 +9,9 @@ const nextConfig: NextConfig = {
     // Sunrise photos rarely change once published.
     minimumCacheTTL: 2678400, // 31 days
     remotePatterns: [
-      // Supabase storage on the custom domain (episode thumbnails, media, discoveries)
-      { protocol: "https", hostname: "site.thezorafiles.com", pathname: "/storage/v1/object/public/**", search: "" },
-      // Default Supabase domains, in case a URL was saved before the custom domain
-      { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**", search: "" },
+      // Supabase storage for this project (episode thumbnails, media, discoveries,
+      // member photos). The old custom domain site.thezorafiles.com is retired.
+      { protocol: "https", hostname: "bdszbuchldnxlywxylbo.supabase.co", pathname: "/storage/v1/object/public/**", search: "" },
       // YouTube fallback thumbnails
       { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**", search: "" },
     ],

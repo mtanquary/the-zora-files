@@ -76,6 +76,7 @@ No test runner is configured — verify UI changes by running `npm run dev` and 
 Two access paths, pick the right one:
 - `src/lib/db.ts` — `pg` Pool using `DATABASE_URL` (server-side queries in `src/lib/queries.ts`)
 - `src/lib/supabase.ts` — Supabase JS client using `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` (client-side and auth flows)
+- The Supabase URL is the project address `https://bdszbuchldnxlywxylbo.supabase.co`. The old custom domain `site.thezorafiles.com` was retired in October 2026 when the paid add-on ended (it returns Cloudflare error 1014); don't reintroduce it. `website/scripts/fix-storage-domain.sql` rewrites any stored links that still use it.
 
 Schema lives in `website/scripts/setup-db.sql`. Core tables: `episodes`, `discoveries`, plus related records. The `episodes` table stores `eos_index` and `zora_score` as JSONB so sub-score rationale is preserved.
 
