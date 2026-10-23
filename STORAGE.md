@@ -11,12 +11,12 @@ Everything Zora lives in three locations on this laptop:
 ```
 C:\Users\mattt\
 │
-├── Documents\the-zora-files\        ← the repo (TIER 1)
+├── src\the-zora-files\        ← the repo (TIER 1)
 │                                       code, plans, docs, website
 │                                       version-controlled in git
 │                                       NOT in Proton sync
 │
-├── Proton Drive\willowrain_dream\My files\zora\    ← production media (TIER 2)
+├── Proton Drive\My files\zora\    ← production media (TIER 2)
 │   ├── _inbox\
 │   ├── shoots\
 │   ├── episodes\
@@ -66,7 +66,7 @@ The `.gitignore` enforces all of the above. Don't loosen it without updating thi
 
 Bidirectional sync to Proton Drive. Backed up off-machine. Not version-controlled — Proton handles its own versioning.
 
-Everything in Tier 2 lives under one root: `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\`. See `production/workflow.md` for the per-subfolder rules; the high-level breakdown:
+Everything in Tier 2 lives under one root: `C:\Users\mattt\Proton Drive\My files\zora\`. See `production/workflow.md` for the per-subfolder rules; the high-level breakdown:
 
 | Subfolder | Contents | Retention |
 |---|---|---|
@@ -99,8 +99,8 @@ Proton can mark files "online only" to save disk space. That's catastrophic for 
 Stays on this laptop. Not synced, not in git. Regenerable from scratch.
 
 - `C:\Users\mattt\Resolve-Cache\` — DaVinci cache files location (already configured)
-- `Documents\the-zora-files\website\node_modules\` and `\.next\` — regen via `npm install` and `npm run build`
-- `Documents\the-zora-files\tooling\*\node_modules\` and `\*\frames\` — regen via `npm install` and the export scripts
+- `src\the-zora-files\website\node_modules\` and `\.next\` — regen via `npm install` and `npm run build`
+- `src\the-zora-files\tooling\*\node_modules\` and `\*\frames\` — regen via `npm install` and the export scripts
 - DaVinci's per-project optimized media and proxy files (always set these locations inside `Resolve-Cache\` when prompted)
 - DaVinci project library / database (the SQLite-style files in `%APPDATA%\Blackmagic Design\DaVinci Resolve\`) — covered indirectly by the `.drb` auto-exports written to Tier 2's `davinci-backups\`
 
@@ -127,7 +127,7 @@ When you score new photos with `node website/scripts/score-archives.mjs`:
 
 In **Resolve Preferences** (Ctrl+, or `DaVinci Resolve → Preferences`):
 
-- **User → Project Save and Load → Project Backups → Location**: `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\davinci-backups\`
+- **User → Project Save and Load → Project Backups → Location**: `C:\Users\mattt\Proton Drive\My files\zora\davinci-backups\`
 - **System → Media Storage**: optionally add `\zora\shoots\` and `\zora\series\` as media storage roots so the Media Pool browser sees them
 
 In **each Project Settings** (Shift+9):

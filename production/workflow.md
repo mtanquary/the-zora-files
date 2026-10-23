@@ -6,9 +6,9 @@ This document covers *what to do and where things live*. The detailed phase-by-p
 
 ## The 60-second version
 
-You have **one place** for production media: `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\`. Everything except code lives there. When you have new footage, drop it in `_inbox\` and ask Claude to route it — no need to remember where individual things go.
+You have **one place** for production media: `C:\Users\mattt\Proton Drive\My files\zora\`. Everything except code lives there. When you have new footage, drop it in `_inbox\` and ask Claude to route it — no need to remember where individual things go.
 
-The repo (`C:\Users\mattt\Documents\the-zora-files\`) is a sibling system. It holds code, plans, scoring, and documentation — not media.
+The repo (`C:\Users\mattt\src\the-zora-files\`) is a sibling system. It holds code, plans, scoring, and documentation — not media.
 
 The cache directory (`C:\Users\mattt\Resolve-Cache\`) is local-only and never backed up.
 
@@ -17,10 +17,10 @@ The cache directory (`C:\Users\mattt\Resolve-Cache\`) is local-only and never ba
 ```
 C:\Users\mattt\
 │
-├── Documents\the-zora-files\        ← the repo (code, plans, docs, website)
+├── src\the-zora-files\        ← the repo (code, plans, docs, website)
 │                                       Backed up via git, NOT in Proton sync
 │
-├── Proton Drive\willowrain_dream\My files\zora\
+├── Proton Drive\My files\zora\
 │   ├── _inbox\                      ← drop new media here, ask Claude to route
 │   ├── shoots\                      ← all raw captures, organized by date
 │   │   └── 2026\05\23-red-butte\
@@ -85,7 +85,7 @@ Footage stays on the cards/devices until you're back at the computer. No on-loca
 This is the only part of the system where you have to **remember a folder name**. Everything else is "ask Claude":
 
 1. Plug in cards / connect devices.
-2. Dump everything into `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\_inbox\`. Any structure is fine — drag whole card folders in if it's faster. Photos and videos and audio all together is fine.
+2. Dump everything into `C:\Users\mattt\Proton Drive\My files\zora\_inbox\`. Any structure is fine — drag whole card folders in if it's faster. Photos and videos and audio all together is fine.
 3. Tell Claude one sentence: where the shoot was. Example: *"Dropped a sunrise shoot from Camelback in the inbox."*
 4. Claude detects devices from filename patterns (GoPro `GX*.MP4`, Hover `HOVER_*`, phone `20YYMMDD_*`, Canon `IMG_*.CR2`), reads dates from filenames or mtimes, and proposes the target shoot folder.
 5. Confirm the proposal. Claude moves the files into `shoots\YYYY\MM\DD-<location-slug>\<device>\` and drops a starter `_shoot.md`.
@@ -251,14 +251,14 @@ Where each tool fits in the file structure:
 
 In Resolve Preferences:
 
-- **System → Media Storage**: optionally add `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\shoots\` and `\series\` as media storage roots so the bin shows them
-- **User → Project Save and Load → Project Backups → Location**: `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\davinci-backups\`
+- **System → Media Storage**: optionally add `C:\Users\mattt\Proton Drive\My files\zora\shoots\` and `\series\` as media storage roots so the bin shows them
+- **User → Project Save and Load → Project Backups → Location**: `C:\Users\mattt\Proton Drive\My files\zora\davinci-backups\`
 
 In each Project Settings (Shift+9, per-project):
 
 - **Master Settings → Working Folders → Cache Files Location**: `C:\Users\mattt\Resolve-Cache\` *(local-only, never backed up)*
 - **Master Settings → Working Folders → Gallery Stills Location**: inside the episode's `02-projects\` folder (so stills get archived with the episode)
-- **Master Settings → Working Folders → Captured Clips Location**: `C:\Users\mattt\Proton Drive\willowrain_dream\My files\zora\davinci-media\<project-name>\Capture\` (when capturing directly into Resolve)
+- **Master Settings → Working Folders → Captured Clips Location**: `C:\Users\mattt\Proton Drive\My files\zora\davinci-media\<project-name>\Capture\` (when capturing directly into Resolve)
 
 Save these as a Project Settings Preset (inside the Project Settings dialog, scroll the left sidebar to the bottom → Presets → Save As) so future projects inherit them.
 

@@ -4,7 +4,7 @@ _After every shoot, work through this pipeline. The high-level system is in `pro
 
 ## Ingest (Phase 3)
 
-- [ ] Drop all card contents into `Proton Drive\willowrain_dream\My files\zora\_inbox\` — any structure is fine
+- [ ] Drop all card contents into `Proton Drive\My files\zora\_inbox\` — any structure is fine
 - [ ] Ping Claude with one sentence: *"Sunrise at <location> dropped in the inbox"*
 - [ ] Review Claude's proposed routing (devices detected, date inferred, target shoot folder), confirm
 - [ ] Wait for Proton sync to complete before clearing the cards (watch the Proton status indicator)

@@ -86,3 +86,7 @@ out/
 .parcel-cache/
 coverage/
 *.log
+
+# Database dumps (copy-prod-to-local.sh writes to a temp dir, but guard anyway)
+*.dump
+*.backup
