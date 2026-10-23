@@ -1,0 +1,21 @@
+{
+  "_comment": "Recreation.gov lookouts to include even though FFLA's rentals page doesn't list them yet, plus per-facility season notes from docs/fire-lookout-research.md. Keyed by Recreation.gov facility id. season_status here overrides the status parsed from FFLA. Re-check every winter.",
+  "extra": {
+    "10373939": {
+      "name": "Red Oak Fire Lookout",
+      "state": "WV",
+      "season_status": "seasonal",
+      "season_notes": "Opened Sept 8, 2026; rentable through Nov 30. 2027 season April 15 to Nov 30. $100/night."
+    }
+  },
+  "notes_by_name": {
+    "Acker Rock": "Season Aug 1 to Nov 15.",
+    "Hager Mountain": "Winter only, Nov 15 to May 15. Staffed as a working lookout in summer.",
+    "Surveyors Ridge": "Mid-July to end of September.",
+    "Walde": "Normally winter-only, mid-December to late March.",
+    "Clearwater": "Year-round.",
+    "Heybrook": "May 1 to Oct 31.",
+    "Jersey Jim": "Mid-May to mid-October.",
+    "Spruce Mountain": "USFS page has shown a site-closed banner. When open, mid-June to Oct 1, max 2 consecutive nights."
+  }
+}
