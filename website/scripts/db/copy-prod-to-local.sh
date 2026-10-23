@@ -34,6 +34,8 @@ echo "1/4  Dumping production public schema (read-only)…"
 
 echo "2/4  Recreating local zorafiles…"
 "$(exe psql)" "$LOCAL/postgres" -q -c "drop database if exists zorafiles with (force);" -c "create database zorafiles;"
+# The dump recreates the public schema itself, so start from none.
+"$(exe psql)" "$LOCAL/zorafiles" -q -c "drop schema public cascade;"
 
 echo "3/4  Restoring…"
 "$(exe pg_restore)" --dbname="$LOCAL/zorafiles" --no-owner --no-privileges "$DUMP" || \
