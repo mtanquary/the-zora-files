@@ -19,10 +19,15 @@ Nothing in this feature books, holds, or logs in anywhere. It links out.
 1. **Pick a secret.** In Git Bash: `openssl rand -hex 32`. Keep it handy for steps 2 and 5.
 2. **Vercel.** Project → Settings → Environment Variables → add `CRON_SECRET` with that value (Production). Optionally add `RIDB_API_KEY` later; the site itself doesn't need it.
 3. **Create the tables in Supabase.** SQL Editor → paste and run `website/scripts/setup-stays.sql`.
-4. **Load the lookouts into Supabase.** From `website/`, with `SUPABASE_DB_URL` in `.env.local`:
-   ```bash
-   DATABASE_URL="$(grep '^SUPABASE_DB_URL=' .env.local | cut -d= -f2-)" node scripts/stays/load-lookouts.mjs
-   ```
+4. **Load the lookouts into Supabase.**
+   1. In Supabase, open the project and click **Connect** (top of the dashboard). Copy the **Session pooler** connection string. It starts with `postgresql://postgres.` and contains `[YOUR-PASSWORD]`.
+   2. Replace `[YOUR-PASSWORD]` with your database password (Project Settings → Database lets you reset it if you don't have it).
+   3. Add it to `website/.env.local` as a new line: `SUPABASE_DB_URL=postgresql://...` (no quotes, no spaces around `=`).
+   4. In any terminal (PowerShell, Command Prompt, or Git Bash), from the `website` folder, run:
+      ```
+      node scripts/stays/load-lookouts.mjs --supabase
+      ```
+   It should print `Target: Supabase (...)` and `Upserted 89 sites.` If it says the table doesn't exist, run step 3 first.
 5. **Deploy**, then **schedule the poller.** Push to `main` so `/api/cron/lookouts` exists in production. Then in the Supabase SQL Editor, open `website/scripts/setup-stays-cron.sql`, replace both `<CRON_SECRET>` placeholders with your secret, and run it. If it complains about an extension, enable `pg_cron` and `pg_net` under Database → Extensions and run it again.
 6. **Check it's working** after 10 minutes:
    ```sql
