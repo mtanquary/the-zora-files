@@ -42,7 +42,7 @@ select cron.schedule(
   '*/5 * * * *',
   $$
   select net.http_post(
-    url := 'https://thezorafiles.com/api/cron/lookouts',
+    url := 'https://www.thezorafiles.com/api/cron/lookouts',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'Authorization', 'Bearer ' || (
