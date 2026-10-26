@@ -48,3 +48,14 @@ export function formatAirsDateShort(
     timeZone: "UTC",
   });
 }
+
+/** True when the episode aired within the last `days` days (and has aired). */
+export function airedWithinDays(
+  publishDate: string | Date | null | undefined,
+  days: number
+): boolean {
+  const pd = toDateOnly(publishDate);
+  if (!pd || !isAired(publishDate)) return false;
+  const ageMs = Date.parse(`${todayUTCDateOnly()}T00:00:00Z`) - Date.parse(`${pd}T00:00:00Z`);
+  return ageMs < days * 86400000;
+}
