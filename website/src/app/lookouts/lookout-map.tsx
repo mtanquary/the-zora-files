@@ -271,11 +271,14 @@ export function LookoutMap({
     if (s) m.easeTo({ center: [s.lng, s.lat], zoom: Math.max(m.getZoom(), 8), duration: 700 });
   }, [selectedId]);
 
-  // Basemap swap (layers re-install on style.load).
+  // Basemap swap. diff: false forces a full style rebuild, which fires
+  // style.load and re-installs our pin layers. With MapLibre's default diff,
+  // switching styles silently drops our sources and layers and style.load
+  // never fires, so the pins vanished for good after picking Topo.
   useEffect(() => {
     const m = mapRef.current;
     if (!m) return;
-    m.setStyle(basemap === "topo" ? TOPO : VOYAGER);
+    m.setStyle(basemap === "topo" ? TOPO : VOYAGER, { diff: false });
   }, [basemap]);
 
   return (
