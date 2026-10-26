@@ -25,7 +25,7 @@ export function normalizeRecgovStatus(raw: string): NightStatus {
 interface RecgovMonthResponse {
   campsites?: Record<
     string,
-    { campsite_id: string; availabilities?: Record<string, string> }
+    { campsite_id: string; campsite_type?: string; availabilities?: Record<string, string> }
   >;
 }
 
@@ -55,6 +55,7 @@ export const recgovProvider: StayProvider = {
       const body = (await res.json()) as RecgovMonthResponse;
       const units = Object.values(body.campsites ?? {}).map((c) => ({
         unitId: String(c.campsite_id),
+        type: c.campsite_type ?? null,
         days: Object.entries(c.availabilities ?? {}).map(([key, raw]) => ({
           date: key.slice(0, 10),
           status: normalizeRecgovStatus(raw),

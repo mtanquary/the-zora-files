@@ -12,6 +12,7 @@ import { addMonthsISO, firstOfMonthISO, latestReleasedNight, todayIn, type Relea
  *   batch_size          site-months per call
  *   request_delay_ms    pause between requests
  *   refresh_hours       how stale a site-month may get before it's re-fetched
+ *   refresh_hours_by_kind   per-kind override, e.g. {"lookout": 24, "cabin": 48}
  *   base_backoff_minutes / max_backoff_hours   per site-month error back-off
  *   cooldown_minutes_on_block   provider-wide pause after a 403/429
  *
@@ -23,6 +24,7 @@ export interface PollConfig {
   batch_size: number;
   request_delay_ms: number;
   refresh_hours: number;
+  refresh_hours_by_kind: Record<string, number>;
   base_backoff_minutes: number;
   max_backoff_hours: number;
   cooldown_minutes_on_block: number;
@@ -30,9 +32,10 @@ export interface PollConfig {
 
 const DEFAULTS: PollConfig = {
   enabled: true,
-  batch_size: 12,
+  batch_size: 15,
   request_delay_ms: 2500,
   refresh_hours: 24,
+  refresh_hours_by_kind: { lookout: 24, cabin: 48, guard_station: 48 },
   base_backoff_minutes: 30,
   max_backoff_hours: 24,
   cooldown_minutes_on_block: 120,
@@ -135,17 +138,18 @@ async function runPollBatchUnlocked(platform: string, opts: { limit?: number }):
   const months = pollMonths(RECGOV_RULE);
   const limit = Math.max(1, Math.min(opts.limit ?? cfg.batch_size, cfg.batch_size));
   const { rows: due } = await pool.query(
-    `select s.id, s.provider_ref, m.month::text as month, coalesce(f.error_count, 0) as error_count
+    `select s.id, s.provider_ref, s.unit_types, m.month::text as month, coalesce(f.error_count, 0) as error_count
      from stay_sites s
      cross join unnest($1::date[]) as m(month)
      left join stay_fetch_state f on f.site_id = s.id and f.month = m.month
      where s.active and s.platform = $2 and s.provider_ref is not null
        and s.season_status not in ('maintenance_closure', 'administrative_closure', 'unavailable')
-       and (f.fetched_at is null or f.fetched_at < now() - make_interval(hours => $3::int))
+       and (f.fetched_at is null
+            or f.fetched_at < now() - make_interval(hours => coalesce(($5::jsonb ->> s.kind)::int, $3::int)))
        and (f.next_attempt_at is null or f.next_attempt_at <= now())
      order by f.fetched_at asc nulls first, m.month asc, s.id
      limit $4`,
-    [months, platform, cfg.refresh_hours, limit]
+    [months, platform, cfg.refresh_hours, limit, JSON.stringify(cfg.refresh_hours_by_kind ?? {})]
   );
   if (due.length === 0) return { ...result, skipped: "nothing due", elapsed_ms: Date.now() - started };
 
@@ -168,7 +172,10 @@ async function runPollBatchUnlocked(platform: string, opts: { limit?: number }):
       const dates: string[] = [];
       const statuses: string[] = [];
       const raws: string[] = [];
-      for (const u of out.data.units) {
+      // Mixed facilities (a few cabins among tent sites) only track their cabins.
+      const allowed: string[] | null = job.unit_types?.length ? job.unit_types : null;
+      const units = allowed ? out.data.units.filter((u) => u.type && allowed.includes(u.type)) : out.data.units;
+      for (const u of units) {
         for (const d of u.days) {
           unitIds.push(u.unitId);
           dates.push(d.date);

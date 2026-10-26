@@ -1,4 +1,4 @@
--- Stays: bookable places (fire lookouts now; cabins and campsites later).
+-- Stays: bookable places (fire lookouts, cabins, guard stations; campsites later).
 --
 -- Run in the Supabase SQL editor (or psql against local Postgres). Idempotent.
 -- The site reads and writes these through the server-side pg pool
@@ -9,7 +9,7 @@
 create table if not exists stay_sites (
   id                   text primary key,          -- 'recgov-234387', 'wv-thorny-mountain'
   kind                 text not null default 'lookout'
-                         check (kind in ('lookout', 'cabin', 'campsite')),
+                         check (kind in ('lookout', 'cabin', 'guard_station', 'campsite')),
   name                 text not null,
   state                text not null,
   operator             text,
@@ -39,6 +39,19 @@ create table if not exists stay_sites (
   created_at           timestamptz not null default now(),
   updated_at           timestamptz not null default now()
 );
+
+-- ── Added for cabins + guard stations (2026-10). Safe to re-run. ────────
+-- unit_types: when a facility mixes cabins with tent sites, only units of
+--   these Recreation.gov campsite types count (e.g. {CABIN ELECTRIC}).
+--   null = every unit counts (lookouts, single-cabin rentals).
+alter table stay_sites add column if not exists unit_types  text[];
+alter table stay_sites add column if not exists unit_count  integer;
+alter table stay_sites add column if not exists price_min   numeric(8, 2);
+alter table stay_sites add column if not exists price_max   numeric(8, 2);
+alter table stay_sites add column if not exists image_url   text;
+alter table stay_sites drop constraint if exists stay_sites_kind_check;
+alter table stay_sites add constraint stay_sites_kind_check
+  check (kind in ('lookout', 'cabin', 'guard_station', 'campsite'));
 
 create unique index if not exists idx_stay_sites_provider
   on stay_sites (platform, provider_ref) where provider_ref is not null;
@@ -106,14 +119,26 @@ create table if not exists stay_config (
 insert into stay_config (key, value) values
   ('poll.recgov', '{
      "enabled": true,
-     "batch_size": 12,
+     "batch_size": 15,
      "request_delay_ms": 2500,
      "refresh_hours": 24,
+     "refresh_hours_by_kind": { "lookout": 24, "cabin": 48, "guard_station": 48 },
      "base_backoff_minutes": 30,
      "max_backoff_hours": 24,
      "cooldown_minutes_on_block": 120
    }'::jsonb)
 on conflict (key) do nothing;
+
+-- Existing installs: add the per-kind tiers and the slightly bigger batch
+-- (15 per 5-minute run, about 3 requests a minute) without touching any
+-- other knob you've tuned.
+update stay_config
+   set value = value
+       || jsonb_build_object('refresh_hours_by_kind',
+            coalesce(value -> 'refresh_hours_by_kind', '{"lookout": 24, "cabin": 48, "guard_station": 48}'::jsonb))
+       || case when (value ->> 'batch_size')::int = 12 then '{"batch_size": 15}'::jsonb else '{}'::jsonb end,
+       updated_at = now()
+ where key = 'poll.recgov' and not (value ? 'refresh_hours_by_kind');
 
 -- ── Lock it down from the public API ─────────────────────────────────────
 alter table stay_sites                enable row level security;

@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { GeoJSONSource, Map as MlMap, StyleSpecification } from "maplibre-gl";
 import type { StayWithAvailability } from "@/lib/stays/types";
-import { SUMMARY_STYLE } from "./display";
+import { KIND_MARKS, SUMMARY_STYLE } from "./display";
 
 /**
- * MapLibre map of lookouts. Clusters when zoomed out; clusters turn green
- * when anything inside is open. Basemaps are OpenStreetMap-derived and need
- * no key: CARTO Voyager (default) and OpenTopoMap.
+ * MapLibre map of lookouts, cabins, and guard stations. Clusters when zoomed
+ * out; clusters turn green when anything inside is open. Fill color is
+ * availability; the pin's ring says what kind of place it is (see
+ * KIND_MARKS). Basemaps are OpenStreetMap-derived and need no key: CARTO
+ * Voyager (default) and OpenTopoMap.
  */
 
 type BasemapId = "voyager" | "topo";
@@ -39,6 +41,10 @@ const TOPO: StyleSpecification = {
 
 const US_CENTER: [number, number] = [-110.5, 44.5];
 
+/** Off the lower-48 frame: included on the map, left out of the first fit. */
+const FAR_STATES = new Set(["AK", "HI", "PR", "VI", "GU"]);
+
+
 function toGeoJSON(sites: StayWithAvailability[]) {
   return {
     type: "FeatureCollection" as const,
@@ -48,6 +54,7 @@ function toGeoJSON(sites: StayWithAvailability[]) {
       properties: {
         id: s.id,
         name: s.name,
+        kind: s.kind,
         summary: s.availability.summary,
         open: s.availability.summary === "available" || s.availability.summary === "partial" ? 1 : 0,
       },
@@ -160,8 +167,23 @@ export function LookoutMap({
             paint: {
               "circle-color": colorMatch as never,
               "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 6, 9, 9],
-              "circle-stroke-color": "#F2EBDD",
-              "circle-stroke-width": 2,
+              "circle-stroke-color": [
+                "match",
+                ["get", "kind"],
+                ...Object.entries(KIND_MARKS).flatMap(([k, v]) => [k, v.stroke]),
+                "#F2EBDD",
+              ] as never,
+              "circle-stroke-width": ["match", ["get", "kind"], "guard_station", 2.5, 2],
+            },
+          });
+          m.addLayer({
+            id: "point-dots",
+            type: "circle",
+            source: "lookouts",
+            filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "kind"], "cabin"]],
+            paint: {
+              "circle-color": KIND_MARKS.cabin.dot!,
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 1.8, 9, 3],
             },
           });
           m.addLayer({
@@ -183,9 +205,14 @@ export function LookoutMap({
         };
 
         map.on("style.load", install);
-        // Frame all lookouts once, on first load.
+        // Frame the pins once, on first load. Alaska, Hawaii, and the
+        // territories stay on the map but would zoom the frame out to the
+        // whole Pacific, so they're left out of the fit unless they're all
+        // there is.
         map.once("load", () => {
-          const pts = sitesRef.current;
+          const all = sitesRef.current;
+          const near = all.filter((p) => !FAR_STATES.has(p.state));
+          const pts = near.length ? near : all;
           if (!map || pts.length === 0) return;
           const lngs = pts.map((p) => p.lng);
           const lats = pts.map((p) => p.lat);

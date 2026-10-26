@@ -87,7 +87,7 @@ Production surfaces beyond the spec in `website/_GUIDE.md`: `log` (expedition lo
 **Route structure:**
 - `/` — channel home (The Zora Files umbrella)
 - `/about` — channel-level about page
-- `/lookouts` — fire lookout finder (map, availability, release calendar). Setup and operations: `docs/lookouts-setup.md`
+- `/lookouts` — fire lookout, cabin & guard station finder (map, type toggle, availability, release calendar). `/cabins` and `/guard-stations` redirect to it pre-filtered. Setup and operations: `docs/lookouts-setup.md`
 - `/finding-zora/` — Finding Zora series hub
 - `/finding-zora/episodes` — episode archive
 - `/finding-zora/episodes/[slug]` — episode detail

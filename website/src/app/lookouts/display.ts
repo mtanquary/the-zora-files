@@ -1,4 +1,20 @@
-import type { NightStatus, SiteSummary } from "@/lib/stays/types";
+import type { NightStatus, SiteSummary, StayKind } from "@/lib/stays/types";
+
+/** Pin ring per kind, shared by the map and the list. Lookouts: plain pin.
+ *  Cabins: light center dot. Guard stations: dark ring. */
+export const KIND_MARKS: Record<string, { stroke: string; dot: string | null }> = {
+  lookout: { stroke: "#F2EBDD", dot: null },
+  cabin: { stroke: "#F2EBDD", dot: "#F2EBDD" },
+  guard_station: { stroke: "#1D2342", dot: null },
+};
+
+/** How each kind of stay is named in the UI. */
+export const KIND_LABELS: Record<StayKind, { one: string; many: string }> = {
+  lookout: { one: "Fire lookout", many: "Lookouts" },
+  cabin: { one: "Cabin", many: "Cabins" },
+  guard_station: { one: "Guard station", many: "Guard stations" },
+  campsite: { one: "Campsite", many: "Campsites" },
+};
 
 /** Pin + chip colors. Earthy, legible on the light basemap; avoids the
  *  teal (Eos) and violet (Discovery) reservations. */
@@ -42,12 +58,28 @@ export const SUMMARY_ORDER: SiteSummary[] = [
 ];
 
 export const STATE_NAMES: Record<string, string> = {
-  CA: "California", CO: "Colorado", ID: "Idaho", MT: "Montana", OR: "Oregon",
-  SD: "South Dakota", WA: "Washington", WI: "Wisconsin", WV: "West Virginia", WY: "Wyoming",
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+  FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana",
+  IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
+  MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
+  OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
+  WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming", PR: "Puerto Rico",
+  VI: "U.S. Virgin Islands", GU: "Guam",
 };
 
-/** "YAAK MTN. LOOKOUT RENTAL" style names are already cleaned by the seed;
- *  this just trims the trailing word "Lookout" for compact list rows. */
+/** "$45", "$45–$90", or null. */
+export function formatPrice(min: number | null, max: number | null): string | null {
+  if (min == null) return null;
+  const f = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+  return max != null && max !== min ? `${f(min)}–${f(max)}` : f(min);
+}
+
+/** Names are already cleaned by the seeds; this just trims a trailing
+ *  "Lookout" for compact list rows. */
 export function shortName(name: string): string {
   return name.replace(/\s+(Fire\s+)?Lookout$/i, "");
 }

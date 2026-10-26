@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import type { StaysResponse, StayWithAvailability, SiteSummary } from "@/lib/stays/types";
+import { MAP_KINDS, type StaysResponse, type StayWithAvailability, type SiteSummary, type StayKind } from "@/lib/stays/types";
 import { platformInfo, SEASON_LABELS, SEASON_CLOSED } from "@/lib/stays/platforms";
 import {
   addDaysISO,
@@ -14,6 +14,9 @@ import {
   todayIn,
 } from "@/lib/stays/release";
 import {
+  formatPrice,
+  KIND_LABELS,
+  KIND_MARKS,
   NIGHT_STYLE,
   STATE_NAMES,
   SUMMARY_LABEL_NO_RANGE,
@@ -54,6 +57,20 @@ function Chip({ summary, hasRange }: { summary: SiteSummary; hasRange: boolean }
   );
 }
 
+/** The pin shape for a kind, matching the map (see KIND_MARKS). */
+function KindMark({ kind, color = "#5E5054" }: { kind: StayKind; color?: string }) {
+  const m = KIND_MARKS[kind] ?? KIND_MARKS.lookout;
+  return (
+    <span
+      aria-hidden
+      className="relative inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full"
+      style={{ background: color, boxShadow: `0 0 0 ${kind === "guard_station" ? 2 : 1.5}px ${m.stroke === "#F2EBDD" ? "#D9CFBC" : m.stroke}` }}
+    >
+      {m.dot && <span className="h-1.5 w-1.5 rounded-full" style={{ background: m.dot }} />}
+    </span>
+  );
+}
+
 /* ───────────────────────── detail panel ───────────────────────── */
 
 function DetailPanel({
@@ -75,13 +92,16 @@ function DetailPanel({
     : null;
   const rangeReleaseFuture = rangeRelease && (rangeRelease.at ? rangeRelease.at > new Date() : rangeRelease.date > todayIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const seasonClosed = SEASON_CLOSED.has(site.season_status);
+  const price = formatPrice(site.price_min, site.price_max);
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="flex items-start justify-between gap-3 border-b border-park-rule bg-park-paper-2 px-5 py-4">
         <div>
           <p className="font-park-sans text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-park-moss">
-            {[site.managing_unit, STATE_NAMES[site.state] ?? site.state].filter(Boolean).join(" · ")}
+            {[KIND_LABELS[site.kind]?.one, site.managing_unit, STATE_NAMES[site.state] ?? site.state]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
           <h3 className="mt-1 font-park-display text-2xl font-bold leading-tight text-park-ink">{site.name}</h3>
           {site.operator && <p className="font-park-sans text-sm text-park-ink-faint">{site.operator}</p>}
@@ -94,6 +114,19 @@ function DetailPanel({
           ✕
         </button>
       </div>
+
+      {site.image_url && (
+        // Recreation.gov's own listing photo; plain <img> since it's a remote CDN we don't proxy.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={site.image_url}
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="aspect-[16/9] w-full border-b border-park-rule object-cover"
+          onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = "none")}
+        />
+      )}
 
       <div className="space-y-5 px-5 py-5 font-park-sans text-sm text-park-ink">
         <div className="flex flex-wrap items-center gap-2">
@@ -109,11 +142,27 @@ function DetailPanel({
           )}
         </div>
 
-        {site.rating != null && (
+        {(site.rating != null || price || (site.unit_count ?? 0) > 1) && (
           <p className="text-park-ink-soft">
-            <span className="font-bold text-park-ink">★ {site.rating.toFixed(1)}</span>
-            {site.rating_count ? ` · ${site.rating_count} rating${site.rating_count === 1 ? "" : "s"}` : ""} on
-            Recreation.gov
+            {site.rating != null && (
+              <>
+                <span className="font-bold text-park-ink">★ {site.rating.toFixed(1)}</span>
+                {site.rating_count ? ` · ${site.rating_count} rating${site.rating_count === 1 ? "" : "s"}` : ""} on
+                Recreation.gov
+              </>
+            )}
+            {price && (
+              <>
+                {site.rating != null && " · "}
+                <span className="font-semibold text-park-ink">{price}</span> a night
+              </>
+            )}
+            {(site.unit_count ?? 0) > 1 && (
+              <>
+                {(site.rating != null || price) && " · "}
+                {site.unit_count} {site.kind === "cabin" ? "cabins" : "units"} on one listing
+              </>
+            )}
           </p>
         )}
 
@@ -175,7 +224,7 @@ function DetailPanel({
                 ? `The ${range.start.slice(0, 4)} season's ${rule.channel === "phone" ? "phone" : "release"} day is `
                 : "Your dates open "}
               <strong className="text-ink">{formatMoment(rangeRelease, { year: true })}</strong>.
-              {rule.type === "rolling_months" && " Set an alarm. Popular lookouts go in minutes."}
+              {rule.type === "rolling_months" && " Set an alarm. The popular ones go in minutes."}
             </p>
           )}
           {next && !(range && rangeReleaseFuture) && (
@@ -244,11 +293,14 @@ export function LookoutFinder({
   initial,
   initialStart,
   initialNights,
+  initialKinds,
   today,
 }: {
   initial: StaysResponse;
   initialStart: string;
   initialNights: number;
+  /** Kinds shown at first (from ?type=). All of them when empty. */
+  initialKinds: StayKind[];
   today: string;
 }) {
   const [data, setData] = useState<StaysResponse>(initial);
@@ -256,6 +308,7 @@ export function LookoutFinder({
   const [nights, setNights] = useState<number>(NIGHT_OPTIONS.includes(initialNights) ? initialNights : 2);
   const [stateFilter, setStateFilter] = useState<string>("");
   const [onlyOpen, setOnlyOpen] = useState(false);
+  const [kinds, setKinds] = useState<StayKind[]>(initialKinds.length ? initialKinds : MAP_KINDS);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -303,21 +356,39 @@ export function LookoutFinder({
     };
   }, [rangeKey, range, nights]);
 
+  // Keep ?type= in sync so a filtered view can be shared.
+  const kindKey = kinds.join(",");
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (kinds.length === MAP_KINDS.length) url.searchParams.delete("type");
+    else url.searchParams.set("type", kindKey);
+    window.history.replaceState(null, "", url.toString());
+  }, [kindKey, kinds.length]);
+
+  const toggleKind = (k: StayKind) =>
+    setKinds((cur) => {
+      const next = cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k];
+      return next.length ? MAP_KINDS.filter((x) => next.includes(x)) : cur; // never empty
+    });
+
   const hasRange = !!data.range;
-  const states = useMemo(
-    () => [...new Set(data.sites.map((s) => s.state))].sort(),
-    [data.sites]
-  );
+  const kindCounts = useMemo(() => {
+    const c: Partial<Record<StayKind, number>> = {};
+    for (const s of data.sites) c[s.kind] = (c[s.kind] ?? 0) + 1;
+    return c;
+  }, [data.sites]);
+  const ofKind = useMemo(() => data.sites.filter((s) => kinds.includes(s.kind)), [data.sites, kinds]);
+  const states = useMemo(() => [...new Set(ofKind.map((s) => s.state))].sort(), [ofKind]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return data.sites.filter((s) => {
+    return ofKind.filter((s) => {
       if (stateFilter && s.state !== stateFilter) return false;
       if (onlyOpen && !["available", "partial"].includes(s.availability.summary)) return false;
       if (q && !`${s.name} ${s.managing_unit ?? ""}`.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [data.sites, stateFilter, onlyOpen, query]);
+  }, [ofKind, stateFilter, onlyOpen, query]);
 
   const counts = useMemo(() => {
     const c: Partial<Record<SiteSummary, number>> = {};
@@ -350,6 +421,29 @@ export function LookoutFinder({
 
   return (
     <div>
+      {/* Kind toggle */}
+      <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="What to show">
+        {MAP_KINDS.filter((k) => kindCounts[k]).map((k) => {
+          const on = kinds.includes(k);
+          return (
+            <button
+              key={k}
+              onClick={() => toggleKind(k)}
+              aria-pressed={on}
+              className={`inline-flex items-center gap-2 rounded-sm border-2 px-3 py-1.5 font-park-sans text-sm font-semibold transition-colors ${
+                on
+                  ? "border-blue-hour bg-park-paper-2 text-park-ink"
+                  : "border-park-ink/15 bg-transparent text-park-ink-faint line-through decoration-park-ink/30 hover:border-park-forest hover:text-park-forest"
+              }`}
+            >
+              <KindMark kind={k} color={on ? "#2E7D4F" : "#B8ADB2"} />
+              {KIND_LABELS[k].many}
+              <span className="text-park-ink-faint">{kindCounts[k]}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Controls */}
       <div className="flex flex-wrap items-end gap-3 rounded-sm border border-park-rule bg-park-paper-2 p-4">
         <label className="flex flex-col gap-1">
@@ -397,7 +491,7 @@ export function LookoutFinder({
           <input
             type="search"
             value={query}
-            placeholder="Lookout or forest"
+            placeholder="Name or forest"
             onChange={(e) => setQuery(e.target.value)}
             className={inputCls}
           />
@@ -422,7 +516,11 @@ export function LookoutFinder({
           </span>
         ))}
         <span className="ml-auto text-park-ink-faint">
-          {loading ? "Updating…" : error ? `Couldn't update: ${error}` : `${filtered.length} lookouts`}
+          {loading
+            ? "Updating…"
+            : error
+              ? `Couldn't update: ${error}`
+              : `${filtered.length} ${filtered.length === 1 ? "place" : "places"}`}
         </span>
       </div>
 
@@ -436,10 +534,17 @@ export function LookoutFinder({
             <DetailPanel site={selected} range={data.range} onClose={() => setSelectedId(null)} />
           ) : (
             <div className="flex h-full flex-col justify-center gap-3 px-6 py-8 font-park-sans text-sm text-park-ink-soft">
-              <p className="font-park-display text-xl font-bold text-park-ink">Pick a lookout</p>
+              <p className="font-park-display text-xl font-bold text-park-ink">Pick a place</p>
               <p>
                 Tap a pin for details, ratings, season status, and when its dates open. Choose check-in dates to
                 color every pin by availability for those nights.
+              </p>
+              <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
+                {MAP_KINDS.map((k) => (
+                  <span key={k} className="inline-flex items-center gap-1.5">
+                    <KindMark kind={k} /> {KIND_LABELS[k].one}
+                  </span>
+                ))}
               </p>
               <p className="text-park-ink-faint">
                 Availability is refreshed on a schedule from Recreation.gov. It can lag a cancellation by a few hours,
@@ -453,7 +558,11 @@ export function LookoutFinder({
       {/* List */}
       <div className="mt-8">
         <h3 className="mb-3 font-park-display text-2xl font-bold text-park-ink">
-          {hasRange ? `For ${formatDay(data.range!.start)} to ${formatDay(data.range!.end, { year: true })}` : "Every lookout"}
+          {hasRange
+            ? `For ${formatDay(data.range!.start)} to ${formatDay(data.range!.end, { year: true })}`
+            : kinds.length === 1
+              ? `Every ${KIND_LABELS[kinds[0]].one.toLowerCase()}`
+              : "Every place"}
         </h3>
         <ul className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
           {sorted.map((s) => {
@@ -476,10 +585,7 @@ export function LookoutFinder({
                     selectedId === s.id ? "bg-park-paper-2" : ""
                   }`}
                 >
-                  <span
-                    className="h-3 w-3 shrink-0 rounded-full"
-                    style={{ background: SUMMARY_STYLE[s.availability.summary].color }}
-                  />
+                  <KindMark kind={s.kind} color={SUMMARY_STYLE[s.availability.summary].color} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-park-display font-semibold text-park-ink">
                       {shortName(s.name)}
@@ -499,7 +605,7 @@ export function LookoutFinder({
           })}
         </ul>
         {sorted.length === 0 && (
-          <p className="py-6 font-park-sans text-park-ink-soft">No lookouts match those filters.</p>
+          <p className="py-6 font-park-sans text-park-ink-soft">Nothing matches those filters.</p>
         )}
       </div>
     </div>

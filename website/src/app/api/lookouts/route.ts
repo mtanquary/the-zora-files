@@ -1,13 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getStaysWithAvailability, parseRange } from "@/lib/stays/queries";
+import { getStaysWithAvailability, parseKinds, parseRange } from "@/lib/stays/queries";
 import type { StaysResponse } from "@/lib/stays/types";
 
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/lookouts?start=YYYY-MM-DD&end=YYYY-MM-DD
- * Lookouts with availability for the requested nights, read from our own
- * snapshot tables. The browser never talks to Recreation.gov.
+ * GET /api/lookouts?start=YYYY-MM-DD&end=YYYY-MM-DD&kind=lookout,cabin,guard_station
+ * Lookouts, cabins, and guard stations with availability for the requested
+ * nights, read from our own snapshot tables. `kind` defaults to all of them.
+ * The browser never talks to Recreation.gov.
  */
 export async function GET(request: NextRequest) {
   let range;
@@ -18,7 +19,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const sites = await getStaysWithAvailability("lookout", range);
+    const kinds = parseKinds(request.nextUrl.searchParams.get("kind"));
+    const sites = await getStaysWithAvailability(kinds, range);
     const body: StaysResponse = { generated_at: new Date().toISOString(), range, sites };
     return NextResponse.json(body, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },

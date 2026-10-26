@@ -10,6 +10,7 @@ import type {
   StayKind,
   StayWithAvailability,
 } from "./types";
+import { MAP_KINDS } from "./types";
 
 /** Longest range the map will evaluate, in nights. */
 export const MAX_RANGE_NIGHTS = 14;
@@ -17,16 +18,24 @@ export const MAX_RANGE_NIGHTS = 14;
 const SITE_COLUMNS = `id, kind, name, state, operator, managing_unit, lat, lng,
   coords_approximate, platform, provider_ref, booking_url, info_url,
   season_status, season_notes, provider_reservable, release_rule,
-  rating::float8 as rating, rating_count, rating_source`;
+  rating::float8 as rating, rating_count, rating_source,
+  unit_count, price_min::float8 as price_min, price_max::float8 as price_max, image_url`;
 
-export async function getActiveSites(kind: StayKind): Promise<StaySite[]> {
+export async function getActiveSites(kinds: StayKind[]): Promise<StaySite[]> {
   const { rows } = await pool.query(
     `select ${SITE_COLUMNS} from stay_sites
-     where kind = $1 and active and lat is not null and lng is not null
+     where kind = any($1) and active and lat is not null and lng is not null
      order by state, name`,
-    [kind]
+    [kinds]
   );
   return rows;
+}
+
+/** Parse ?kind=cabin,guard_station. Unknown values are ignored; empty means all map kinds. */
+export function parseKinds(param: string | null): StayKind[] {
+  const wanted = (param ?? "").split(",").map((k) => k.trim()).filter(Boolean);
+  const kinds = MAP_KINDS.filter((k) => wanted.includes(k));
+  return kinds.length ? kinds : MAP_KINDS;
 }
 
 /** Best status across a facility's units for one night (any open unit wins). */
@@ -54,11 +63,11 @@ function summarizeRange(nights: { status: NightStatus }[]): SiteSummary {
  * nights; without one, it reflects "anything open in the release window".
  */
 export async function getStaysWithAvailability(
-  kind: StayKind,
+  kinds: StayKind[],
   range: { start: string; end: string } | null,
   now: Date = new Date()
 ): Promise<StayWithAvailability[]> {
-  const sites = await getActiveSites(kind);
+  const sites = await getActiveSites(kinds);
   if (sites.length === 0) return [];
   const ids = sites.map((s) => s.id);
 
@@ -144,6 +153,8 @@ export async function getStaysWithAvailability(
       lat: Number(site.lat),
       lng: Number(site.lng),
       rating: site.rating != null ? Number(site.rating) : null,
+      price_min: site.price_min != null ? Number(site.price_min) : null,
+      price_max: site.price_max != null ? Number(site.price_max) : null,
       availability,
     };
   });

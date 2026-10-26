@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The stay finder lives at /lookouts; these open it pre-filtered.
+  async redirects() {
+    return [
+      { source: "/cabins", destination: "/lookouts?type=cabin", permanent: false },
+      { source: "/guard-stations", destination: "/lookouts?type=guard_station", permanent: false },
+    ];
+  },
   images: {
     // AVIF where supported, WebP otherwise. Photos are served at the width
     // each screen needs instead of straight off the camera.

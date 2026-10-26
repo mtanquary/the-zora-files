@@ -4,6 +4,8 @@ import type { NightStatus } from "../types";
 export interface MonthAvailability {
   units: {
     unitId: string;
+    /** Provider's unit type, e.g. Recreation.gov "CABIN NONELECTRIC". */
+    type: string | null;
     days: { date: string; status: NightStatus; raw: string }[];
   }[];
 }
@@ -14,7 +16,7 @@ export type FetchOutcome =
   | { ok: false; httpStatus: number | null; blocked: boolean; error: string };
 
 /**
- * A pollable booking platform. Lookouts, cabins, and campsites all go
+ * A pollable booking platform. Lookouts, cabins, guard stations, and campsites all go
  * through this, so a new platform is one module plus a registry entry.
  */
 export interface StayProvider {

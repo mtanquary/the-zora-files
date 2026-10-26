@@ -1,0 +1,19 @@
+{
+  "_comment": "Hand corrections for cabins.v1.json, keyed by Recreation.gov facility id. Re-check every winter. include: facilities the sweeps can't find by name (fetched by seed-cabins.mjs). overrides: any site field (name, kind, lat, lng, coords_approximate, season_status, season_notes, state); force: true keeps a facility the automatic rules would leave out. exclude: ids to leave off the map, with the reason. extra: non-Recreation.gov cabins, written out in full like manual-lookouts.json.",
+  "include": { "234313": "Swan Cabin Group Camp" },
+  "overrides": {
+    "233105": { "force": true, "name": "Salmon Lake Cabin (Sitka)" },
+    "234313": { "force": true, "name": "Swan Cabin", "season_notes": "Group cabin." },
+    "234783": { "name": "Haleakalā Wilderness Cabins" },
+    "10075403": { "lat": 59.87975, "lng": -139.77463 },
+    "10006208": { "lat": 60.34805, "lng": -154.04274 },
+    "10005414": {
+      "lat": 40.550165,
+      "lng": -110.695155,
+      "coords_approximate": true,
+      "season_notes": "Recreation.gov lists no coordinates; the pin uses the Forest Service's Upper Stillwater House record, about 22 miles up Rock Creek Road from Mountain Home."
+    }
+  },
+  "exclude": {},
+  "extra": {}
+}

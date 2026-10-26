@@ -90,3 +90,6 @@ coverage/
 # Database dumps (copy-prod-to-local.sh writes to a temp dir, but guard anyway)
 *.dump
 *.backup
+
+# Raw API responses cached by the stays seed scripts (rebuildable)
+website/data/stays/raw/

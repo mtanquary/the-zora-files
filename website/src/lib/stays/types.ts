@@ -1,10 +1,13 @@
 /**
- * Shared types for bookable stays (fire lookouts today; cabins and
+ * Shared types for bookable stays (fire lookouts, cabins, guard stations;
  * campsites later). Safe to import from client components.
  */
 import type { ReleaseRule } from "./release";
 
-export type StayKind = "lookout" | "cabin" | "campsite";
+export type StayKind = "lookout" | "cabin" | "guard_station" | "campsite";
+
+/** Kinds the map shows today, in display order. */
+export const MAP_KINDS: StayKind[] = ["lookout", "cabin", "guard_station"];
 
 export type SeasonStatus =
   | "open"
@@ -56,6 +59,12 @@ export interface StaySite {
   rating: number | null;
   rating_count: number | null;
   rating_source: string | null;
+  /** Rentable units under this listing (multi-cabin facilities). */
+  unit_count: number | null;
+  /** Nightly price range on the booking site, when known. */
+  price_min: number | null;
+  price_max: number | null;
+  image_url: string | null;
 }
 
 export interface SiteAvailability {
